@@ -11,11 +11,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // navbar-expand navbar-light bg-light
-function Navbar() {
+function Navbar({ toggleSidebar }) {
   return (
     <div className="navbar ">
       <div className="menu-search">
-        <div className="menuIcon">
+        <div className="menuIcon" onClick={toggleSidebar}>
           <FontAwesomeIcon icon={faBars} size="sm" className="navbar-icons" />
         </div>
         <div className="searchInput">

@@ -1,40 +1,90 @@
 import React from "react";
 import "./Sidebar.css";
+import logoImg from "../../assets/Vector.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {} from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faHome,
+  faCog,
+  faPeopleGroup,
+  faBriefcase,
+  faComputer,
+  faCalendar,
+  faArrowRightFromFile,
+  faWifi3,
+  faUsers,
+  faCamera,
+  faSquarePollVertical,
+  faFileExport,
+  faLink,
+} from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
-function Sidebar() {
+function Sidebar({ isSideBarOpen }) {
+  const sections = [
+    {
+      heading: "Main menu",
+      items: [
+        { icon: faHome, text: "Dashboard" },
+        { icon: faUser, text: "My Screen" },
+      ],
+      isMiddle: false,
+    },
+    {
+      heading: "Data Administration",
+      items: [
+        { icon: faUsers, text: "Teammates" },
+        { icon: faBriefcase, text: "Work Planners" },
+        { icon: faComputer, text: "Ventures" },
+        { icon: faCalendar, text: "Absence Calender" },
+        { icon: faWifi3, text: "Offline Periods" },
+        { icon: faCamera, text: "Screen Captures" },
+        { icon: faPeopleGroup, text: "Fellow Workers" },
+        { icon: faSquarePollVertical, text: "Reports" },
+        { icon: faFileExport, text: "Data Export" },
+      ],
+      isMiddle: true,
+    },
+    {
+      heading: "Customization",
+      items: [
+        { icon: faCog, text: "Settings" },
+        { icon: faLink, text: "Affiliates" },
+      ],
+      isMiddle: false,
+    },
+  ];
+
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isSideBarOpen ? "open" : ""}`}>
       <div className="brand">
-        <div className="brand-logo-holder">App Tracker</div>
+        <div className="brand-logo-holder ">
+          <p className="logo-name m-0 p-0">App Tracker</p>
+          <span>
+            <img src={logoImg} alt="" />
+          </span>
+        </div>
       </div>
-      <div className="main-menu">
-        <h6>Main Menu</h6>
-        <ul>
-          {/* <li className="sidebar-listItem">Dashboard</li>
-          <li className="sidebar-listItem">My Screen</li> */}
-        </ul>
-      </div>
-      <div className="data-administration">
-        <h6>Data Administration</h6>
-        <ul>
-          {/* <li className="sidebar-listItem">Teammates</li>
-          <li className="sidebar-listItem">Work Planners</li>
-          <li className="sidebar-listItem">Ventures</li>
-          <li className="sidebar-listItem">Absence Calander</li>
-          <li className="sidebar-listItem">Screen Captures</li>
-          <li className="sidebar-listItem">Reports</li>
-          <li className="sidebar-listItem">Data Export</li>
-          <li className="sidebar-listItem">Settings</li> */}
-        </ul>
-      </div>
-      <div className="customization">
-        <h6>Customization</h6>
-        <ul>
-          {/* <li className="sidebar-listItem">Settings</li>
-          <li className="sidebar-listItem">Affiliates</li> */}
-        </ul>
+      <div className="section-holder">
+        {sections.map((section, sectionIndex) => (
+          <div
+            key={sectionIndex}
+            className={`section ${section.isMiddle ? "middle-section" : ""}`}
+          >
+            <p>{section.heading}</p>
+            <ul className="menu">
+              {section.items.map((item, itemIndex) => (
+                <li key={itemIndex}>
+                  <div className="icon-holder">
+                    <FontAwesomeIcon icon={item.icon} className="custom-icon" />
+                  </div>
+
+                  <span>{item.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );

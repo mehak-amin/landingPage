@@ -8,8 +8,13 @@
 }
 .sidebar-holder {
   width: 20%;
-  background-color: aquamarine;
+  border-right: 1px solid black;
 }
 .navbar-home-holder {
   width: 80%;
+}
+@media (max-width: 1079px) {
+  .sidebar-holder {
+    width: auto;
+  }
 }
