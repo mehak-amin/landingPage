@@ -1,0 +1,17 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+.sidebar {
+  overflow-y: scroll;
+}
+.brand {
+  padding: 0.5rem 0.9rem;
+}
+.brand-logo-holder {
+  height: 60px;
+}
+.sidebar-listItem {
+  padding: 0.8rem 2rem;
+  list-style: none;
+}

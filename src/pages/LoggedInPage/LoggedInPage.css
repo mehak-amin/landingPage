@@ -1,0 +1,15 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+.logged-in-page {
+  display: flex;
+  overflow-y: hidden;
+}
+.sidebar-holder {
+  width: 20%;
+  background-color: aquamarine;
+}
+.navbar-home-holder {
+  width: 80%;
+}
