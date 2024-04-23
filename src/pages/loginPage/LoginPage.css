@@ -119,6 +119,10 @@
   border-radius: 5px;
   padding: 0.2rem 0.9rem;
 }
+.validation{
+  color: red;
+  font-size: 1.3vw;
+}
 @media (max-width: 931px) {
   .signin-heading-login {
     font-size: 1.5rem;
