@@ -1,6 +1,7 @@
 import SignInPage from "./pages/signInPage/SignInPage";
 import LoginPage from "./pages/loginPage/LoginPage";
 import LoggedInPage from "./pages/LoggedInPage/LoggedInPage";
+import MessageBox from "./components/messages/MessageBox";
 // import LoggedInPage from "./pages/LoggedInPage/LoggedInPage";
 import { Routes, Route } from "react-router-dom";
 

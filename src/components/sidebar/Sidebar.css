@@ -7,7 +7,9 @@
   /* overflow-y: scroll; */
 }
 .open {
-  display: none;
+  /* display: none; */
+  left: -20%; /* Show sidebar by sliding it into view */
+  transform: translateX(0);
 }
 
 .brand {
@@ -30,8 +32,8 @@
   font-weight: 500;
 }
 .section.middle-section {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border-top: 1px solid #6d6d6d;
+  border-bottom: 1px solid #6d6d6d;
 }
 .menu {
   padding: 0;
