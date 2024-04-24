@@ -5,12 +5,15 @@ import "./LoginPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faEye } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE_URI from "../../../config";
 
+axios.defaults.withCredentials = true
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleFocus = () => {
@@ -21,17 +24,44 @@ function LoginPage() {
     setIsFocused(false);
   };
 
-  const handleSubmit = (e) => {
+
+  // <---- LOGIC OF VALIDATIONS FOR LOGIN ---->
+  // <---- INTRACTION WITH LOGIN API WITH AXIOS ---->
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try{
+      const response = await axios({
+        method: 'POST',
+        url:`${BASE_URI}/api/v1/users/login`,      // GETTING END POINT FROM CONFIG.JS
+        data:{
+          email,
+          password
+        }
+      });
+      if(response.status === 200){
+        // console.log("logged in");
+        navigate("/loggedinpage");
+      }
+      // console.log(response)
+    }
+    catch(err){
+      if(err.response.data.message === "Invalid Credentials"){
+        // console.log("Incorect Password");
+        setMessage('Incorect Password');
+      }
+      else if(err.response.data.message === "No user found with those credentials"){
+        setMessage('Invalid User');
+      }
+      else if(err.response.data.message === 'Provide all the credentials'){
+        setMessage('All feilds Required');
+      }
+      // console.log(err);
+    }
   };
-  const handleLogin = (e) => {
-    console.log("lalala");
-    e.preventDefault();
-    navigate("/loggedinpage");
-    // <Navigate to="/loggedinpage" />;
-  };
+
+
+
 
   return (
     <div className="login">
@@ -109,10 +139,11 @@ function LoginPage() {
           </div>
           {/* ----------------------- */}
           <div className="btn-holder-login">
-            <button type="submit" className="btn-login " onClick={handleLogin}>
+            <button type="submit" className="btn-login " onClick={handleSubmit}>
               Login
             </button>
           </div>
+          <div className="validation">{message && message}</div>
           <div className="socio-login">
             <div>or continue with</div>
             <div className="google-logo">
