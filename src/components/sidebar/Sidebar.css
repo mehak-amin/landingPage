@@ -3,20 +3,18 @@
   margin: 0;
 }
 .sidebar {
-  overflow: hidden;
+  overflow: auto;
   /* overflow-y: scroll; */
 }
-.open {
-  /* display: none; */
-  left: -20%; /* Show sidebar by sliding it into view */
+/* .open {
+  left: -20%;
   transform: translateX(0);
-}
+} */
 
 .brand {
   padding: 1rem 2rem;
 }
 .brand-logo-holder {
-  /* height: 60px; */
   display: flex;
   column-gap: 0.5rem;
 }
@@ -44,9 +42,6 @@
   list-style: none;
   padding: 0.5rem 0;
 }
-/* .menu li span {
-  margin-left: 0.5rem;
-} */
 .icon-holder {
   width: 35px;
 }
@@ -58,7 +53,6 @@
 }
 @media (max-width: 1171px) {
   .logo-name {
-    /* display: none; */
     font-size: 1.3rem;
   }
 }

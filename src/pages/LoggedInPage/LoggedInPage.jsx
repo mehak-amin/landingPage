@@ -47,8 +47,10 @@ function LoggedInPage() {
         />
 
         <Dashboard />
-        <MessageBox showMessageBox={showMessageBox} />
-        {/* {showMessageBox && } */}
+        <MessageBox
+          showMessageBox={showMessageBox}
+          toggleMessageBox={toggleMessageBox}
+        />
       </div>
     </div>
   );

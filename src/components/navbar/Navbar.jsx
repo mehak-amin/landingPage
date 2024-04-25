@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+// import {useState} from "react";
 import "./Navbar.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

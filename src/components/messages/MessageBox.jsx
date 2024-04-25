@@ -3,7 +3,7 @@ import "./Messagebox.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const MessageBox = ({ showMessageBox }) => {
+const MessageBox = ({ showMessageBox, toggleMessageBox }) => {
   const messages = [
     {
       icon: faUser,
@@ -68,14 +68,15 @@ const MessageBox = ({ showMessageBox }) => {
   ];
 
   return (
-    <div className={`msg-box${showMessageBox ? "-active" : ""}`}>
+    <div className={`msg-box ${showMessageBox ? "active" : ""}`}>
+      {/* {`messages${showMessageBox ? "active" : ""}`} */}
       <div className="messages">
         <div className="message-heading d-flex align-items-center gap-4">
           <div>
             <p className="msg-heading m-0 p-0">Messages</p>
             <p className="msg-para m-0 p-0">All Team Members</p>
           </div>
-          <div className="close-button-holder">
+          <div className="close-button-holder" onClick={toggleMessageBox}>
             <FontAwesomeIcon
               icon={faTimes}
               size="sm"
