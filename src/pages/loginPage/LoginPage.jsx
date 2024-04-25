@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import signInImg from "../../assets/MacBook Air (2022).svg";
 import googleLogo from "../../assets/google.jpg";
 import "./LoginPage.css";
@@ -157,7 +157,7 @@ function LoginPage() {
           <div className="signUp-link-holder d-flex justify-content-center align-items-center">
             <span className="signUp-link ">
               <Link to="/" className="link">
-                Don't have an account click here!
+                Don&apos;t have an account click here!
               </Link>
             </span>
           </div>
