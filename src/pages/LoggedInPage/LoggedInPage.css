@@ -4,14 +4,34 @@
 }
 .logged-in-page {
   display: flex;
-  overflow-y: hidden;
+  overflow: hidden;
+  height: 100vh;
 }
 .sidebar-holder {
   width: 20%;
   border-right: 1px solid black;
+  overflow-y: auto;
 }
 .navbar-home-holder {
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 80%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5d4d4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8b8a8a;
 }
 @media (max-width: 1079px) {
   .sidebar-holder {

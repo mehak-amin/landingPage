@@ -1,4 +1,3 @@
-import React from "react";
 import SignInPage from "./pages/signInPage/SignInPage";
 import LoginPage from "./pages/loginPage/LoginPage";
 import LoggedInPage from "./pages/LoggedInPage/LoggedInPage";
