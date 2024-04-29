@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./LoggedInPage.css";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import Dashboard from "../dashboard/Dashboard";
+import MyScreen from "../MyScreen/MyScreen";
 
 function LoggedInPage() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -34,7 +34,7 @@ function LoggedInPage() {
       </div>
       <div className="navbar-home-holder">
         <Navbar toggleSidebar={toggleSidebar} />
-        <Dashboard />
+        <MyScreen />
       </div>
     </div>
   );

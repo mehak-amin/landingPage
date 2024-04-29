@@ -3,8 +3,12 @@
   margin: 0;
 }
 .navbar {
-  padding: 0.5rem 2rem;
-
+  padding: 0.5rem 3.3rem;
+  /* position: fixed; */
+  /* width: 80%; */
+  /* background-color: white; */
+  /* top: 0; */
+  /* z-index: 10; */
   border-bottom: 2px solid rgba(175, 245, 175, 0.559);
 }
 .navbar,
