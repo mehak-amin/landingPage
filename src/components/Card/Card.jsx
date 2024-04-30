@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import "../../pages/dashboard/Dashboard.css";
+import "../../pages/MyScreen/MyScreen.css";
 export default function CustomCard({ title, text }) {
   return (
     <div className="col-md-4 mb-4">
