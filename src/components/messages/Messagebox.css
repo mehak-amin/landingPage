@@ -1,9 +1,10 @@
 * {
   margin: 0;
   padding: 0;
+
 }
 .msg-box {
-  height: 470px;
+  height: 490px;
   width: 400px;
   display: flex;
   justify-content: center;
@@ -18,12 +19,13 @@
   /* top:50px; */
   /* right:-500px; */
   /* left:2000px; */
-  transition: right 0.5s ease-in-out;
+  transition: right 0.3s ease-in-out;
   position: absolute;
+  top:77px;
   right:-390px;
 }
 .active {
-  right:0;
+  right:-6px;
 }
 .messages {
   height: 470px;

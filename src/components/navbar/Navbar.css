@@ -5,6 +5,15 @@
 .navbar {
   padding: 0.5rem 2rem;
   border-bottom: 2px solid rgba(175, 245, 175, 0.559);
+  /* position: relative; */
+  position: fixed;
+  right: 0;
+  width: 80%;
+  z-index: 1000;
+  background-color: white;
+}
+.navbar-full {
+  width: 100%;
 }
 .navbar,
 .menu-search,
@@ -24,6 +33,11 @@
 }
 .menu-search {
   column-gap: 2rem;
+}
+.menuIcon,
+.profilePicture,
+.searchIcon {
+  cursor: pointer;
 }
 .msgIcon-bellIcon,
 .profile {
@@ -58,6 +72,31 @@
 .msgIcon,
 .userName {
   padding: 0.5rem;
+  cursor: pointer;
+}
+@media (max-width: 1090px) {
+  /* .sidebar {
+    width: 10%;
+    min-width: 80px;
+  } */
+  .navbar {
+    width: 90%;
+  }
+  .navbar-full {
+    width: 100%;
+  }
+}
+@media (max-width: 800px) {
+  /* .sidebar {
+    width: 10%;
+    min-width: 80px;
+  } */
+  .navbar {
+    width: calc(100% - 80px);
+  }
+  .navbar-full {
+    width: 100%;
+  }
 }
 @media (max-width: 768px) {
   .searchInput {

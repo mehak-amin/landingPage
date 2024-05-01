@@ -41,16 +41,14 @@ function LoggedInPage() {
         </div>
       )}
       <div className="navbar-home-holder">
-        <Navbar
-          toggleSidebar={toggleSidebar}
-          toggleMessageBox={toggleMessageBox}
-        />
-
+        <div>
+          <Navbar
+            toggleSidebar={toggleSidebar}
+            toggleMessageBox={toggleMessageBox}
+            showMessageBox={showMessageBox}
+          />
+        </div>
         <Dashboard />
-        <MessageBox
-          showMessageBox={showMessageBox}
-          toggleMessageBox={toggleMessageBox}
-        />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 * {
   padding: 0;
   margin: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   position: relative;
 }
 .logged-in-page {
@@ -12,6 +12,7 @@
 .sidebar-holder {
   width: 20%;
   border-right: 1px solid #6d6d6d;
+  overflow-y: auto;
 }
 .sidebar-holder.openn {
   left: -20%; /* Show sidebar by sliding it into view */
@@ -42,6 +43,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #8b8a8a;
 }
+
 @media (max-width: 1079px) {
   .sidebar-holder {
     width: 10%;

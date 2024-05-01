@@ -1,6 +1,7 @@
 import React from "react";
 // import {useState} from "react";
 import "./Navbar.css";
+import MessageBox from "../messages/MessageBox";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { Navbar } from "react-bootstrap";
@@ -13,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // navbar-expand navbar-light bg-light
-function Navbar({ toggleSidebar, toggleMessageBox }) {
+function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox }) {
   return (
     <div className="navbar ">
       <div className="menu-search">
@@ -53,6 +54,10 @@ function Navbar({ toggleSidebar, toggleMessageBox }) {
           <FontAwesomeIcon icon={faUser} size="sm" className="navbar-icons" />
         </div>
       </div>
+      <MessageBox
+        showMessageBox={showMessageBox}
+        toggleMessageBox={toggleMessageBox}
+      />
     </div>
   );
 }

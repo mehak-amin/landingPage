@@ -3,7 +3,8 @@
   margin: 0;
 }
 .sidebar {
-  overflow: auto;
+  /* height: auto; */
+  overflow-y: hidden;
   /* overflow-y: scroll; */
 }
 /* .open {
@@ -68,5 +69,17 @@
   }
   .icon-holder {
     width: 1.5rem;
+  }
+}
+@media (max-width: 1090px) {
+  .sidebar {
+    /* width: 10%; */
+    min-width: 80px;
+  }
+}
+@media (max-width: 800px) {
+  .sidebar {
+    /* width: 10%; */
+    min-width: 80px;
   }
 }
