@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./LoggedInPage.css";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -48,7 +48,7 @@ function LoggedInPage() {
             showMessageBox={showMessageBox}
           />
         </div>
-        <Dashboard />
+      
       </div>
     </div>
   );

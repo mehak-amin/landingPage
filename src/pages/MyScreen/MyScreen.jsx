@@ -6,8 +6,8 @@ import Card from "../../components/Card/Card";
 import { BarChart, Bar, XAxis } from "recharts";
 // import { OverlayTrigger, Popover } from "react-bootstrap";
 
-import "./Dashboard.css";
-function Dashboard() {
+import "./MyScreen.css";
+function MyScreen() {
   const [activeButton, setActiveButton] = useState("day");
   const generateData = () => {
     const data = [];
@@ -414,4 +414,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default MyScreen;

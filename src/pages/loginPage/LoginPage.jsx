@@ -8,12 +8,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URI from "../../../config";
 
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleFocus = () => {
@@ -24,44 +24,41 @@ function LoginPage() {
     setIsFocused(false);
   };
 
-
   // <---- LOGIC OF VALIDATIONS FOR LOGIN ---->
   // <---- INTRACTION WITH LOGIN API WITH AXIOS ---->
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
+    try {
       const response = await axios({
-        method: 'POST',
-        url:`${BASE_URI}/api/v1/users/login`,      // GETTING END POINT FROM CONFIG.JS
-        data:{
+        method: "POST",
+        url: `${BASE_URI}/api/v1/users/login`, // GETTING END POINT FROM CONFIG.JS
+        data: {
           email,
-          password
-        }
+          password,
+        },
       });
-      if(response.status === 200){
+      if (response.status === 200) {
         // console.log("logged in");
         navigate("/loggedinpage");
       }
       // console.log(response)
-    }
-    catch(err){
-      if(err.response.data.message === "Invalid Credentials"){
+    } catch (err) {
+      if (err?.response?.data?.message === "Invalid Credentials") {
         // console.log("Incorect Password");
-        setMessage('Incorect Password');
-      }
-      else if(err.response.data.message === "No user found with those credentials"){
-        setMessage('Invalid User');
-      }
-      else if(err.response.data.message === 'Provide all the credentials'){
-        setMessage('All feilds Required');
+        setMessage("Incorect Password");
+      } else if (
+        err?.response?.data?.message === "No user found with those credentials"
+      ) {
+        setMessage("Invalid User");
+      } else if (
+        err?.response?.data?.message === "Provide all the credentials"
+      ) {
+        setMessage("All feilds Required");
       }
       // console.log(err);
     }
   };
-
-
-
 
   return (
     <div className="login">
