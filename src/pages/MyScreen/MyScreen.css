@@ -1,0 +1,73 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.btn-disabled {
+  background-color: white;
+  color: black;
+  padding-block: 0.3rem;
+}
+.height-100vh {
+  height: 100vh;
+}
+.custom-bg-opacity {
+  background-color: rgba(128, 128, 128, 0.112);
+}
+.bg-lightgreen {
+  background-color: #36c449;
+}
+.bg-red {
+  background-color: #ff662f;
+}
+.bg-lightGray {
+  background-color: #d3d3d3;
+}
+.text-green {
+  color: #36c449;
+}
+.legend-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.legend-color {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+.legend-label {
+  font-size: 16px;
+}
+
+.barChart {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.barChart::-webkit-scrollbar {
+  width: 6px !important;
+  height: 3px;
+}
+
+.barChart::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb {
+  background: #d5d4d4 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb:hover {
+  background: #8b8a8a !important;
+}

@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.border-lightgreen {
+  border: 1px solid #dff9e2;
+}
+.bg-darkGray {
+  background-color: #6d6d6d;
+}
+.barChart {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.barChart::-webkit-scrollbar {
+  width: 6px !important;
+  height: 3px;
+}
+
+.barChart::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb {
+  background: #d5d4d4 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb:hover {
+  background: #8b8a8a !important;
+}
+.text-green {
+  color: #36c449;
+}
+.text-red {
+  color: #ff662f;
+}
+.text-blue {
+  color: #0062af;
+}

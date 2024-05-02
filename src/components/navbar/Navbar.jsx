@@ -1,5 +1,8 @@
 import React from "react";
+// import {useState} from "react";
 import "./Navbar.css";
+import MessageBox from "../messages/MessageBox";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { Navbar } from "react-bootstrap";
 import {
@@ -11,11 +14,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // navbar-expand navbar-light bg-light
-function Navbar({ toggleSidebar }) {
+function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox }) {
   return (
     <div className="navbar ">
       <div className="menu-search">
-        <div className="menuIcon" onClick={toggleSidebar}>
+        <div className="menuIcon" id="navButton" onClick={toggleMyNav}>
           <FontAwesomeIcon icon={faBars} size="sm" className="navbar-icons" />
         </div>
         <div className="searchInput">
@@ -34,7 +37,7 @@ function Navbar({ toggleSidebar }) {
         <div className="bellIcon">
           <FontAwesomeIcon icon={faBell} size="sm" className="navbar-icons" />
         </div>
-        <div className="msgIcon">
+        <div className="msgIcon" onClick={toggleMessageBox}>
           <FontAwesomeIcon
             icon={faMessage}
             size="sm"
@@ -51,6 +54,10 @@ function Navbar({ toggleSidebar }) {
           <FontAwesomeIcon icon={faUser} size="sm" className="navbar-icons" />
         </div>
       </div>
+      <MessageBox
+        showMessageBox={showMessageBox}
+        toggleMessageBox={toggleMessageBox}
+      />
     </div>
   );
 }

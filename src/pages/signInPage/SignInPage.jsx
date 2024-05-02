@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import signInImg from "../../assets/MacBook Air (2022).svg";
 import "./SignInPage.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBuilding,
@@ -200,6 +201,8 @@ const SignInForm = () => {
           </form>
         </div>
       </div>
+
+      {/* ------ */}
     </>
   );
 };
