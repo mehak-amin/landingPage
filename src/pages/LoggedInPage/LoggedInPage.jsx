@@ -3,6 +3,7 @@ import "./LoggedInPage.css";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
+import ManageApps from "../MannageApps/ManageApps";
 import MessageBox from "../../components/messages/MessageBox";
 
 function LoggedInPage() {
@@ -48,7 +49,6 @@ function LoggedInPage() {
             showMessageBox={showMessageBox}
           />
         </div>
-      
       </div>
     </div>
   );
