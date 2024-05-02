@@ -1,0 +1,667 @@
+.wrapper-div-manageapps{
+    /* background-color: aqua; */
+    height: 100%;
+    background-color: #F0F0F0;
+    width: auto;
+}
+h1, h2, h3, h4, h5, h6{
+    margin: 0;
+}
+
+/* <---- TOP DIV STYLING ----> */
+
+.top-div-manageapps{
+    background-color: white;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    
+
+}
+.heading-manageapps{
+    height: 50%;
+    width: 40%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.calendar-manageapps{
+    display: flex;
+    gap: 1vw;
+}
+.right-top-manageapps{
+    width: 50%;
+    /* background-color: red; */
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 2vw;
+    padding-left: 3vw;
+}
+.responsive-h4-manageapps{
+    display: none;
+}
+.left-top-manageapps{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: bisque; */
+    width: 50%;
+    padding-left: 4vw;
+
+}
+.add-manageapps{
+    height: 45%;
+    width: 38%;
+    background-color: #6D6D6D;
+    color: white;
+    font-weight: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4vw;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.404);
+    cursor: pointer;
+}
+.filter-manageapps{
+    color: rgb(36, 149, 52);
+}
+.calendar-responsive-manageapps{
+    display: none;
+}
+
+
+/* <------ CENTER DIV STYLING ------> */
+
+
+.center-div-manageapps{
+    height: 16vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* background-color: blue; */
+    /* border-bottom: 1px solid black; */
+}
+.center-top-manageapps{
+    height: 50%;
+    display: flex;
+    /* background-color: red; */
+}
+
+.search-icon{
+    background-color: white;
+    height: 50%;
+    width: 10%;
+    border-top-right-radius: 0.3vw;
+    border-bottom-right-radius: 0.3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-manageapps{
+    /* background-color: brown; */
+    height: 100%;
+    width: 28%;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+}
+.search-manageapps input{
+    height: 50%;
+    border: none;
+    outline: none;
+    border-top-left-radius: 0.3vw;
+    border-bottom-left-radius: 0.3vw;
+    padding-left: 0.5vw;
+    
+}
+.center-top-right-manageapps{
+    /* background-color: aqua; */
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    padding-left: 1vw;
+}
+.center-manageapps-sort{
+    height: 50%;
+    width: 15%;
+    background-color:white;
+    border-radius: 0.3vw;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.center-bottom-manageapps{
+    height: 50%;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 4vw;
+    /* overflow-x: auto; */
+}
+.center-bottom-buttons-manageapps{
+    height: 78%;
+    width: 13%;
+    background-color: white;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border-top-left-radius: 0.4vw;
+    border-top-right-radius: 0.4vw;
+}
+.center-bottom-buttons-manageapps h5{
+    font-weight: 400;
+    font-size: 1.2vw;
+}
+
+
+/* <--------- BOTTOM DIV STYLING -----------> */
+
+
+.bottom-div-manageapps{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* background-color: white; */
+}
+.content-bottom-div-manageapps{
+    height: 40%;
+    width: 95%;
+    background-color: white;
+}
+.top-div-bottom-manageapps{
+    height: 11.5%;
+    width: 100%;
+    background-color: #B3B3B3;
+    display: flex;
+}
+.left-top-div-bottom-manageapps{
+    width: 50%;
+    /* background-color: aqua; */
+    display: flex;
+    align-items: center;
+    padding-left: 1.2vw;
+}
+.left-top-div-bottom-manageapps h5{
+    text-decoration: underline;
+    color: white;
+}
+.right-top-div-bottom-manageapps{
+    width: 50%;
+    /* background-color: aliceblue; */
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 2vw;
+    gap: 1.5vw;
+}
+.right-top-div-bottom-manageapps h5{
+    color: white;
+}
+.table-container-manageapps{
+    width: 100%;
+    height: 100%;
+    /* background-color: aqua; */
+}
+.table-container-manageapps table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-container-manageapps table tr {
+    border-bottom: 1px solid #B3B3B3;
+    display: flex;
+    gap: 23vw;
+    height: 10%;
+    padding: 0 2vw 0 2vw;
+}
+
+.table-container-manageapps table td,th {
+    padding: 10px;
+    border-right: 1px solid transparent;
+    flex: 1;
+    text-align: center;
+    
+}
+
+.table-container-manageapps table th{
+    height: 4vw;
+    border-bottom: none;
+}
+.table-container-manageapps table .table-headding-manageapps{
+    border-bottom: none;
+}
+.table-data-appname-manageapps{
+    display: flex;
+    justify-content: start;
+    gap: 0.5vw;
+}
+.table-data-appname-manageapps img{
+    height: 100%;
+    width: 25%;
+}
+.responsive-table-manageapps{
+    display: none;
+}
+
+
+/* <------------ POPUP ADD APP -------------> */
+
+.addapp-popup-wrapper{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #00000096;
+    top: 0;
+    left: 0;
+    animation-name: opacity;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    
+}
+.addapp-popup-manageapps {
+    height: 80vh;
+    width: 70vw;
+    background-color: white;
+    position: fixed;
+    top: 20%;
+    /* right: 10%; Adjusted to open from the top right */
+    transition: all 0.5s ease-in-out;
+    /* color: rgb(255, 255, 255); */
+    animation-name: bigout;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+    /* display: flex;
+    justify-content: end; */
+}
+
+@keyframes bigout {
+    from {
+        height: 0;
+        width: 0;
+        right: 0; /* Start from the top right corner */
+        top: 0;
+        border-top-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        /* border-bottom-left-radius: 50%; */
+        
+    }
+    to {
+        height: 55vh;
+        width: 30vw;
+        right: 30%; /* Adjusted to open from the top right */
+        /* border-radius: 0; */
+    }
+}
+
+@keyframes opacity {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.addapp-top-manageapps{
+    height: 12%;
+    width: 100%;
+    background-color: #6D6D6D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.8vw 0 1.8vw;
+    color: white;
+}
+
+.addapp-top-manageapps div{
+    cursor: pointer;
+}
+
+.addapp-center-manageapps{
+    /* background-color: blue; */
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid #B3B3B3;
+    gap: 1vw;
+    padding-top: 2vw;
+}
+.addapp-center-manageapps div{
+    height: 38%;
+    width: 95%;
+    /* border-bottom: 1px solid grey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 0.5vw;
+}
+.addapp-center-manageapps div input,select{
+    height: 60%;
+    width: 100%;
+    border-radius: 0.5vw;
+    border: 1px solid #b3b3b3;
+    padding-left: 2vw;
+}
+.addapp-center-manageapps div h6{
+    text-align: start;
+}
+.addapp-bottom-manageapps{
+    height: 30%;
+    width: 100%;
+    /* background-color: blue; */
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 2vw;
+    gap: 1vw;
+}
+.addapp-cancle-bottom-manageapps{
+    height: 25%;
+    width: 25%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    border: 1px solid #B3B3B3;
+}
+.addapp-invite-bottom-manageapps{
+    height: 25%;
+    width: 25%;
+    background-color: #6D6D6D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    color: white;
+}
+
+
+
+
+/* <----------- MEDIA QUERIES -------------> */
+
+@media screen and (max-width:840px){
+    .wrapper-div-manageapps{
+        width: 86.9vw;
+        background-color: #F0F0F0;
+        height: 95vh;
+    }   
+    .top-div-manageapps{
+        /* border-bottom: 1px solid #B3B3B3; */
+        display: block;
+        height: 20%;
+        background-color: transparent;
+    }
+    .heading-manageapps{
+        height: 70%;
+        width: 70%;
+        border: 3px solid #ffffff;
+        background-color: #F0F0F0;
+        border-radius: 0.8vw;
+    }
+    .left-top-manageapps{
+        height: 50%;
+        padding-left: 4vw;
+    }
+    .right-top-manageapps{
+        height: 50%;
+        padding-left: 4vw;
+    }
+    .heading-manageapps h4{
+        font-size: 3.5vw;
+    }
+    .add-manageapps{
+        width: 70%;
+        height: 45%;
+        letter-spacing: 0.2vw;
+
+    }
+    .calendar-manageapps{
+        display: none;
+    }
+    .filter-manageapps{
+        display: none;
+    }
+
+    /* <---------- MEDIA QUERIES FOR CENTER SECTION -----------> */
+
+    .center-div-manageapps{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        height: 20%;
+        
+
+    }
+    .center-top-manageapps{
+        display:block ;
+        height: 80%;
+        justify-content: center;
+        border-bottom: 1px solid #B3B3B3;
+    }
+    .center-bottom-manageapps div{
+        height: 50%;
+        width: 10%;
+        border-radius: 0.5vw;
+    }
+    .center-bottom-manageapps div h5{
+        font-size: 2vw;
+    }
+
+    .center-top-right-manageapps{
+        height: 50%;
+        width: 100%;
+        justify-content: center;
+        /* margin-left: 4vw; */
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin-top: 0.4vw;
+    }
+    .search-manageapps{
+        height: 50%;
+        align-items: start;
+        width: 100%;
+        /* padding-right: 7vw; */
+        padding-top: 2vw;
+        display: flex;
+        justify-content: center;
+        
+    }
+    .search-manageapps input{
+        height: 100%;
+        width: 80%;
+        border-top-left-radius: 1.2vw;
+        border-bottom-left-radius: 1.2vw;
+        padding-left: 2vw;
+    }
+    .search-manageapps div{
+        height: 100%;
+        border-top-right-radius: 1.2vw;
+        border-bottom-right-radius: 1.2vw;
+    }
+    .center-manageapps-sort{
+        height: 70%;
+        width: 90%;
+        border-radius: 1.2vw;
+        justify-content: center;
+        gap: 1vw;
+    }
+
+    /* <------------ MEDIA QUERIES FOR BOTTOM STYLING -------------> */
+
+
+    .bottom-div-manageapps{
+       height: max-content;
+    }
+
+    .content-bottom-div-manageapps{
+        height: max-content;
+        display: flex;
+        flex-direction: column;
+        gap: 1vw;
+        background-color: transparent;
+    }
+    .top-div-bottom-manageapps{
+        background-color: white;
+        color: black;
+        height: 6vh;
+    }
+    .top-div-bottom-manageapps div h5{
+        color: black;
+    }
+    .table-container-manageapps{
+        display: none;
+    }
+    .responsive-table-manageapps{
+        display: block;
+        
+    }
+    .responsive-table-manageapps table {
+        height: 25vh;
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 0.5vw; /* Border radius for the table */
+        background-color: white; /* Background color for the table */
+      }
+      
+      .responsive-table-manageapps table tr {
+        border-bottom: 1px solid #ddd; /* Add border to bottom of each row */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw 0 5vw;
+        height: 33%;
+      }
+      
+      .responsive-table-manageapps table tr:last-child {
+        border-bottom: none; /* Remove border from the last row */
+      }
+      
+      .responsive-table-manageapps table td{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+      }
+      
+      .responsive-table-manageapps h6 {
+        margin: 0; /* Remove margin for h6 tags */
+        
+      }
+      .table-data-appname-manageapps img{
+        height: 100%;
+        width: 35%;
+      }      
+      .table-data-appname-manageapps{
+        width: min-content;
+      }
+      .responsive-table-manageapps table tr h6{
+        font-size: 3vw;
+      }
+      .addapp-popup-manageapps{
+        width: 90vw;
+        animation-name: bigout-responsive;
+        
+      }
+      @keyframes bigout-responsive {
+        from {
+            height: 0;
+            width: 0;
+            right: 0; /* Start from the top right corner */
+            top: 0;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            /* border-bottom-left-radius: 50%; */
+            
+        }
+        to {
+            height: 55vh;
+            width: 50vw;
+            right: 20%; /* Adjusted to open from the top right */
+            /* border-radius: 0; */
+        }
+    }
+    
+}
+
+@media screen and (max-width:450px){
+    .wrapper-div-manageapps{
+        width: 79vw;
+        background-color: #F0F0F0;
+        height: 95vh;
+    }
+    .top-div-manageapps{
+        height: 15%;
+    }
+    .heading-manageapps{
+        height: 60%;
+        width: 90%;
+        border: 3px solid #ffffff;
+        background-color: #F0F0F0;
+        border-radius: 0.8vw;
+    }
+    .heading-manageapps h4{
+        font-size: 4.5vw;
+        font-weight: 700;
+    }
+    .add-manageapps{
+        width: 95%;
+        height: 45%;
+        letter-spacing: 0.2vw;
+    }
+    .add-manageapps h5{
+        font-size: 3vw;
+    }
+    .search-manageapps{
+        height: 40%;
+    }
+    .top-div-bottom-manageapps{
+        height: 5vh;
+    }
+    .top-div-bottom-manageapps h5{
+        font-size: 2.5vw;
+        font-weight: 700;
+    }
+    .content-bottom-div-manageapps{
+        gap: 2vh;
+    }
+    .responsive-table-manageapps table tr td h6{
+        font-size: 4vw;
+    }
+    .addapp-popup-manageapps{
+        animation-name: bigout-responsive;
+        
+      }
+      @keyframes bigout-responsive {
+        from {
+            height: 0;
+            width: 0;
+            right: 0; /* Start from the top right corner */
+            top: 0;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            /* border-bottom-left-radius: 50%; */
+            
+        }
+        to {
+            height: 55vh;
+            width: 80vw;
+            right: 10%; /* Adjusted to open from the top right */
+            /* border-radius: 0; */
+        }
+    }
+}

@@ -3,6 +3,10 @@ import "./LoggedInPage.css";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Teamates from "../Teammates/Teammates";
+import ManageApps from "../MannageApps/ManageApps";
+
 
 function LoggedInPage() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -33,8 +37,13 @@ function LoggedInPage() {
         <Sidebar isSideBarOpen={isSideBarOpen} />
       </div>
       <div className="navbar-home-holder">
+
         <Navbar toggleSidebar={toggleSidebar} />
-        <Dashboard />
+        {/* <Dashboard/> */}
+        {/* <Teamates/> */}
+        <ManageApps/>
+        
+        
       </div>
     </div>
   );
