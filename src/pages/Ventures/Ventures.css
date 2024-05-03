@@ -1,0 +1,33 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "Kumbh Sans", sans-serif;
+}
+.bg-gray {
+  background-color: #6d6d6d;
+}
+.bg-body-light {
+  background-color: #f0f0f0;
+}
+.hoverEffect:hover {
+  text-decoration: underline;
+}
+.custom-top {
+  top: 0.7rem;
+}
+.custom-end {
+  right: 0.5rem;
+}
+input::placeholder {
+  font-size: 0.9rem;
+}
+.gap-6 {
+  gap: 5rem;
+}
+.bg-customGray {
+  background-color: #6d6d6d80;
+}
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -4,6 +4,7 @@ import { LuFilter } from "react-icons/lu";
 import { CiCalendar } from "react-icons/ci";
 import Card from "../../components/Card/Card";
 import { BarChart, Bar, XAxis } from "recharts";
+import { LineChart, Line } from "recharts";
 // import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import "./MyScreen.css";
@@ -315,7 +316,7 @@ function MyScreen() {
                 width={data.length * 28}
                 height={300}
                 data={data}
-                barSize={20} // Adjust bar size for better visibility
+                barSize={20}
                 barGap={0}
                 barCategoryGap={1}
                 margin={{ top: 30, right: 40, bottom: 30, left: 40 }}

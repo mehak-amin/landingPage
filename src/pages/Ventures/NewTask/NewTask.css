@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "Kumbh Sans", sans-serif;
+}
+.bg-gray {
+  background-color: #6d6d6d;
+}
+.bg-body-light {
+  background-color: #f0f0f0;
+}
+.bg-lightGray {
+  background-color: #d6d6d6;
+}
