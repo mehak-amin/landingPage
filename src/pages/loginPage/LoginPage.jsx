@@ -38,6 +38,7 @@ function LoginPage() {
           password,
         },
       });
+      console.log(response.data);
       if (response.status === 200) {
         // console.log("logged in");
         navigate("/loggedinpage");

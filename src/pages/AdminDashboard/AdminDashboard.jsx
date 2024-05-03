@@ -7,8 +7,14 @@ import { LuFilter } from "react-icons/lu";
 import { CiCalendar } from "react-icons/ci";
 import { CgSandClock } from "react-icons/cg";
 import { BsExclamationSquare } from "react-icons/bs";
-import { BarChart, Bar, XAxis } from "recharts";
-import { AreaChart, Area, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  AreaChart,
+  Area,
+  ResponsiveContainer,
+} from "recharts";
 import { FaUserCheck } from "react-icons/fa";
 import { RxEyeNone } from "react-icons/rx";
 import { useState, useEffect, useRef } from "react";
@@ -19,21 +25,16 @@ export default function AdminDashboard() {
 
   const generateData = () => {
     const data = [];
-    const total = 1; // Total sum of productive, unproductive, and neutral
-
-    // Generate time slots from '10:00 AM' to '5:00 PM' with 10-minute intervals
+    const total = 1;
     for (let hour = 10; hour <= 17; hour++) {
-      // hours from 10 AM to 5 PM
       for (let minute = 0; minute < 60; minute += 30) {
-        // 10-minute intervals
         const timeSlot = `${(hour % 12).toString().padStart(2, "0")}:${minute
           .toString()
           .padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`;
 
-        // Generate random values for productive, unproductive, and neutral
-        const productive = Math.random() * total; // Random value between 0 and 1
-        const unproductive = Math.random() * (total - productive); // Random value between 0 and remaining total
-        const neutral = total - (productive + unproductive); // Remaining total
+        const productive = Math.random() * total;
+        const unproductive = Math.random() * (total - productive);
+        const neutral = total - (productive + unproductive);
 
         data.push({ timeSlot, productive, unproductive, neutral });
       }
@@ -161,7 +162,7 @@ export default function AdminDashboard() {
               <p>Productivity Bar</p>
               <ul className="d-flex list-unstyled gap-4">
                 <li className="text-green">Productive</li>
-                <li className="text-red">UnProductive</li>
+                <li className="text-red">Unproductive</li>
                 <li className="text-blue">Neutral</li>
               </ul>
             </div>
@@ -170,7 +171,7 @@ export default function AdminDashboard() {
                 width={data.length * 34}
                 height={350}
                 data={data}
-                barSize={20} // Adjust bar size for better visibility
+                barSize={20}
                 barGap={0}
                 barCategoryGap={15}
                 margin={{ top: 30, right: 40, bottom: 30, left: 40 }}

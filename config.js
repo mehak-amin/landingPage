@@ -1,3 +1,3 @@
-const BASE_URI = "http://192.168.1.27:5050"
+const BASE_URI = "http://tracker.ap-south-1.elasticbeanstalk.com/";
 
 export default BASE_URI;
