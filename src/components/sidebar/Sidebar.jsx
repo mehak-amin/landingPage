@@ -18,7 +18,7 @@ import {
   faFileExport,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
+// import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
 function Sidebar({ isSideBarOpen }) {
   const sections = [
@@ -56,7 +56,7 @@ function Sidebar({ isSideBarOpen }) {
   ];
 
   return (
-    <div className={`sidebar ${isSideBarOpen ? "open" : ""}`}>
+    <div className="sidebar">
       <div className="brand">
         <div className="brand-logo-holder ">
           <p className="logo-name m-0 p-0">App Tracker</p>
