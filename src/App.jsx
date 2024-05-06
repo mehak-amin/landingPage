@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
 // import LoggedInPage from "./pages/LoggedInPage/LoggedInPage";
 import { Routes, Route } from "react-router-dom";
 
+
 function App() {
   return (
     <Routes>
@@ -12,6 +13,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/loggedinpage" element={<LoggedInPage />} />
       <Route path="/dashboard" element={<AdminDashboard />} />
+  
     </Routes>
   );
 }
