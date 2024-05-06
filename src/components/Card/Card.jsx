@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import "../../pages/MyScreen/MyScreen.css";
+// import "../../pages/MyScreen/MyScreen.css";
 // import {
 //   LineChart,
 //   Line,

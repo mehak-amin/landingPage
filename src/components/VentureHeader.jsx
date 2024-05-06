@@ -1,6 +1,6 @@
 import ButtonActive from "./Button/ButtonActive";
 import ButtonInactive from "./Button/ButtonInactive";
-import { Link } from "react-router-dom";
+
 export default function VentureHeader({ heading, name, setShow }) {
   return (
     <div className="container mt-1 p-0">

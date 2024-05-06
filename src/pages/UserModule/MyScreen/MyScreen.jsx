@@ -2,9 +2,9 @@ import HSBar from "react-horizontal-stacked-bar-chart";
 import { useState } from "react";
 import { LuFilter } from "react-icons/lu";
 import { CiCalendar } from "react-icons/ci";
-import Card from "../../components/Card/Card";
+import Card from "../../../components/Card/Card";
 import { BarChart, Bar, XAxis } from "recharts";
-import { LineChart, Line } from "recharts";
+// import { LineChart, Line } from "recharts";
 // import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import "./MyScreen.css";
