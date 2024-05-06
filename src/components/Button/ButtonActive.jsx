@@ -6,10 +6,7 @@ export default function ButtonActive({ heading, setShow }) {
       onClick={() => heading === "New Project" && setShow(true)}
     >
       {heading === "New Task" ? (
-        <Link
-          to="/projects/newTask"
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
+        <Link to="newTask" style={{ textDecoration: "none", color: "inherit" }}>
           {heading}
         </Link>
       ) : (
