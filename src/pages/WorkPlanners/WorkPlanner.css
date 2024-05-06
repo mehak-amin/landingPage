@@ -1,0 +1,79 @@
+.fw-600 {
+  font-weight: 600;
+}
+.fs-24 {
+  font-size: 24px;
+}
+.rounded-sm {
+  border-radius: 4px;
+}
+.px-7 {
+  padding: 0 5rem;
+}
+.single-line-btn {
+  white-space: nowrap;
+}
+.fs-16 {
+  font-size: 1rem;
+}
+.line-height-custom {
+  line-height: 3; /* Set line height equal to font size */
+}
+.bg-work {
+  background-color: #d9d9d9;
+}
+.bg-sick {
+  background-color: #bf8450;
+}
+.bg-trip {
+  background-color: #8c98a5;
+}
+@media (max-width: 1096px) {
+  .px-7 {
+    padding: 0 1rem;
+  }
+}
+/* ------------------- */
+.calandar-text-size {
+  font-size: 14px;
+}
+.radio-btn-width {
+  width: 4rem;
+}
+#calandar-holder,
+#calandar-icon {
+  height: 30px;
+  width: 30px;
+}
+#filter-holder,
+#filter-icon {
+  height: 24px;
+  width: 24px;
+}
+#filter-icon {
+  color: #249534;
+}
+.cal-btn {
+  width: 4rem;
+}
+.add-btn {
+  font-size: 12px;
+  width: 9em;
+}
+.main-content {
+  background-color: #f0f0f0;
+}
+
+.sub-pages ul {
+  padding: 0.1rem 0;
+}
+
+.sub-pages ul li:hover {
+  background-color: gray;
+}
+.table-holder {
+  overflow-x: auto;
+}
+table {
+  min-width: 60rem;
+}

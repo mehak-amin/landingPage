@@ -4,7 +4,7 @@ import googleLogo from "../../assets/google.jpg";
 import "./LoginPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faEye } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URI from "../../../config";
 
@@ -14,7 +14,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  const [user, setUser] = useState("");
+  // const navigate = useNavigate();
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -24,42 +25,36 @@ function LoginPage() {
     setIsFocused(false);
   };
 
-  // <---- LOGIC OF VALIDATIONS FOR LOGIN ---->
-  // <---- INTRACTION WITH LOGIN API WITH AXIOS ---->
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios({
-        method: "POST",
-        url: `${BASE_URI}/api/v1/users/login`, // GETTING END POINT FROM CONFIG.JS
-        data: {
-          email,
-          password,
-        },
+    axios
+      .post(`${BASE_URI}/api/v1/users/login`, { email, password })
+      .then((response) => {
+        console.log(response.data.userData.token);
+        setUser(response.data.userData);
+        const token = response.data.userData.token;
+        localStorage.setItem("token", token);
+      })
+      .catch((err) => {
+        if (err?.response?.data?.message === "Invalid Credentials") {
+          setMessage("Incorrect Password");
+        } else if (
+          err?.response?.data?.message ===
+          "No user found with those credentials"
+        ) {
+          setMessage("Invalid User");
+        } else if (
+          err?.response?.data?.message === "Provide all the credentials"
+        ) {
+          setMessage("All fields Required");
+        }
       });
-      console.log(response.data);
-      if (response.status === 200) {
-        // console.log("logged in");
-        navigate("/loggedinpage");
-      }
-      // console.log(response)
-    } catch (err) {
-      if (err?.response?.data?.message === "Invalid Credentials") {
-        // console.log("Incorect Password");
-        setMessage("Incorect Password");
-      } else if (
-        err?.response?.data?.message === "No user found with those credentials"
-      ) {
-        setMessage("Invalid User");
-      } else if (
-        err?.response?.data?.message === "Provide all the credentials"
-      ) {
-        setMessage("All feilds Required");
-      }
-      // console.log(err);
-    }
   };
+
+  const token = localStorage.getItem("token");
+  if (token && user) {
+    return <Navigate to="/admin/dashboard" />;
+  }
 
   return (
     <div className="login">
@@ -155,7 +150,7 @@ function LoginPage() {
           <div className="signUp-link-holder d-flex justify-content-center align-items-center">
             <span className="signUp-link ">
               <Link to="/" className="link">
-                Don&apos;t have an account click here!
+                Don't have an account click here!
               </Link>
             </span>
           </div>
