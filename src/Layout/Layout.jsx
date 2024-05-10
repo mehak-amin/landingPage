@@ -3,10 +3,11 @@ import { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/Footer";
-export default function Layout() {
+export default function Layout({ role }) {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const sideBarRef = useRef(null);
+  // const roll = "admin";
 
   const toggleMessageBox = () => {
     console.log("msg box");
@@ -35,7 +36,7 @@ export default function Layout() {
     <div className="logged-in-page">
       {isSideBarOpen || (
         <div className="sidebar-holder" ref={sideBarRef}>
-          <Sidebar isSideBarOpen={isSideBarOpen} />
+          <Sidebar isSideBarOpen={isSideBarOpen} role={role} />
         </div>
       )}
       <div className="navbar-home-holder">
