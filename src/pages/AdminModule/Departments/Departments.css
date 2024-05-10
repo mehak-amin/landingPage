@@ -1,0 +1,842 @@
+.wrapper-div-departments{
+    /* background-color: aqua; */
+    height: 100vh;
+    background-color: #F0F0F0;
+    width: auto;
+    overflow-y: scroll;
+    
+    
+}
+h1, h2, h3, h4, h5, h6{
+    margin: 0;
+}
+
+/* <---- TOP DIV STYLING ----> */
+
+.top-div-departments{
+    background-color: white;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    
+
+}
+.heading-departments{
+    height: 50%;
+    width: 40%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+.calendar-departments{
+    display: flex;
+    gap: 1vw;
+}
+.right-top-departments{
+    width: 50%;
+    /* background-color: red; */
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 2vw;
+    padding-left: 3vw;
+}
+.responsive-h4-departments{
+    display: none;
+}
+.left-top-departments{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: bisque; */
+    width: 50%;
+    padding-left: 4vw;
+
+}
+.add-departments{
+    height: 45%;
+    width: 38%;
+    background-color: #6D6D6D;
+    color: white;
+    font-weight: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4vw;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.404);
+    cursor: pointer;
+}
+.filter-departments{
+    color: rgb(36, 149, 52);
+}
+.calendar-responsive-departments{
+    display: none;
+}
+
+
+/* <------ CENTER DIV STYLING ------> */
+
+
+.center-div-departments{
+    height: 16vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* background-color: blue; */
+    /* border-bottom: 1px solid black; */
+}
+.center-top-departments{
+    height: 50%;
+    display: flex;
+    /* background-color: red; */
+}
+
+.search-icon{
+    background-color: white;
+    height: 50%;
+    width: 10%;
+    border-top-right-radius: 0.3vw;
+    border-bottom-right-radius: 0.3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-departments{
+    /* background-color: brown; */
+    height: 100%;
+    width: 28%;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+}
+.search-departments input{
+    height: 50%;
+    border: none;
+    outline: none;
+    border-top-left-radius: 0.3vw;
+    border-bottom-left-radius: 0.3vw;
+    padding-left: 0.5vw;
+    
+}
+.center-top-right-departments{
+    /* background-color: aqua; */
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+    padding-left: 1vw;
+}
+.center-departments-sort{
+    height: 50%;
+    width: 15%;
+    background-color:white;
+    border-radius: 0.3vw;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.center-bottom-departments{
+    height: 50%;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 4vw;
+    /* overflow-x: auto; */
+}
+.center-bottom-buttons-departments{
+    height: 78%;
+    width: 13%;
+    background-color: white;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border-top-left-radius: 0.4vw;
+    border-top-right-radius: 0.4vw;
+}
+.center-bottom-buttons-departments h5{
+    font-weight: 400;
+    font-size: 1.2vw;
+}
+
+
+/* <--------- BOTTOM DIV STYLING -----------> */
+
+
+.bottom-div-departments{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* background-color: white; */
+}
+.content-bottom-div-departments{
+    height: max-content;
+    width: 95%;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    
+    
+}
+.top-div-bottom-departments{
+    height: 6vh;
+    width: 100%;
+    background-color: #B3B3B3;
+    display: flex;
+}
+.left-top-div-bottom-departments{
+    width: 50%;
+    /* background-color: aqua; */
+    display: flex;
+    align-items: center;
+    padding-left: 1.2vw;
+}
+.left-top-div-bottom-departments h5{
+    text-decoration: underline;
+    color: white;
+}
+.right-top-div-bottom-departments{
+    width: 50%;
+    /* background-color: aliceblue; */
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 2vw;
+    gap: 1.5vw;
+}
+.right-top-div-bottom-departments h5{
+    color: white;
+}
+.table-container-departments {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+}
+
+.table-container-departments table {
+    width: 100%;
+    height: 15vh;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 0.5vw;
+}
+
+.table-container-departments th,
+.table-container-departments td {
+    text-align: center;
+    padding: 10px;
+}
+
+.table-container-departments tr td:last-child{
+    position: relative;
+}
+
+.table-container-departments tr {
+    height: 50%;
+}
+
+/* .table-container-departments th {
+  
+}
+
+.table-container-departments tr:nth-child(even) {
+   
+} */
+.table-data-appname-departments{
+    display: flex;
+    justify-content: center;
+    gap: 0.5vw;
+}
+.responsive-table-departments{
+    display: none;
+}
+.date-responsive-departments h6{
+    display: none;
+}
+
+.table-container-departments tr td:last-child div{
+        /* background-color: blue; */
+        border: 1px solid grey;
+        background-color: white;
+        color: black;
+        position: absolute;
+        animation-name: deleteAndEditPopUp;
+        transition: all 0.5s ease-in-out;
+        animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+    z-index: 1;
+}
+@keyframes deleteAndEditPopUp {
+    from {
+        height: 0;
+        width: 30%;
+        right: 40%; /* Start from the top right corner */
+        bottom: -100%;
+        
+    }
+    to {
+        height: 300%;
+        width:30%;
+        right: 40%; /* Adjusted to open from the top right */
+        bottom: -400%;
+        /* border-radius: 0; */
+    }
+}
+.table-container-departments tr td:last-child div h6{
+    height: 50%;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    padding-left: 0.5vw;
+    color: red;
+    cursor: pointer;
+}
+
+.table-container-departments tr td:last-child div h6:first-child{
+    color: black;
+    border-bottom: 1px solid #B3B3B3;
+}
+
+.table-container-departments tr td h6:last-child{
+    cursor: pointer;
+}
+
+
+/* <------------ POPUP ADD APP -------------> */
+
+.create-department-popup-wrapper{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #00000096;
+    top: 0;
+    left: 0;
+    animation-name: opacity;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    z-index: 1000;
+}
+.create-department-popup-departments {
+    height: 80vh;
+    width: 70vw;
+    background-color: white;
+    position: fixed;
+    top: 20%;
+    /* right: 10%; Adjusted to open from the top right */
+    transition: all 0.5s ease-in-out;
+    /* color: rgb(255, 255, 255); */
+    animation-name: bigout;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+    /* display: flex;
+    justify-content: end; */
+}
+
+@keyframes bigout {
+    from {
+        height: 0;
+        width: 0;
+        right: 0; /* Start from the top right corner */
+        top: 0;
+        border-top-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        /* border-bottom-left-radius: 50%; */
+        
+    }
+    to {
+        height: 40vh;
+        width: 30vw;
+        right: 30%; /* Adjusted to open from the top right */
+        /* border-radius: 0; */
+    }
+}
+
+@keyframes opacity {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+.create-department-top-departments{
+    height: 15%;
+    width: 100%;
+    background-color: #6D6D6D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.8vw 0 1.8vw;
+    color: white;
+}
+
+.create-department-top-departments div{
+    cursor: pointer;
+}
+
+.create-department-center-departments{
+    /* background-color: blue; */
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid #B3B3B3;
+    gap: 1vw;
+    padding-top: 2vw;
+}
+.create-department-center-departments div{
+    height: 80%;
+    width: 95%;
+    /* border-bottom: 1px solid grey; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 0.5vw;
+}
+.create-department-center-departments div input,select{
+    height: 60%;
+    width: 100%;
+    border-radius: 0.5vw;
+    border: 1px solid #b3b3b3;
+    padding-left: 2vw;
+}
+.create-department-center-departments div h6{
+    text-align: start;
+}
+.create-department-bottom-departments{
+    height: 30%;
+    width: 100%;
+    /* background-color: blue; */
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 2vw;
+    gap: 1vw;
+}
+.create-department-cancle-bottom-departments{
+    height: 35%;
+    width: 25%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    border: 1px solid #B3B3B3;
+    cursor: pointer;
+}
+.create-department-invite-bottom-departments{
+    height: 35%;
+    width: 25%;
+    background-color: #6D6D6D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.2vw;
+    color: white;
+    cursor: pointer;
+}
+
+
+
+.delete-popup-departments{
+    position: absolute;
+    height: 40%;
+    width: 60%;
+    background-color: white;
+    transition: all 0.5s ease-in-out;
+    animation-name: deletePopUp;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+}
+
+
+@keyframes deletePopUp {
+    from {
+        height: 0;
+        width: 40vw;
+        right: 30%; /* Start from the top right corner */
+        top: 0;
+        /* border-top-left-radius: 50%;
+        border-bottom-right-radius: 50%; */
+        /* border-bottom-left-radius: 50%; */
+        
+    }
+    to {
+        height: 40vh;
+        width: 40vw;
+        right: 30%; /* Adjusted to open from the top right */
+        /* border-radius: 0; */
+    }
+}
+
+.wrapper-delete-popup-departments{
+    z-index: 1000;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #00000096;
+    top: 0;
+    left: 0;
+    animation-name: opacity;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+@keyframes opacity {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+.delete-department-top-departments{
+    height: 15%;
+    width: 100%;
+    background-color: #6D6D6D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.8vw 0 1.8vw;
+    color: white;
+}
+
+.delete-department-top-departments div{
+    cursor: pointer;
+}
+.delete-department-center-departments{
+    height: 50%;
+    width: 100%;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #4e4e4e;
+    border-bottom: 1px solid #4e4e4e;
+}
+.delete-department-bottom-departments{
+    height: 35%;
+    /* background-color: aquamarine; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4vw;
+}
+.delete-department-bottom-departments h5{
+    height: 50%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    cursor: pointer;
+}
+
+.delete-department-bottom-departments h5:first-child{
+    border: 1px solid #4e4e4e;
+}
+.delete-department-bottom-departments h5:last-child{
+    background-color: #ff662f;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: white;
+
+}
+
+
+
+/* <----------- MEDIA QUERIES -------------> */
+
+@media screen and (max-width:840px){
+    .wrapper-div-departments{
+        width: 86.9vw;
+        background-color: #F0F0F0;
+        height: 95vh;
+    }   
+    .top-div-departments{
+        /* border-bottom: 1px solid #B3B3B3; */
+        display: block;
+        height: 20%;
+        background-color: transparent;
+    }
+    .heading-departments{
+        height: 70%;
+        width: 70%;
+        border: 3px solid #ffffff;
+        background-color: #F0F0F0;
+        border-radius: 0.8vw;
+    }
+    .left-top-departments{
+        height: 50%;
+        padding-left: 4vw;
+    }
+    .right-top-departments{
+        height: 50%;
+        padding-left: 4vw;
+    }
+    .heading-departments h4{
+        font-size: 3.5vw;
+    }
+    .add-departments{
+        width: 70%;
+        height: 45%;
+        letter-spacing: 0.2vw;
+
+    }
+    .calendar-departments{
+        display: none;
+    }
+    .filter-departments{
+        display: none;
+    }
+
+    /* <---------- MEDIA QUERIES FOR CENTER SECTION -----------> */
+
+    .center-div-departments{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        height: 20%;
+        
+
+    }
+    .center-top-departments{
+        display:block ;
+        height: 80%;
+        justify-content: center;
+        border-bottom: 1px solid #B3B3B3;
+    }
+    .center-bottom-departments div{
+        height: 50%;
+        width: 10%;
+        border-radius: 0.5vw;
+    }
+    .center-bottom-departments div h5{
+        font-size: 2vw;
+    }
+
+    .center-top-right-departments{
+        height: 50%;
+        width: 100%;
+        justify-content: center;
+        /* margin-left: 4vw; */
+        display: flex;
+        justify-content: center;
+        padding: 0;
+        margin-top: 0.4vw;
+    }
+    .search-departments{
+        height: 50%;
+        align-items: start;
+        width: 100%;
+        /* padding-right: 7vw; */
+        padding-top: 2vw;
+        display: flex;
+        justify-content: center;
+        
+    }
+    .search-departments input{
+        height: 100%;
+        width: 80%;
+        border-top-left-radius: 1.2vw;
+        border-bottom-left-radius: 1.2vw;
+        padding-left: 2vw;
+    }
+    .search-departments div{
+        height: 100%;
+        border-top-right-radius: 1.2vw;
+        border-bottom-right-radius: 1.2vw;
+    }
+    .center-departments-sort{
+        height: 70%;
+        width: 90%;
+        border-radius: 1.2vw;
+        justify-content: center;
+        gap: 1vw;
+    }
+
+    /* <------------ MEDIA QUERIES FOR BOTTOM STYLING -------------> */
+
+
+    .bottom-div-departments{
+       height: max-content;
+    }
+
+    .content-bottom-div-departments{
+        height: max-content;
+        display: flex;
+        flex-direction: column;
+        gap: 1vw;
+        background-color: transparent;
+    }
+    .top-div-bottom-departments{
+        background-color: white;
+        color: black;
+        height: 6vh;
+    }
+    .top-div-bottom-departments div h5{
+        color: black;
+    }
+    .table-container-departments{
+        display: none;
+    }
+    .responsive-table-departments{
+        display: block;
+        
+    }
+    .responsive-table-departments table {
+        height: 25vh;
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 0.5vw; /* Border radius for the table */
+        background-color: white; /* Background color for the table */
+      }
+      
+      .responsive-table-departments table tr {
+        border-bottom: 1px solid #ddd; /* Add border to bottom of each row */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5vw 0 5vw;
+        height: 33%;
+      }
+      
+      .responsive-table-departments table tr:last-child {
+        border-bottom: none; /* Remove border from the last row */
+      }
+      
+      .responsive-table-departments table td{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+      }
+      
+      .responsive-table-departments h6 {
+        margin: 0; /* Remove margin for h6 tags */
+        
+      }
+      .table-data-appname-departments img{
+        height: 100%;
+        width: 35%;
+      }      
+      .table-data-appname-departments{
+        width: min-content;
+      }
+      .responsive-table-departments table tr h6{
+        font-size: 3vw;
+      }
+      .create-department-popup-departments{
+        width: 90vw;
+        animation-name: bigout-responsive;
+        
+      }
+      @keyframes bigout-responsive {
+        from {
+            height: 0;
+            width: 0;
+            right: 0; /* Start from the top right corner */
+            top: 0;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            /* border-bottom-left-radius: 50%; */
+            
+        }
+        to {
+            height: 35vh;
+            width: 70vw;
+            right: 20%; /* Adjusted to open from the top right */
+            /* border-radius: 0; */
+        }
+    }
+    
+}
+
+@media screen and (max-width:450px){
+    .wrapper-div-departments{
+        width: 79vw;
+        background-color: #F0F0F0;
+        height: 95vh;
+    }
+    .top-div-departments{
+        height: 15%;
+    }
+    .heading-departments{
+        height: 60%;
+        width: 90%;
+        border: 3px solid #ffffff;
+        background-color: #F0F0F0;
+        border-radius: 0.8vw;
+    }
+    .heading-departments h4{
+        font-size: 4.5vw;
+        font-weight: 700;
+    }
+    .add-departments{
+        width: 95%;
+        height: 45%;
+        letter-spacing: 0.2vw;
+    }
+    .add-departments h5{
+        font-size: 3vw;
+    }
+    .search-departments{
+        height: 40%;
+    }
+    .top-div-bottom-departments{
+        height: 5vh;
+    }
+    .top-div-bottom-departments h5{
+        font-size: 2.5vw;
+        font-weight: 700;
+    }
+    .content-bottom-div-departments{
+        gap: 2vh;
+    }
+    .responsive-table-departments table tr td h6{
+        font-size: 4vw;
+    }
+    .create-department-popup-departments{
+        animation-name: bigout-responsive;
+        
+      }
+      @keyframes bigout-responsive {
+        from {
+            height: 0;
+            width: 0;
+            right: 0; /* Start from the top right corner */
+            top: 0;
+            border-top-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            /* border-bottom-left-radius: 50%; */
+            
+        }
+        to {
+            height: 35vh;
+            width: 80vw;
+            top: 30%;
+            right: 10%; /* Adjusted to open from the top right */
+            /* border-radius: 0; */
+        }
+    }
+    .date2-responsive-departments h6{
+        display: none;
+    }
+    .date-responsive-departments h6{
+        display: block;
+    }
+}
