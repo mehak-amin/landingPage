@@ -235,6 +235,10 @@ h1, h2, h3, h4, h5, h6{
     padding: 10px;
 }
 
+.table-container-departments tr td:last-child{
+    position: relative;
+}
+
 .table-container-departments tr {
     height: 50%;
 }
@@ -256,6 +260,55 @@ h1, h2, h3, h4, h5, h6{
 }
 .date-responsive-departments h6{
     display: none;
+}
+
+.table-container-departments tr td:last-child div{
+        /* background-color: blue; */
+        border: 1px solid grey;
+        background-color: white;
+        color: black;
+        position: absolute;
+        animation-name: deleteAndEditPopUp;
+        transition: all 0.5s ease-in-out;
+        animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+    z-index: 1;
+}
+@keyframes deleteAndEditPopUp {
+    from {
+        height: 0;
+        width: 30%;
+        right: 40%; /* Start from the top right corner */
+        bottom: -100%;
+        
+    }
+    to {
+        height: 300%;
+        width:30%;
+        right: 40%; /* Adjusted to open from the top right */
+        bottom: -400%;
+        /* border-radius: 0; */
+    }
+}
+.table-container-departments tr td:last-child div h6{
+    height: 50%;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    padding-left: 0.5vw;
+    color: red;
+    cursor: pointer;
+}
+
+.table-container-departments tr td:last-child div h6:first-child{
+    color: black;
+    border-bottom: 1px solid #B3B3B3;
+}
+
+.table-container-departments tr td h6:last-child{
+    cursor: pointer;
 }
 
 
@@ -382,6 +435,7 @@ h1, h2, h3, h4, h5, h6{
     align-items: center;
     border-radius: 0.2vw;
     border: 1px solid #B3B3B3;
+    cursor: pointer;
 }
 .create-department-invite-bottom-departments{
     height: 35%;
@@ -392,8 +446,116 @@ h1, h2, h3, h4, h5, h6{
     align-items: center;
     border-radius: 0.2vw;
     color: white;
+    cursor: pointer;
 }
 
+
+
+.delete-popup-departments{
+    position: absolute;
+    height: 40%;
+    width: 60%;
+    background-color: white;
+    transition: all 0.5s ease-in-out;
+    animation-name: deletePopUp;
+    animation-duration: 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out; /* Adjust timing function if needed */
+    animation-fill-mode: forwards; /* Keep the final state of the animation */
+}
+
+
+@keyframes deletePopUp {
+    from {
+        height: 0;
+        width: 40vw;
+        right: 30%; /* Start from the top right corner */
+        top: 0;
+        /* border-top-left-radius: 50%;
+        border-bottom-right-radius: 50%; */
+        /* border-bottom-left-radius: 50%; */
+        
+    }
+    to {
+        height: 40vh;
+        width: 40vw;
+        right: 30%; /* Adjusted to open from the top right */
+        /* border-radius: 0; */
+    }
+}
+
+.wrapper-delete-popup-departments{
+    z-index: 1000;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: #00000096;
+    top: 0;
+    left: 0;
+    animation-name: opacity;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+}
+@keyframes opacity {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+.delete-department-top-departments{
+    height: 15%;
+    width: 100%;
+    background-color: #6D6D6D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.8vw 0 1.8vw;
+    color: white;
+}
+
+.delete-department-top-departments div{
+    cursor: pointer;
+}
+.delete-department-center-departments{
+    height: 50%;
+    width: 100%;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #4e4e4e;
+    border-bottom: 1px solid #4e4e4e;
+}
+.delete-department-bottom-departments{
+    height: 35%;
+    /* background-color: aquamarine; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4vw;
+}
+.delete-department-bottom-departments h5{
+    height: 50%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5vw;
+    cursor: pointer;
+}
+
+.delete-department-bottom-departments h5:first-child{
+    border: 1px solid #4e4e4e;
+}
+.delete-department-bottom-departments h5:last-child{
+    background-color: #ff662f;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color: white;
+
+}
 
 
 

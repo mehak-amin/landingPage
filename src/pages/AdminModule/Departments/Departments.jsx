@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Departments.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,18 +10,147 @@ import {
   faEllipsis,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-// import figma from "../../assets/figma.jpeg";
-// import figma from "../../assets/figma.jpeg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+// import { DiAppcelerator } from 'react-icons/di';
+import BASE_URI from "../../../../config";
 
 const Departments = () => {
   const [createDeparment, setcreateDeparment] = useState(false);
+  const [departmentsData, setDepartmentsData] = useState([]);
+  const [deptName, setDeptName] = useState("");
+  const [editOrDeletePopUp, setEditOrDeletePopUp] = useState({});
+  const [deletePopUp, setDeletePopUp] = useState(false);
+  const [id, setId] = useState("");
+  // const [toggleStates, setToggleStates] = useState({});
+
+  const navigate = useNavigate();
+
+  const handleDelete = () => {
+    setDeletePopUp(!deletePopUp);
+  };
+
+  const toggleEditOrDeletePopUp = (id) => {
+    // console.log(id)
+    setEditOrDeletePopUp((prevEditOrDeletePopUp) => ({
+      ...prevEditOrDeletePopUp,
+      [id]: !prevEditOrDeletePopUp[id],
+    }));
+  };
+
+  // const toggleEditOrDeletePopUp = ()=>{
+  //   setEditOrDeletePopUp(!editOrDeletePopUp);
+  // }
 
   const togglecreateDeparment = () => {
     setcreateDeparment(!createDeparment);
   };
 
+  //    <-------- GETTING DATA FROM BACKEND (GET) --------->
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${BASE_URI}/api/v1/departments`,
+      });
+      setDepartmentsData(response.data.data);
+      setDeptName("");
+      console.log(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
+
+  //   <----------- POSTING DATA ON BACKEND (POST) (CREATE DEPARTMENT) ----------->
+
+  const handleCreateDepartment = async () => {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${BASE_URI}/api/v1/departments`,
+        data: {
+          deptName,
+        },
+      });
+      setcreateDeparment(false);
+      fetchDepartments();
+
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //   DELETING DATA OF BACKEND (DELETE)
+
+  const handleDeleteDepartment = async () => {
+    try {
+      console.log(id);
+      const response = await axios({
+        method: "DELETE",
+        url: `${BASE_URI}/api/v1/departments/${id}`,
+      });
+      fetchDepartments();
+      setDeletePopUp(false);
+
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // UPDATING DATA ON BACKEND WITH (PATCH)
+
+  const handleEditDepartment = async () => {
+    try {
+      const response = await axios({
+        method: "PATCH",
+        url: `${BASE_URI}/api/v1/departments/${id}`,
+        data: {
+          newName,
+        },
+      });
+      navigate("/loggedinpage");
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="wrapper-div-departments">
+      {/* <--------- DELETE POPUP STRUCTURE -----------> */}
+      {deletePopUp && (
+        <div className="wrapper-delete-popup-departments">
+          <div className="delete-popup-departments">
+            <div className="delete-department-top-departments">
+              <h4>Delete Department</h4>
+              <div onClick={() => setDeletePopUp(!deletePopUp)}>
+                <h4>
+                  <FontAwesomeIcon icon={faCircleXmark} />
+                </h4>
+              </div>
+            </div>
+
+            <div className="delete-department-center-departments">
+              <h6>
+                Do you really want to remove the projects that you have chosen?
+              </h6>
+              <h6>There is no turning back.</h6>
+            </div>
+
+            <div className="delete-department-bottom-departments">
+              <h5 onClick={() => setDeletePopUp(false)}>Cancel</h5>
+              <h5 onClick={handleDeleteDepartment}>Delete</h5>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* <---- TOP DIV ----> */}
 
       <div className="top-div-departments">
@@ -89,14 +218,25 @@ const Departments = () => {
             <div className="create-department-center-departments">
               <div className="create-department-top-center-departments">
                 <h6>Department Name</h6>
-                <input type="text" placeholder="Enter Department Name...!" />
+                <input
+                  type="text"
+                  placeholder="Enter Department Name...!"
+                  value={deptName}
+                  onChange={(e) => setDeptName(e.target.value)}
+                />
               </div>
             </div>
             <div className="create-department-bottom-departments">
-              <div className="create-department-cancle-bottom-departments">
+              <div
+                className="create-department-cancle-bottom-departments"
+                onClick={() => setDeptName("")}
+              >
                 <h6>Cancel</h6>
               </div>
-              <div className="create-department-invite-bottom-departments">
+              <div
+                className="create-department-invite-bottom-departments"
+                onClick={handleCreateDepartment}
+              >
                 <h6>Create</h6>
               </div>
             </div>
@@ -117,40 +257,55 @@ const Departments = () => {
               </h6>
             </div>
           </div>
-          <div className="table-container-departments">
-            <table>
-              <tr className="table-headding-departments">
-                <th>
-                  <h6>Role Name</h6>
-                </th>
-                <th>
-                  <h6>Created</h6>
-                </th>
-                <th>
-                  <h6>Members</h6>
-                </th>
-                <th>
-                  <h6>Edit/Delete</h6>
-                </th>
-              </tr>
-              <tr>
-                <td className="table-data-appname-departments">
-                  <input type="checkbox" /> <h6>Management</h6>
-                </td>
-                <td>
-                  <h6>Wed 24 April, 2024 02:22 PM</h6>
-                </td>
-                <td>
-                  <h6>3</h6>
-                </td>
-                <td>
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-            </table>
-          </div>
+          {departmentsData.map((department, departmentIndex) => (
+            <div key={departmentIndex} className="table-container-departments">
+              <table>
+                <tr className="table-headding-departments">
+                  <th>
+                    <h6>Role Name</h6>
+                  </th>
+                  <th>
+                    <h6>Created</h6>
+                  </th>
+                  <th>
+                    <h6>Members</h6>
+                  </th>
+                  <th>
+                    <h6>Edit/Delete</h6>
+                  </th>
+                </tr>
+                <tr>
+                  <td className="table-data-appname-departments">
+                    <input type="checkbox" />{" "}
+                    <h6>{department.department_name}</h6>
+                  </td>
+                  <td>
+                    <h6>{department.created_at}</h6>
+                  </td>
+                  <td>
+                    <h6>3</h6>
+                  </td>
+                  <td>
+                    <h6
+                      onClick={() => {
+                        toggleEditOrDeletePopUp(department.id);
+                        setId(department.id);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faEllipsis} />
+                      {editOrDeletePopUp[department.id] && (
+                        <div>
+                          <h6>Edit</h6>
+                          <h6 onClick={handleDelete}>Delete</h6>
+                        </div>
+                      )}
+                    </h6>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          ))}
+
           <div className="responsive-table-departments">
             <table>
               <tr>

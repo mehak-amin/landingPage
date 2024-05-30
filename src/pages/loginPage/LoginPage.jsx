@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import signInImg from "../../assets/MacBook Air (2022).svg";
 import googleLogo from "../../assets/google.jpg";
 import "./LoginPage.css";
@@ -9,13 +9,17 @@ import axios from "axios";
 import BASE_URI from "../../../config";
 
 axios.defaults.withCredentials = true;
-function LoginPage() {
+function LoginPage({ role, setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clientId, setClientId] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState({});
+
+  const [user, setUser] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+
   // const navigate = useNavigate();
 
   const handleFocus = () => {
@@ -26,18 +30,33 @@ function LoginPage() {
     setIsFocused(false);
   };
 
+  // Check localStorage on component mount
+  useEffect(() => {
+    const storedRememberMe = localStorage.getItem("rememberMe") === "true";
+    if (storedRememberMe) {
+      setRememberMe(true);
+      // Optionally, you could also fill in the email field from localStorage here
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     axios
       .post(`${BASE_URI}/users/login`, { email, password, client_id: clientId })
       .then((response) => {
-        console.log(response.data);
 
+        console.log(response);
+        // console.log(response.data.userData.token);
         setUser(response.data.Data);
+        // console.log(response.data.Data.role);
+        setRole(response.data.Data.role);
+
         const token = response.data.token;
         localStorage.setItem("token", token);
       })
       .catch((err) => {
+        // console.log(err);
         if (err?.response?.data?.message === "Invalid Credentials") {
           setMessage("Incorrect Password");
         } else if (
@@ -51,13 +70,27 @@ function LoginPage() {
           setMessage("All fields Required");
         }
       });
+    // If "Remember Me" is checked, store it in localStorage
+    if (rememberMe) {
+      localStorage.setItem("rememberMe", true);
+      console.log("remerber mee");
+      // Optionally, you could also store the email in localStorage here
+    } else {
+      localStorage.removeItem("rememberMe");
+      // Optionally, you could also remove the email from localStorage here
+    }
   };
 
   const token = localStorage.getItem("token");
 
   if (token && user) {
-    return <Navigate to="/admin/dashboard" />;
+    if (role === "admin") {
+      return <Navigate to="/admin/dashboard" />;
+    } else if (role === "user") {
+      return <Navigate to="/users/myScreen" />;
+    }
   }
+  // console.log(role);
 
   return (
     <div className="login">
@@ -139,16 +172,21 @@ function LoginPage() {
           <div className="remember-forgot-link">
             <div className="remember-link m-0">
               <div>
-                <input type="checkbox" className="m-0" />
+                <input
+                  type="checkbox"
+                  className="m-0"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
               </div>
               <div className="remember-label ">
                 <label htmlFor="">remember me</label>
               </div>
             </div>
             <div className="">
-              <a href="" className="forgot-link">
+              <Link to="forgetPassword" className="forgot-link">
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </div>
           {/* ----------------------- */}

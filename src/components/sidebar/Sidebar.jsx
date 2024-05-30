@@ -20,8 +20,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
-function Sidebar({ isSideBarOpen }) {
-  const sections = [
+function Sidebar({ isSideBarOpen, role }) {
+  console.log(role);
+  const adminOptions = [
     {
       heading: "Main menu",
       items: [
@@ -37,8 +38,71 @@ function Sidebar({ isSideBarOpen }) {
         { icon: faBriefcase, text: "Work Planners" },
         { icon: faComputer, text: "Ventures" },
         { icon: faCalendar, text: "Absence Calender" },
-        { icon: faWifi3, text: "Offline Periods" },
         { icon: faCamera, text: "Screen Captures" },
+        { icon: faPeopleGroup, text: "Fellow Workers" },
+        { icon: faSquarePollVertical, text: "Reports" },
+        { icon: faFileExport, text: "Data Export" },
+        { icon: faWifi3, text: "Offline Times" },
+      ],
+      isMiddle: true,
+    },
+    {
+      heading: "Customization",
+      items: [
+        { icon: faCog, text: "Settings" },
+        { icon: faLink, text: "Affiliates" },
+      ],
+      isMiddle: false,
+    },
+  ];
+
+  const managerOptions = [
+    {
+      heading: "Main menu",
+      items: [
+        { icon: faHome, text: "Dashboard" },
+        { icon: faUser, text: "My Screen" },
+      ],
+      isMiddle: false,
+    },
+    {
+      heading: "Data Administration",
+      items: [
+        { icon: faUsers, text: "Teammates" },
+        { icon: faBriefcase, text: "Work Planners" },
+        { icon: faComputer, text: "Ventures" },
+        { icon: faCalendar, text: "Absence Calender" },
+        { icon: faCamera, text: "Screen Captures" },
+        { icon: faPeopleGroup, text: "Fellow Workers" },
+        { icon: faSquarePollVertical, text: "Reports" },
+        { icon: faFileExport, text: "Data Export" },
+        { icon: faWifi3, text: "Offline Times" },
+      ],
+      isMiddle: true,
+    },
+    {
+      heading: "Customization",
+      items: [
+        { icon: faCog, text: "Settings" },
+        { icon: faLink, text: "Affiliates" },
+      ],
+      isMiddle: false,
+    },
+  ];
+
+  const userOptions = [
+    {
+      heading: "Main menu",
+      items: [{ icon: faUser, text: "My Screen" }],
+      isMiddle: false,
+    },
+    {
+      heading: "Data Administration",
+      items: [
+        { icon: faUsers, text: "Teammates" },
+        { icon: faBriefcase, text: "Work Planners" },
+        { icon: faComputer, text: "Ventures" },
+        { icon: faCalendar, text: "Absence Calender" },
         { icon: faPeopleGroup, text: "Fellow Workers" },
         { icon: faSquarePollVertical, text: "Reports" },
         { icon: faFileExport, text: "Data Export" },
@@ -54,6 +118,14 @@ function Sidebar({ isSideBarOpen }) {
       isMiddle: false,
     },
   ];
+  let sidebarOptions;
+  if (role === "admin") {
+    sidebarOptions = adminOptions;
+  } else if (role === "manager") {
+    sidebarOptions = managerOptions;
+  } else {
+    sidebarOptions = userOptions;
+  }
 
   return (
     <div className="sidebar">
@@ -66,7 +138,7 @@ function Sidebar({ isSideBarOpen }) {
         </div>
       </div>
       <div className="section-holder">
-        {sections.map((section, sectionIndex) => (
+        {sidebarOptions.map((section, sectionIndex) => (
           <div
             key={sectionIndex}
             className={`section ${section.isMiddle ? "middle-section" : ""}`}
