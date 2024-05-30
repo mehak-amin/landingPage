@@ -4,3 +4,6 @@
   margin: 0;
   font-family: "Kumbh Sans", sans-serif;
 }
+.col-custom {
+  width: 12.5%;
+}

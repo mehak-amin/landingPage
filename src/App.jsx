@@ -10,18 +10,16 @@ import Layout from "./Layout/Layout";
 import MyScreen from "./pages/UserModule/MyScreen/MyScreen";
 import Ventures from "./pages/UserModule/Ventures/Ventures";
 import NewTask from "./pages/UserModule/Ventures/NewTask/NewTask";
-// import LoggedInPage from "./pages/AdminModule/Admin/LoggedInPage";
-// import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
-// import Ventures from "./pages/Ventures/Ventures";
-// import NewTask from "./pages/Ventures/NewTask/NewTask";
-
 import { Routes, Route } from "react-router-dom";
+import TeammateDetails from "./pages/AdminModule/Teammates/TeammateDetails/TeammateDetails";
+import Test from "./pages/Test";
 
 function App() {
   return (
     <Routes>
       <Route path="/signUp" element={<SignInPage />} />
       <Route path="/" element={<LoginPage />} />
+      <Route path="/test" element={<Test />} />
 
       <Route path="/" element={<Layout />}>
         <Route path="admin" element={<Admin />}>
@@ -29,12 +27,15 @@ function App() {
           <Route path="departments" element={<Departments />} />
           <Route path="manageApps" element={<ManageApps />} />
           <Route path="teammates" element={<Teamates />} />
+          <Route
+            path="teammates/teammateDetails/:id"
+            element={<TeammateDetails />}
+          />
         </Route>
         <Route path="users" element={<User />}>
           <Route path="myScreen" element={<MyScreen />} />
-          <Route path="projects" element={<Ventures />}>
-            <Route path="newTask" element={<NewTask />} />
-          </Route>
+          <Route path="projects" element={<Ventures />} />
+          <Route path="projects/newTask" element={<NewTask />} />
         </Route>
       </Route>
     </Routes>
