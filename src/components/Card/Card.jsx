@@ -1,55 +1,91 @@
 import { Card } from "react-bootstrap";
-// import "../../pages/MyScreen/MyScreen.css";
-// import {
-//   LineChart,
-//   Line,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-// } from "recharts";
-export default function CustomCard({ title, text }) {
-  // const data = [
-  //   {
-  //     startTime: new Date("2024-05-02T10:03:52.000Z").getTime(),
-  //     duration:
-  //       new Date("2024-05-02T10:06:13.000Z").getTime() -
-  //       new Date("2024-05-02T10:03:52.000Z").getTime(),
-  //   },
-  //   {
-  //     startTime: new Date("2024-05-02T10:15:23.000Z").getTime(),
-  //     duration:
-  //       new Date("2024-05-02T10:15:38.000Z").getTime() -
-  //       new Date("2024-05-02T10:15:23.000Z").getTime(),
-  //   },
-  //   {
-  //     startTime: new Date("2024-05-02T10:16:46.000Z").getTime(),
-  //     duration:
-  //       new Date("2024-05-02T10:16:53.000Z").getTime() -
-  //       new Date("2024-05-02T10:16:46.000Z").getTime(),
-  //   },
-  // ].sort((a, b) => a.startTime - b.startTime);
-  // <LineChart
-  //       width={600}
-  //       height={300}
-  //       data={data}
-  //       margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-  //     >
-  //       <CartesianGrid strokeDasharray="3 3" />
-  //       <XAxis dataKey="startTime" />
-  //       <YAxis />
-  //       <Tooltip />
-  //       <Legend />
-  //       <Line type="monotone" dataKey="duration" stroke="#8884d8" />
-  //     </LineChart>
+
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+export default function CustomCard({ title, data }) {
+  // const newData = data
+  //   ? data.map((time, index) => ({
+  //       day: index + 1,
+  //       arrivalTime: time,
+  //     }))
+  //   : [];
+  // console.log(newData);
+
+  // const formatDeskTime = (hours, minutes) => {
+  //   if (hours === 0) {
+  //     return `${minutes}m`;
+  //   } else if (minutes === 0) {
+  //     return `${hours}h`;
+  //   } else {
+  //     return `${hours}h ${minutes}m`;
+  //   }
+  // };
+
+  // const deskTimesGraph = (durationsInSeconds) => {
+  // Convert durations from seconds to hours and minutes
+  const data1 =
+    data &&
+    data.map((duration, index) => {
+      // const hours = Math.floor(duration / 3600);
+      const minutes = Math.floor(duration / 60);
+      return { time: minutes, day: index + 1 };
+    });
+
+  console.log(data1);
+  // };
+
+  // deskTimesGraph(data);
+
+  function calculateTotalDeskTimeInHoursAndMinutes(durationsInSeconds) {
+    const totalSeconds =
+      durationsInSeconds &&
+      durationsInSeconds.reduce((acc, curr) => acc + curr, 0);
+
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return { hours, minutes };
+  }
+
+  const { hours, minutes } = calculateTotalDeskTimeInHoursAndMinutes(data);
+
   return (
-    <div className="col-md-4 mb-4">
-      <Card className=" shadow px-4 ">
-        <Card.Body>
+    <div className="mb-4">
+      <Card className=" shadow px-2 px-sm-4 ">
+        <Card.Body className="p-2 p-sm-3">
           <Card.Text className="fw-bold">{title}</Card.Text>
-          <Card.Title className="text-green">{text}</Card.Title>
-          <Card.Img src="src/assets/Chart.png" />
+          <Card.Title className="text-green">
+            {hours}h {minutes}m
+          </Card.Title>
+          <div style={{ width: "100%", height: 200 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                // width={300}
+                // height={200}
+                data={data1}
+                margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                {/* <XAxis dataKey="day" /> */}
+                {/* <YAxis dataKey="time" /> */}
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="time"
+                  stroke="#36c449"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </Card.Body>
       </Card>
     </div>
