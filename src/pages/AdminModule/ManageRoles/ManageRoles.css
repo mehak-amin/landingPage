@@ -1,0 +1,67 @@
+/* styles.css */
+.container {
+  max-width: 100%;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+.table tbody tr,
+table thead tr {
+  border: none;
+}
+
+/* .text-success {
+  color: green;
+} */
+
+/* .d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+} */
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+/* .btn-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: inherit;
+  text-decoration: underline;
+} */
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.fa-trash,
+.fa-edit,
+.fa-ellipsis-h {
+  cursor: pointer;
+}
+.btn-transparent {
+  background-color: transparent !important;
+  /* color: transparent !important; */
+  border: none !important;
+  box-shadow: none !important;
+}

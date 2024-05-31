@@ -4,14 +4,8 @@
   font-family: "Kumbh Sans", sans-serif;
 }
 .sidebar {
-  /* height: auto; */
   overflow-y: hidden;
-  /* overflow-y: scroll; */
 }
-/* .open {
-  left: -20%;
-  transform: translateX(0);
-} */
 
 .brand {
   padding: 1rem 2rem;
@@ -35,21 +29,35 @@
   border-top: 1px solid #6d6d6d;
   border-bottom: 1px solid #6d6d6d;
 }
+
 .menu {
   padding: 0;
 }
-.menu li {
+.menu-items {
   display: flex;
   align-items: space-between;
   list-style: none;
   padding: 0.5rem 0;
 }
+
 .icon-holder {
   width: 35px;
 }
+
 .custom-icon {
   font-size: 1.3rem;
 }
+
+.fa-gear {
+  margin-left: -20px;
+}
+.pl-7 {
+  padding-left: 0.7rem;
+}
+.menu-items.active {
+  color: red;
+}
+/* -------------------------------- */
 .menu li .svg-inline--fa {
   margin-right: 10px;
 }
@@ -84,3 +92,6 @@
     min-width: 80px;
   }
 }
+/* .dropdown-toggle::after {
+  display: none;
+} */

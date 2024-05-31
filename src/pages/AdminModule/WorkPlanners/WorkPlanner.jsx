@@ -1,11 +1,15 @@
 import React from "react";
-import TableComponent from "../../../TableComponent";
+// import TableComponent from "../../../TableComponent";
+import CalendarDay from "../../../components/calendar/calendarDay/CalendarDay";
+// import CalendarWeek from "../../../components/calendar/calendarWeek/CalendarWeek";
+// import Practice from "../../../components/practice/Practice";
+// import ScheduleTable from "../../../components/practice2/ScheduleTable";
 import { CiCalendar, CiFilter, CiUser } from "react-icons/ci";
 import "./WorkPlanner.css";
 
 function WorkPlanner() {
   return (
-    <div>
+    <div className="work-planner d-flex ">
       <div className="w-100 py-3">
         <div className="row  px-sm-3 px-md-5 py-2">
           <div className="col-lg-4">
@@ -95,7 +99,7 @@ function WorkPlanner() {
         </div>
         <div className="main-content ">
           <div className="sub-pages shadow px-7">
-            <ul className="d-flex justify-content-start align-items-center list-unstyled py-1 gap-md-5 gap-3">
+            <ul className="d-flex justify-content-start align-items-center list-unstyled py-1 gap-md-5 gap-2 fs-15">
               <li className=" px-1 py-2 rounded-sm">
                 <a>Team Members</a>
               </li>
@@ -116,7 +120,13 @@ function WorkPlanner() {
               </li>
             </ul>
           </div>
-          <TableComponent />
+          <div className="px-7 py-3">
+            {/* <CalendarWeek /> */}
+            <CalendarDay />
+            {/* <Practice /> */}
+            {/* <ScheduleTable /> */}
+          </div>
+          {/* <TableComponent /> */}
         </div>
       </div>
     </div>
