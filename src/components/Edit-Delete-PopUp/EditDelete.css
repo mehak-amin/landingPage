@@ -1,0 +1,11 @@
+.custom-modal .modal-dialog {
+  width: 200px !important;
+  max-width: 200px !important;
+  background-color: aqua !important;
+}
+.bttn {
+  border: none !important;
+}
+.btn-delete {
+  border-bottom: 1px solid gray !important;
+}

@@ -18,11 +18,11 @@ import Test from "./pages/Test";
 import ForgetPassword from "./components/forgetPassword/ForgetPassword";
 import ResetPassword from "./components/resetPassword/ResetPassword";
 import WorkPlanner from "./pages/AdminModule/WorkPlanners/WorkPlanner";
-
+import ManageRoles from "./pages/AdminModule/ManageRoles/ManageRoles";
+import Settings from "./pages/AdminModule/Settings/Settings";
 import { Routes, Route } from "react-router-dom";
-// import { Scheduler } from "@aldabil/react-scheduler";
-// import { ImPilcrow } from "react-icons/im";
 import { useState } from "react";
+import Sidebarpractice from "./components/sidebarpractice/Sidebarpractice";
 
 
 function App() {
@@ -54,13 +54,24 @@ function App() {
 
           <Route path="workplanner" element={<WorkPlanner />} />
 
+          <Route path="settings" element={<Settings />}>
+            <Route path="manageroles" element={<ManageRoles />} />
+          </Route>
+
+
+
         </Route>
         <Route path="users" element={<User />}>
           <Route path="myScreen" element={<MyScreen />} />
           <Route path="projects" element={<Ventures />} />
+
+          <Route path="newTask" element={<NewTask />} />
+
           <Route path="projects/newTask" element={<NewTask />} />
-        </Route>
+
+   </Route>
       </Route>
+      {/* </Route> */}
     </Routes>
   );
 }

@@ -16,8 +16,11 @@
 .fs-16 {
   font-size: 1rem;
 }
+.fs-15 {
+  font-size: 15px;
+}
 .line-height-custom {
-  line-height: 3; /* Set line height equal to font size */
+  line-height: 3;
 }
 .bg-work {
   background-color: #d9d9d9;
