@@ -12,10 +12,13 @@ axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [clientId, setClientId] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
+
   const [user, setUser] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
 
   // const navigate = useNavigate();
 
@@ -40,13 +43,15 @@ function LoginPage({ role, setRole }) {
     e.preventDefault();
 
     axios
-      .post(`${BASE_URI}/api/v1/users/login`, { email, password })
+      .post(`${BASE_URI}/users/login`, { email, password, client_id: clientId })
       .then((response) => {
+
         console.log(response);
         // console.log(response.data.userData.token);
         setUser(response.data.Data);
         // console.log(response.data.Data.role);
         setRole(response.data.Data.role);
+
         const token = response.data.token;
         localStorage.setItem("token", token);
       })
@@ -77,7 +82,7 @@ function LoginPage({ role, setRole }) {
   };
 
   const token = localStorage.getItem("token");
-  console.log(token);
+
   if (token && user) {
     if (role === "admin") {
       return <Navigate to="/admin/dashboard" />;
@@ -135,13 +140,31 @@ function LoginPage({ role, setRole }) {
               </div>
               <input
                 type="password"
-                // className="form-control"
                 id="password"
-                placeholder="enter Password..."
+                placeholder="enter Password......"
                 value={password}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="input-col">
+            <label htmlFor="clientId" className="form-label">
+              Client Id
+            </label>
+            <div
+              className={`inputwithicon-login ${isFocused ? "focused" : ""}`}
+            >
+              <input
+                type="text"
+                id="clientId"
+                placeholder="enter client ID"
+                value={clientId}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={(e) => setClientId(e.target.value)}
               />
             </div>
           </div>
@@ -186,7 +209,7 @@ function LoginPage({ role, setRole }) {
           <div className="signUp-link-holder d-flex justify-content-center align-items-center">
             <span className="signUp-link ">
               <Link to="/" className="link">
-                Don't have an account click here!
+                Don&apos;t have an account click here!
               </Link>
             </span>
           </div>

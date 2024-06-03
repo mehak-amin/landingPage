@@ -16,7 +16,7 @@ import {
 // navbar-expand navbar-light bg-light
 function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox }) {
   return (
-    <div className="navbar ">
+    <div className="navbar px-md-5 px-4">
       <div className="menu-search">
         <div className="menuIcon" id="navButton" onClick={toggleMyNav}>
           <FontAwesomeIcon icon={faBars} size="sm" className="navbar-icons" />

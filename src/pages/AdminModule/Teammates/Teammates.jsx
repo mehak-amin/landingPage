@@ -1,341 +1,730 @@
-import { useState } from "react";
 import "./Teammates.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendar,
-  faFilter,
-  faMagnifyingGlass,
-  faBarsStaggered,
-  faArrowDownShortWide,
-  faUser,
-  faCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import Footer from "../../../components/Footer";
-// import google from "../../assets/google.png";
-// import slack from "../../assets/slack.jpeg";
+
+import Header from "../../../components/Header";
+
+import SearchInput from "../../../components/SearchInput";
+import FilterButton from "../../../components/Button/FilterButton";
+import SortButton from "../../../components/Button/SortButton";
+import { lazy, useEffect, useState, Suspense } from "react";
+import axios from "axios";
+import BASE_URI from "../../../../config";
+import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
+// import ModalComponent from "../../../components/Modal/ModalComponent";
+import { FaSlack } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
+import { Link } from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
+import { convertDate } from "../../../utils/formattingDate";
+
+const ModalComponent = lazy(() => "../../../components/Modal/ModalComponent");
 
 const Teamates = () => {
-  const [addTeammate, setAddteammate] = useState(false);
+  const [activeTab, setActiveTab] = useState("employees");
+  const [isFilter, setIsFilter] = useState(false);
+  const [isSort, setIsSort] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
+  const [sortCriteria, setSortCriteria] = useState("");
+  const [departments, setDepartments] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [addTeamMember, setAddTeamMember] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    department_id: "",
+    role: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+  const formattedStartDate = convertDate(startDate);
 
-  const toggleAddTeammate = () => {
-    setAddteammate(!addTeammate);
+  const token = localStorage.getItem("token");
+
+  let url = `${BASE_URI}/admin/emplReport?date=${formattedStartDate}&tab=${activeTab}`;
+
+  if (sortCriteria && sortOrder) {
+    url += `&sort_by=${sortCriteria}&sort_direction=${sortOrder}`;
+  }
+
+  if (selectedItems.length > 0) {
+    url += `&department[0]=${selectedItems}`;
+  }
+
+  if (search) {
+    url += `&search=${search}`;
+  }
+  const fetchOptions = {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  };
+
+  const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
+
+  const teamsData = data || {};
+
+  const {
+    absentCount,
+    employeesCount,
+    lateCount,
+    outstream,
+    slackingCount,
+    workingCount,
+  } = teamsData;
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URI}/departments`)
+      .then((res) => {
+        console.log(res.data);
+        setDepartments(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URI}/roles`)
+      .then((res) => {
+        console.log(res.data.data.roles);
+        setRoles(res.data.data.roles);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const totalPages = Math.ceil(outstream?.length / itemsPerPage);
+
+  const handleClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const getCurrentItems = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return outstream?.slice(startIndex, endIndex);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`${BASE_URI}/api/v1/employee/myReport`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data);
+        if (resp.data.status === "Success") {
+          setAddTeamMember(false);
+        }
+      });
+  };
+
+  const handleCheckboxChange = (departmentId) => {
+    console.log(departmentId);
+    if (selectedItems.includes(departmentId)) {
+      setSelectedItems(selectedItems.filter((id) => id !== departmentId));
+    } else {
+      setSelectedItems([...selectedItems, departmentId]);
+    }
+  };
+
+  // Function to handle "select all" checkbox change
+  const handleSelectAllChange = () => {
+    if (selectAll) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(departments.map((department) => department.id));
+    }
+    setSelectAll(!selectAll);
+  };
+
+  const handleSetDepartments = () => {
+    setIsFilter(false);
+  };
+
+  const handleReset = () => {
+    setSelectAll(false);
+    setSelectedItems([]);
+  };
+
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleSortCriteriaChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
+  const sideHeadings = [
+    "Department",
+    "Arrived at",
+    "Left at",
+    "Productive Time",
+    "Offline Time",
+    "Active App",
+    "Active Project",
+    "Desktime",
+  ];
+
+  function secondsToHoursMinutes(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    if (hours === 0) {
+      return `${minutes}m`;
+    } else if (minutes === 0) {
+      return `${hours}h`;
+    } else {
+      return `${hours}h ${minutes}m`;
+    }
+  }
+
+  const handleShowModal = () => {
+    setAddTeamMember(true);
+  };
+  const closeModal = () => {
+    setAddTeamMember(false);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  console.log(formData);
+
+  const renderPaginationButtons = () => {
+    const buttons = [];
+
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) {
+        buttons.push(
+          <button
+            key={i}
+            onClick={() => handleClick(i)}
+            disabled={i === currentPage}
+          >
+            {i}
+          </button>
+        );
+      }
+    } else {
+      if (currentPage <= 4) {
+        for (let i = 1; i <= 5; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => handleClick(i)}
+              disabled={i === currentPage}
+            >
+              {i}
+            </button>
+          );
+        }
+        buttons.push(<span key="ellipsis1">...</span>);
+        buttons.push(
+          <button
+            key={totalPages}
+            onClick={() => handleClick(totalPages)}
+            disabled={totalPages === currentPage}
+          >
+            {totalPages}
+          </button>
+        );
+      } else if (currentPage >= totalPages - 3) {
+        buttons.push(
+          <button
+            key={1}
+            onClick={() => handleClick(1)}
+            disabled={1 === currentPage}
+          >
+            1
+          </button>
+        );
+        buttons.push(<span key="ellipsis2">...</span>);
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => handleClick(i)}
+              disabled={i === currentPage}
+            >
+              {i}
+            </button>
+          );
+        }
+      } else {
+        buttons.push(
+          <button
+            key={1}
+            onClick={() => handleClick(1)}
+            disabled={1 === currentPage}
+          >
+            1
+          </button>
+        );
+        buttons.push(<span key="ellipsis3">...</span>);
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          buttons.push(
+            <button
+              key={i}
+              onClick={() => handleClick(i)}
+              disabled={i === currentPage}
+            >
+              {i}
+            </button>
+          );
+        }
+        buttons.push(<span key="ellipsis4">...</span>);
+        buttons.push(
+          <button
+            key={totalPages}
+            onClick={() => handleClick(totalPages)}
+            disabled={totalPages === currentPage}
+          >
+            {totalPages}
+          </button>
+        );
+      }
+    }
+
+    return buttons;
   };
 
   return (
-    // <---- WRAPPER DIV ---->
-    <div className="wrapper-div-teammates">
-      {/* <---- TOP DIV ----> */}
+    <div>
+      <Header
+        heading="Team Members"
+        isDate={true}
+        isMonthFilter={false}
+        btnName="Add Team Members"
+        selectedStartDate={startDate}
+        setSelectedStartDate={setStartDate}
+        handleClick={handleShowModal}
+      />
 
-      <div className="top-div-teammates">
-        <div className="left-top-teammates">
-          <div className="heading-teammates">
-            <h4 className="heading-h4-teammates">Team Members</h4>
-            <h4 className="responsive-h4-teammates">Teammates</h4>
-          </div>
-        </div>
+      <div className=" pt-4 bg-lightGray1">
+        <div className="d-md-flex gap-6 mb-3 px-md-5 px-3 position-relative">
+          <SearchInput
+            placeholder="Search team member...!"
+            value={search}
+            setValue={setSearch}
+          />
 
-        <div className="right-top-teammates">
-          <div className="calendar-teammates">
-            <h4>
-              <FontAwesomeIcon icon={faCalendar} />
-            </h4>
-            <h4>April 11, 2024</h4>
-          </div>
-
-          <h4 className="filter-teammates">
-            <FontAwesomeIcon icon={faFilter} />
-          </h4>
-
-          <div className="calendar-responsive-teammates">
-            <div className="day-teammates">
-              <h6>Day</h6>
+          <div className="d-flex gap-4 mt-3 mt-md-0">
+            <div
+              className="border-0 bg-white rounded py-2 py-md-0"
+              onClick={() => setIsFilter(!isFilter)}
+            >
+              <FilterButton />
             </div>
-            <div>
-              <h6>Week</h6>
-            </div>
-            <div>
-              <h6>Month</h6>
-            </div>
-          </div>
-
-          <div className="add-teammates" onClick={toggleAddTeammate}>
-            <h5>Add Team Members</h5>
-          </div>
-        </div>
-      </div>
-
-      {/* <---- CENTER DIV ----> */}
-
-      <div className="center-div-teammates">
-        <div className="center-top-teammates">
-          <div className="search-teammates">
-            <input type="text" placeholder="Search team member..!" />
-            <div className="search-icon">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </div>
-          </div>
-
-          <div className="center-top-right-teammates">
-            <div className="center-teammates-filter">
-              <FontAwesomeIcon icon={faBarsStaggered} />
-              <h6>Filter</h6>
-            </div>
-            <div className="center-teammates-sort">
-              <FontAwesomeIcon icon={faArrowDownShortWide} />
-              <h6>Sort</h6>
-            </div>
-          </div>
-        </div>
-
-        <div className="center-bottom-teammates">
-          <div className="center-bottom-buttons-teammates">
-            <h5>Employees</h5>
-            <h5>21</h5>
-          </div>
-          <div className="center-bottom-buttons-teammates">
-            <h5>Working</h5>
-            <h5>15</h5>
-          </div>
-          <div className="center-bottom-buttons-teammates">
-            <h5>Late</h5>
-            <h5>3</h5>
-          </div>
-          <div className="center-bottom-buttons-teammates">
-            <h5>Slack</h5>
-            <h5>0</h5>
-          </div>
-          <div className="center-bottom-buttons-teammates">
-            <h5>Absent</h5>
-            <h5>3</h5>
-          </div>
-        </div>
-      </div>
-
-      {/* <---- BOTTOM DIV ----> */}
-
-      {addTeammate && (
-        <div className="add-teammate-popup-wrapper">
-          <div className="add-teammate-popup-teammates">
-            <div className="addteammate-top-teammates">
-              <h4>Add Teammate</h4>
-              <div onClick={toggleAddTeammate}>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleXmark} />
-                </h4>
-              </div>
-            </div>
-
-            <div className="center-addteammate-teammates">
-              <h4>Add Team Members so you can Monitor their Output.</h4>
-              <h5>Forming Teams helps you stay Structured.</h5>
-            </div>
-
-            <div className="inputs-addteammat-teammates">
-              <div className="sec-input-holder-addteammate">
-                <div>
-                  <h6>Full Name</h6>
-                  <input type="text" placeholder="Enter Your Full Name" />
+            {isFilter && (
+              <div
+                className="z-3 position-absolute bg-white shadow"
+                style={{ top: "115%", left: "-43%" }}
+              >
+                <div className="py-2 px-4 fs-5 fw-light flex align-items-center gap-5">
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={handleSelectAllChange}
+                    style={{ width: "1rem", height: "1rem" }}
+                  />
+                  <label htmlFor="">Select all</label>
                 </div>
-                <div>
-                  <h6>Email</h6>
-                  <input type="text" placeholder="Enter Your Email" />
-                </div>
-              </div>
 
-              <div className="sec-input-holder-addteammate">
-                <div>
-                  <h6>Department</h6>
-                  <select>
-                    <option>Management</option>
+                <div className="py-3 px-4 border-top">
+                  <SearchInput placeholder="Search" />
+                </div>
+
+                <ul className="list-unstyled fs-5 fw-light">
+                  {departments.map((department) => {
+                    return (
+                      <li
+                        className="py-2 px-4 border-top border-bottom flex align-items-center gap-5"
+                        key={department.id}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.includes(department.id)}
+                          onChange={() => handleCheckboxChange(department.id)}
+                          style={{ width: "1rem", height: "1rem" }}
+                        />
+                        <label htmlFor="">{department.department_name}</label>
+                      </li>
+                    );
+                  })}
+
+                  <li className="pt-3 px-4 border-top d-flex align-items-center justify-content-between">
+                    <button
+                      className=" border px-3 text-center py-1 rounded fw-light shadow cursor-pointer fs-5 bg-transparent"
+                      onClick={handleReset}
+                    >
+                      Reset
+                    </button>
+                    <button
+                      className=" border  text-center px-3 py-1 rounded bg-gray text-white shadow cursor-pointer fs-5"
+                      onClick={handleSetDepartments}
+                    >
+                      Apply
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            <div
+              className="border-0 bg-white rounded"
+              onClick={() => setIsSort(!isSort)}
+            >
+              <SortButton />
+            </div>
+
+            {isSort && (
+              <div
+                className="z-3 position-absolute bg-white shadow"
+                style={{ top: "115%", left: "40%" }}
+              >
+                <div className="px-3 py-2">
+                  <select
+                    value={sortCriteria}
+                    onChange={handleSortCriteriaChange}
+                    className="py-1"
+                  >
+                    <option value="" disabled selected>
+                      --Select--
+                    </option>
+                    <option value="name">Name</option>
+                    <option value="status">Status</option>
+                    <option value="productiveTime">Productive Time</option>
+                    <option value="offlineTime">Offline Time</option>
+                    <option value="deskTime">DeskTime</option>
+                    <option value="arrivedAt">Arrived at</option>
+                    <option value="leftAt">Left at</option>
+                    <option value="timeAtWork">At work</option>
+                    <option value="activeApp">Active app</option>
+                    <option value="activeProject">Active project</option>
                   </select>
                 </div>
-                <div>
-                  <h6>Role</h6>
-                  <select>
-                    <option>Employee</option>
-                  </select>
+
+                <div className="d-flex flex-direction-column">
+                  <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
+                    <input
+                      type="radio"
+                      value="asc"
+                      checked={sortOrder === "asc"}
+                      onChange={handleSortOrderChange}
+                    />
+                    Ascending <IoIosArrowRoundUp />
+                  </label>
+                  <label className="d-flex align-items-center gap-3 px-4 py-2 ">
+                    <input
+                      type="radio"
+                      value="desc"
+                      checked={sortOrder === "desc"}
+                      onChange={handleSortOrderChange}
+                    />
+                    Descending <IoIosArrowRoundDown />
+                  </label>
                 </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div style={{ overflowX: "auto" }}>
+          <div style={{ minWidth: "50rem" }}>
+            <div className="d-flex px-4 pt-4 gap-3 ms-2">
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "employees" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("employees")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Employees</h5>
+                <h5 className="mb-0 fw-normal">{employeesCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "working" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("working")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Working</h5>
+                <h5 className="mb-0 fw-normal">{workingCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2 ${
+                  activeTab === "late" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("late")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Late</h5>
+                <h5 className="mb-0 fw-normal">{lateCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "slack" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("slacking")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Slack</h5>
+                <h5 className="mb-0 fw-normal">{slackingCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "absent" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("absent")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Absent</h5>
+                <h5 className="mb-0 fw-normal">{absentCount}</h5>
               </div>
             </div>
+            {/* </div> */}
 
-            <div className="bottom-addteammate-teammates">
-              <div className="left-bottom-addteammate">
-                <div>
-                  <h5>Add Team Members</h5>
-                </div>
-              </div>
-
-              <div className="right-bottom-addteammate">
-                <div className="sec-right-bottom-addteammate">
-                  <h6>Import From:</h6>
-                  <div className="auth-buttons-bottom-addteammate slack-addteammate">
-                    <img src={slack} alt="google" />
-                    <h5>Slack</h5>
-                  </div>
-                  <div className="auth-buttons-bottom-addteammate google-addteammate">
-                    <img src={google} alt="google" />
-                    <h5>Workspace</h5>
-                  </div>
-                </div>
-
-                <div className="sec-right-bottom-addteammate">
-                  <div className="cancle-bottom-addteammate">
-                    <h5>Cancle</h5>
-                  </div>
-                  <div className="invite-bottom-addteammate">
-                    <h5>Invite</h5>
-                  </div>
+            <div>
+              <table className="table table-bordered ">
+                <thead>
+                  <tr>
+                    <th className="text-center py-3 bg-lightGray1">Name</th>
+                    {getCurrentItems()?.map((item, index) => (
+                      <th key={index} className="text-center py-3 fw-normal">
+                        <img
+                          src={item.user.picture}
+                          alt=""
+                          className="rounded-circle me-4"
+                          style={{
+                            width: "2rem",
+                            height: "2rem",
+                            objectFit: "cover",
+                          }}
+                        />
+                        {item.user.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {sideHeadings.map((heading, headingIndex) => (
+                    <tr key={headingIndex}>
+                      <td
+                        className={`text-center py-3 fw-bold ${
+                          headingIndex % 2 !== 0 ? "bg-lightGray1" : "bg-white"
+                        }`}
+                      >
+                        {heading}
+                      </td>
+                      {getCurrentItems()?.map((item, itemIndex) => (
+                        <td
+                          key={itemIndex}
+                          className="text-center py-3 hover-effect"
+                        >
+                          <Link
+                            to={`teammateDetails/${item.user.user_id}`}
+                            className="text-black text-decoration-none"
+                          >
+                            {headingIndex === 0
+                              ? item.user.department_name
+                              : headingIndex === 1
+                              ? item.modeledData
+                                ? item.modeledData?.arrivedAt
+                                : "-"
+                              : headingIndex === 2
+                              ? item.modeledData
+                                ? item.modeledData?.leftAt
+                                : "-"
+                              : headingIndex === 3
+                              ? item.modeledData
+                                ? secondsToHoursMinutes(
+                                    item.modeledData?.productiveTime
+                                  )
+                                : "-"
+                              : headingIndex === 4
+                              ? item.modeledData
+                                ? secondsToHoursMinutes(
+                                    item.modeledData?.offlineTime
+                                  )
+                                : "-"
+                              : headingIndex === 5
+                              ? item.modeledData
+                                ? item.modeledData?.activeApp
+                                : "-"
+                              : headingIndex === 7
+                              ? item.modeledData
+                                ? secondsToHoursMinutes(
+                                    item.modeledData?.deskTime
+                                  )
+                                : "-"
+                              : "-"}
+                          </Link>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="pagination-controls d-flex justify-content-md-end mt-3">
+                <div className="d-flex gap-1 px-4 py-3">
+                  <button
+                    className="rounded border border-secondary"
+                    onClick={handlePrevious}
+                    disabled={currentPage === 1}
+                  >
+                    <IoIosArrowRoundBack className="fs-3" />
+                    <span className="d-md-inline d-none">Previous</span>
+                  </button>
+                  {renderPaginationButtons()}
+                  <button
+                    className="rounded border border-secondary"
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages}
+                  >
+                    <span className="d-md-inline d-none">Next</span>
+                    <IoIosArrowRoundForward className="fs-3" />
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-
-      <div className="bottom-div-teammates">
-        <table className="table-teammates">
-          <tr className="bottom-table-row-teammates">
-            <td>Name</td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                BASIT
-              </div>
-            </td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                HAZIK
-              </div>
-            </td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                ZAHID
-              </div>
-            </td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                ABID
-              </div>
-            </td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                KHALID
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Role</td>
-            <td>UI/UX</td>
-            <td>Full Stack</td>
-            <td>NodeJS</td>
-            <td>NodeJS</td>
-            <td>UI/UX</td>
-          </tr>
-          <tr>
-            <td>Arrived At</td>
-            <td>10.00 AM</td>
-            <td>7.00 AM</td>
-            <td>10.00 AM</td>
-            <td>10.00 AM</td>
-            <td>10.00 AM</td>
-          </tr>
-          <tr>
-            <td>Left At</td>
-            <td>4.00 PM</td>
-            <td>9.00PM</td>
-            <td>4.00 PM</td>
-            <td>4.00 PM</td>
-            <td>4.00 PM</td>
-          </tr>
-          <tr>
-            <td>Productive Time</td>
-            <td>3hr 56min</td>
-            <td>12hr 1min</td>
-            <td>3hr 56min</td>
-            <td>3hr 56min</td>
-            <td>3hr 56min</td>
-          </tr>
-          <tr>
-            <td>Offline Time</td>
-            <td>10m</td>
-            <td>0m</td>
-            <td>6m</td>
-            <td>8m</td>
-            <td>2m</td>
-          </tr>
-          <tr>
-            <td>Active App</td>
-            <td>Figma</td>
-            <td>VS Code</td>
-            <td>VS Code</td>
-            <td>Youtube</td>
-            <td>Figma</td>
-          </tr>
-          <tr>
-            <td>Active Project</td>
-            <td>DeskTime</td>
-            <td>DeskTime</td>
-            <td>DeskTime</td>
-            <td>DeskTime</td>
-            <td>DeskTime</td>
-          </tr>
-          <tr>
-            <td>Desktime</td>
-            <td>10m</td>
-            <td>12hr</td>
-            <td>10m</td>
-            <td>10m</td>
-            <td>10m</td>
-          </tr>
-        </table>
-        <table className="table-responsive-teammates">
-          <tr>
-            <td>Name</td>
-            <td>
-              <div>
-                <FontAwesomeIcon icon={faUser} />
-                BASIT
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Role</td>
-            <td>UI/UX</td>
-          </tr>
-          <tr>
-            <td>Arrived At</td>
-            <td>10.00 AM</td>
-          </tr>
-          <tr>
-            <td>Left At</td>
-            <td>4.00 PM</td>
-          </tr>
-          <tr>
-            <td>Productive Time</td>
-            <td>3hr 56min</td>
-          </tr>
-          <tr>
-            <td>Offline Time</td>
-            <td>10m</td>
-          </tr>
-          <tr>
-            <td>Active App</td>
-            <td>Figma</td>
-          </tr>
-          <tr>
-            <td>Active Project</td>
-            <td>DeskTime</td>
-          </tr>
-          <tr>
-            <td>Desktime</td>
-            <td>10m</td>
-          </tr>
-        </table>
       </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        {addTeamMember && (
+          <ModalComponent
+            handleClose={closeModal}
+            heading="Add Teammate"
+            btn1="Cancel"
+            btn2="Invite"
+          >
+            <div className="px-4 py-3 mb-5">
+              <h5 className="text-center">
+                Add Team Members so you can Monitor their Output.
+              </h5>
+              <h5 className="text-center">
+                Forming Teams helps you stay Structured.
+              </h5>
+            </div>
+            <form className="mb-3" onSubmit={handleSubmit}>
+              <div className="d-flex gap-4 mb-5">
+                <label htmlFor="name" className="w-50">
+                  Full Name <span className="text-red">*</span>
+                  <input
+                    type="text"
+                    id="name"
+                    name="fullname"
+                    placeholder="Enter Full name..."
+                    className="d-block px-3 py-2 w-100 rounded border"
+                    value={formData.fullname}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+                <label htmlFor="email" className="w-50">
+                  Email <span className="text-red">*</span>
+                  <input
+                    type="text"
+                    placeholder="Enter Email..."
+                    className="d-block px-3 py-2 w-100 rounded border"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="d-flex gap-4 mb-5">
+                <div className="w-50 h-100">
+                  <label>Department</label>
+                  <select
+                    id="department-select"
+                    value={formData.department_id}
+                    name="department_id"
+                    onChange={handleChange}
+                    className="px-3 py-2"
+                  >
+                    <option value="" disabled>
+                      --Select Department--
+                    </option>
+                    {departments.map((department) => (
+                      <option key={department.id} value={department.id}>
+                        {department.department_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="w-50 h-100">
+                  <label>Role</label>
+                  <select
+                    id="role-select"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="px-3 py-2"
+                  >
+                    <option value="" disabled>
+                      --Select Role--
+                    </option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.role}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="d-flex gap-6">
+                <button type="submit" className="btn">
+                  Add Team Members
+                </button>
+                <div className="d-flex gap-4 align-items-center">
+                  <p className="mb-0 ">
+                    Import<span className="ms-2">from:</span>
+                  </p>
+                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                    <FaSlack /> <span>Slack</span>
+                  </button>
+                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                    <FcGoogle />
+                    <span>Workspace</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ModalComponent>
+        )}
+      </Suspense>
     </div>
   );
 };
