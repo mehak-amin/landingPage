@@ -1,0 +1,19 @@
+.bg-darkgray {
+  background-color: #6d6d6d;
+}
+
+.close-btn {
+  height: 30px;
+  width: 30px;
+  border: 2px solid white;
+  border-radius: 50%;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+.fs-2 {
+  font-size: 2rem;
+}
+.no-border-radius {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}

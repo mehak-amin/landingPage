@@ -20,10 +20,9 @@ import ResetPassword from "./components/resetPassword/ResetPassword";
 import WorkPlanner from "./pages/AdminModule/WorkPlanners/WorkPlanner";
 import ManageRoles from "./pages/AdminModule/ManageRoles/ManageRoles";
 import Settings from "./pages/AdminModule/Settings/Settings";
-import { Routes, Route } from "react-router-dom";
+
 import { useState } from "react";
 import Sidebarpractice from "./components/sidebarpractice/Sidebarpractice";
-
 
 function App() {
   const [role, setRole] = useState("");
@@ -38,7 +37,6 @@ function App() {
         path="/resetPassword/b7293698d4e362ec6e90c2e5cf5cd179106d824c9a7fc2bca4ce78cb175c9f46"
         element={<ResetPassword />}
       />
-
 
       <Route path="/" element={<Layout role={role} />}>
         <Route path="admin" element={<Admin />}>
@@ -57,9 +55,6 @@ function App() {
           <Route path="settings" element={<Settings />}>
             <Route path="manageroles" element={<ManageRoles />} />
           </Route>
-
-
-
         </Route>
         <Route path="users" element={<User />}>
           <Route path="myScreen" element={<MyScreen />} />
@@ -68,8 +63,7 @@ function App() {
           <Route path="newTask" element={<NewTask />} />
 
           <Route path="projects/newTask" element={<NewTask />} />
-
-   </Route>
+        </Route>
       </Route>
       {/* </Route> */}
     </Routes>

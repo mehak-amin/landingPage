@@ -1,18 +1,19 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import "./ManageRoles.css";
-// import { PiTrashBold } from "react-icons/pi";
 import { FaTrash, FaEllipsisH } from "react-icons/fa";
 import EditDdelete from "../../../components/Edit-Delete-PopUp/Edit-delete";
 import BASE_URI from "../../../../config";
-// import {
-//   addRole,
-//   bulkDeleteRoles,
-//   deleteRole,
-//   getRoles,
-//   updateRole,
-// } from "../../../services/RollManagerService";
-import axios from "axios";
+// import CreateRoles from "./createRoles/Createroles";
+import CreateRoles from "./createRoles/CreateRoles";
+import "./ManageRoles.css";
+// import { library } from "@fortawesome/fontawesome-svg-core";
+// // import {
+// //   addRole,
+// //   bulkDeleteRoles,
+// //   deleteRole,
+// //   getRoles,
+// //   updateRole,
+// // } from "../../../services/RollManagerService";
 
 // const rolesData = [
 //   {
@@ -49,15 +50,24 @@ import axios from "axios";
 // ];
 
 function ManageRoles() {
-  //   const [active, setActive] = useState(true);
-  // const [roles, setRoles] = useState(rolesData);
   const [roles, setRoles] = useState([]);
   const [selectedRoles, setSelectedRoles] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditDeleteModal, setShowEditDeleteModal] = useState(false);
+
+  const handleShowCreate = () => {
+    console.log("clicked");
+    setShowCreateModal(true);
+  };
+  const handleCloseCreate = () => setShowCreateModal(false);
+
+  const handleShowEditDelete = () => setShowEditDeleteModal(true);
+  const handleCloseEditDelete = () => setShowEditDeleteModal(false);
+  //   const [active, setActive] = useState(true);
+  // const [roles, setRoles] = useState(rolesData);
   // const [editingRole, setEditingRole] = useState(null);
   // const [dates, setDates] = useState([]);
-  // const [newRoleName, setNewRoleName] = useState("");
-  // const [newRoleStatus, setNewRoleStatus] = useState("active"); // Default to active
+
   // const [error, setError] = useState(null);
 
   const token = localStorage.getItem("token");
@@ -79,110 +89,53 @@ function ManageRoles() {
       "Nov",
       "Dec",
     ];
+    //     //get the components of the date
 
-    //get the components of the date
     const dayOfWeek = weekDays[date.getUTCDay()];
     const day = date.getUTCDate();
-    // const month = months[date.getUTCMonth()];
+
     const month = months[date.getUTCMonth()];
     const year = date.getUTCFullYear();
-
     // Get hours and minutes for formatting
     let hours = date.getUTCHours();
     const minutes = date.getUTCMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-
-    // Format minutes with leading zero
+    hours = hours % 12 || 12;
     const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-    // Format hours with leading zero
     const formattedHours = hours < 10 ? "0" + hours : hours;
 
-    // Combine the components into the desired format
     return `${dayOfWeek} ${day} ${month}, ${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URI}/api/v1/roles`, {
-        headers: "Bearer " + token,
-      })
-      .then((resp) => {
-        console.log(resp.data.data.roles);
-        setRoles(resp.data.data.roles);
-        // });
-        const fetchedRoles = resp.data.data.roles.map((role) => ({
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get(`${BASE_URI}/roles`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response.data.data.roles);
+        const fetchedRoles = response.data.data.roles.map((role) => ({
           ...role,
           created_at: formatDate(role.created_at),
         }));
         setRoles(fetchedRoles);
-      })
-      .catch((err) => {
-        console.error("Error fetching roles:", err);
-      });
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+
+    fetchRoles();
   }, [token]);
+
   const handleSelectAll = () => {
     if (selectedRoles.length === roles.length) {
       setSelectedRoles([]);
     } else {
-      setSelectedRoles(roles.map((role) => role.id)); //[1,2,3,....]
+      setSelectedRoles(roles.map((role) => role.id));
     }
   };
-
-  // -----------------
-  // const handleAddRole = () => {
-  //   axios
-  //     .post(
-  //       `${BASE_URI}/api/v1/roles`,
-  //       {
-  //         role: newRoleName,
-  //         is_active: newRoleStatus === 'active' ? 1 : 0,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: "Bearer " + token,
-  //         },
-  //       }
-  //     )
-  //     .then((resp) => {
-  //       // Role successfully added, update roles list
-  //       fetchRoles();
-  //       // Clear input fields
-  //       setNewRoleName("");
-  //       setNewRoleStatus("active"); // Reset status to active
-  //       console.log("Role added successfully:", resp.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error adding role:", err);
-  //       // Handle error
-  //     });
-  // };
-
-  // -----------------------
-  // const handleAddRole = () => {
-  //   axios
-  //     .post(
-  //       `${BASE_URI}/api/v1/roles`,
-  //       {
-  //         role: "Roll Name",
-  //         is_active: newRoleStatus === "active" ? 1 : 0,
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: "Bearer" + token,
-  //         },
-  //       }
-  //     )
-  //     .then((resp) => {
-  //       // Role successfully added, update roles list
-  //       fetchRoles();
-  //       // Clear input fields
-  //       setNewRoleName("");
-  //       setNewRoleStatus("active"); // Reset status to active
-  //       console.log("Role added successfully:", resp.data);
-  //     });
-  // };
 
   const handleCheckboxChange = (id) => {
     setSelectedRoles((prevSelectedRoles) => {
@@ -193,27 +146,28 @@ function ManageRoles() {
       }
     });
   };
+
   const handleDeleteSelected = () => {
     setRoles((prevRoles) =>
       prevRoles.filter((role) => !selectedRoles.includes(role.id))
     );
-    setSelectedRoles([]); // Clear the selection after deletion
+    setSelectedRoles([]);
   };
+
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+
   const handleDelete = () => {
-    console.log("deleted successfully");
-    toggleModal();
-  };
-  const handleEdit = () => {
-    console.log("edited successfully");
-    toggleModal();
+    console.log("Deleted successfully");
+    handleCloseEditDelete();
   };
 
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
+  const handleEdit = () => {
+    console.log("Edited successfully");
+    handleCloseEditDelete();
+  };
+
   return (
     <div className="container mt-5">
       <div
@@ -228,6 +182,8 @@ function ManageRoles() {
           >
             Select all
           </a>
+          <button onClick={handleShowCreate}>show</button>
+          <CreateRoles show={showCreateModal} handleClose={handleCloseCreate} />
         </div>
         <div className="d-flex align-items-center gap-3">
           <span className="text-white fw-medium">
@@ -240,8 +196,8 @@ function ManageRoles() {
             <FaTrash />
           </button>
           <EditDdelete
-            showModal={showModal}
-            toggleModal={toggleModal}
+            showModal={showEditDeleteModal}
+            toggleModal={handleShowEditDelete}
             handleDelete={handleDelete}
             handleEdit={handleEdit}
           />

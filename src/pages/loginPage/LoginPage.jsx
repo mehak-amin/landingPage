@@ -19,7 +19,6 @@ function LoginPage({ role, setRole }) {
   const [user, setUser] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-
   // const navigate = useNavigate();
 
   const handleFocus = () => {
@@ -43,9 +42,8 @@ function LoginPage({ role, setRole }) {
     e.preventDefault();
 
     axios
-      .post(`${BASE_URI}/users/login`, { email, password, client_id: clientId })
+      .post(`${BASE_URI}/users/login`, { email, password })
       .then((response) => {
-
         console.log(response);
         // console.log(response.data.userData.token);
         setUser(response.data.Data);
