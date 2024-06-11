@@ -1,0 +1,50 @@
+.barChart {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.barChart::-webkit-scrollbar {
+  width: 6px !important;
+  height: 3px;
+}
+
+.barChart::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb {
+  background: #d5d4d4 !important;
+}
+
+.barChart::-webkit-scrollbar-thumb:hover {
+  background: #8b8a8a !important;
+}
+@media screen and (min-width: 1500px) {
+  .responsive-container {
+    display: flex;
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1500px) {
+  .ss-display-flex {
+    display: flex;
+  }
+}
+@media screen and (max-width: 800px) {
+  .app-scroll {
+    overflow-x: auto;
+  }
+  .app-scroll::-webkit-scrollbar {
+    width: 6px !important;
+    height: 3px;
+  }
+  .app-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+  }
+
+  .app-scroll::-webkit-scrollbar-thumb {
+    background: #d5d4d4 !important;
+  }
+
+  .app-scroll::-webkit-scrollbar-thumb:hover {
+    background: #8b8a8a !important;
+  }
+}

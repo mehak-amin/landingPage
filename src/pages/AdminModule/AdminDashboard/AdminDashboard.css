@@ -9,26 +9,6 @@
 .bg-darkGray {
   background-color: #6d6d6d;
 }
-.barChart {
-  overflow-x: auto;
-  max-width: 100%;
-}
-.barChart::-webkit-scrollbar {
-  width: 6px !important;
-  height: 3px;
-}
-
-.barChart::-webkit-scrollbar-track {
-  background: #f1f1f1 !important;
-}
-
-.barChart::-webkit-scrollbar-thumb {
-  background: #d5d4d4 !important;
-}
-
-.barChart::-webkit-scrollbar-thumb:hover {
-  background: #8b8a8a !important;
-}
 .text-green {
   color: #36c449;
 }
@@ -46,9 +26,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 10px;
   }
   .dropdown-tabs {
     display: block;
+  }
+}
+@media screen and (min-width: 1400px) {
+  .max-w-41 {
+    max-width: 41%;
   }
 }
 @media screen and (max-width: 800px) {
@@ -74,5 +61,10 @@
 @media screen and (min-width: 869px) {
   .dropdown-tabs {
     display: none;
+  }
+}
+@media screen and (max-width: 421px) {
+  .custom-wrap-420 {
+    flex-wrap: wrap;
   }
 }

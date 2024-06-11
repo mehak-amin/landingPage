@@ -21,7 +21,7 @@ import {
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
 function Sidebar({ isSideBarOpen, role }) {
-  console.log(role);
+  // console.log(role);
   const adminOptions = [
     {
       heading: "Main menu",

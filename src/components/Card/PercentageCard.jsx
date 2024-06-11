@@ -15,7 +15,7 @@ export default function PercentageCard({ title, data }) {
         arrivalTime: time.toFixed(2),
       }))
     : [];
-  console.log(newData);
+
   const dummyData = [...newData, { day: 1, arrivalTime: "30" }];
 
   function calculateMean(durations) {
@@ -30,7 +30,7 @@ export default function PercentageCard({ title, data }) {
 
   return (
     <div className="mb-4">
-      <Card className=" shadow px-2 px-sm-4 ">
+      <Card className="custom-shadow px-2 px-sm-4 ">
         <Card.Body className="p-2 p-sm-3">
           <Card.Text className="fw-bold">{title}</Card.Text>
           <Card.Title className="text-green">{mean} %</Card.Title>
@@ -46,7 +46,13 @@ export default function PercentageCard({ title, data }) {
                 {/* <XAxis dataKey="day" /> */}
                 {/* <YAxis /> */}
                 <Tooltip />
-                <Line type="monotone" dataKey="arrivalTime" stroke="#36c449" />
+                <Line
+                  type="monotone"
+                  dataKey="arrivalTime"
+                  stroke="#36c449"
+                  dot={false}
+                  activeDot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>

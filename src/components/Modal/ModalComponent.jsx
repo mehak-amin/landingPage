@@ -5,7 +5,6 @@ export default function ModalComponent({
   heading,
   children,
   handleClose,
-
   btn1,
   btn2,
 }) {

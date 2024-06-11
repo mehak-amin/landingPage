@@ -1,28 +1,49 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Departments.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendar,
-  faFilter,
-  faArrowDownShortWide,
-  faMagnifyingGlass,
-  faTrashCan,
-  faEllipsis,
-  faCircleXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { DiAppcelerator } from 'react-icons/di';
 import BASE_URI from "../../../../config";
-
+import Header from "../../../components/Header";
+import SearchInput from "../../../components/SearchInput";
+import SortButton from "../../../components/Button/SortButton";
+import formatDateToIST from "../../../utils/formatDateToIST";
+import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import useFetch from "../../../hooks/useFetch";
+import ModalComponent from "../../../components/Modal/ModalComponent";
 const Departments = () => {
   const [createDeparment, setcreateDeparment] = useState(false);
-  const [departmentsData, setDepartmentsData] = useState([]);
+  // const [departmentsData, setDepartmentsData] = useState([]);
   const [deptName, setDeptName] = useState("");
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState({});
   const [deletePopUp, setDeletePopUp] = useState(false);
   const [id, setId] = useState("");
-  // const [toggleStates, setToggleStates] = useState({});
+  const [isSort, setIsSort] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
+  const [sortCriteria, setSortCriteria] = useState("");
+  const [search, setSearch] = useState("");
+
+  const token = localStorage.getItem("token");
+  let url = `${BASE_URI}/departments`;
+  if (sortCriteria && sortOrder) {
+    url += `?sort=${sortCriteria}&direction=${sortOrder}`;
+  }
+
+  if (search) {
+    url += `&search=${search}`;
+  }
+  const fetchOptions = {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  };
+
+  const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
+  const departmentsData = data?.data || [];
+  // console.log(data);
 
   const navigate = useNavigate();
 
@@ -38,40 +59,15 @@ const Departments = () => {
     }));
   };
 
-  // const toggleEditOrDeletePopUp = ()=>{
-  //   setEditOrDeletePopUp(!editOrDeletePopUp);
-  // }
-
   const togglecreateDeparment = () => {
     setcreateDeparment(!createDeparment);
   };
-
-  //    <-------- GETTING DATA FROM BACKEND (GET) --------->
-
-  const fetchDepartments = async () => {
-    try {
-      const response = await axios({
-        method: "GET",
-        url: `${BASE_URI}/api/v1/departments`,
-      });
-      setDepartmentsData(response.data.data);
-      setDeptName("");
-      console.log(response.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
-
-  //   <----------- POSTING DATA ON BACKEND (POST) (CREATE DEPARTMENT) ----------->
 
   const handleCreateDepartment = async () => {
     try {
       const response = await axios({
         method: "POST",
-        url: `${BASE_URI}/api/v1/departments`,
+        url: `${BASE_URI}/departments`,
         data: {
           deptName,
         },
@@ -92,7 +88,7 @@ const Departments = () => {
       console.log(id);
       const response = await axios({
         method: "DELETE",
-        url: `${BASE_URI}/api/v1/departments/${id}`,
+        url: `${BASE_URI}/departments/${id}`,
       });
       fetchDepartments();
       setDeletePopUp(false);
@@ -109,7 +105,7 @@ const Departments = () => {
     try {
       const response = await axios({
         method: "PATCH",
-        url: `${BASE_URI}/api/v1/departments/${id}`,
+        url: `${BASE_URI}/departments/${id}`,
         data: {
           newName,
         },
@@ -121,88 +117,131 @@ const Departments = () => {
     }
   };
 
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleSortCriteriaChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
+  const handleClose = () => {
+    setDeletePopUp(!deletePopUp);
+  };
+
   return (
     <div className="wrapper-div-departments">
       {/* <--------- DELETE POPUP STRUCTURE -----------> */}
       {deletePopUp && (
-        <div className="wrapper-delete-popup-departments">
-          <div className="delete-popup-departments">
-            <div className="delete-department-top-departments">
-              <h4>Delete Department</h4>
-              <div onClick={() => setDeletePopUp(!deletePopUp)}>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleXmark} />
-                </h4>
-              </div>
-            </div>
-
-            <div className="delete-department-center-departments">
-              <h6>
-                Do you really want to remove the projects that you have chosen?
-              </h6>
-              <h6>There is no turning back.</h6>
-            </div>
-
-            <div className="delete-department-bottom-departments">
-              <h5 onClick={() => setDeletePopUp(false)}>Cancel</h5>
-              <h5 onClick={handleDeleteDepartment}>Delete</h5>
-            </div>
+        <ModalComponent
+          heading="Delete Department"
+          handleClose={handleClose}
+          btn1="Cancel"
+          btn2="Delete"
+        >
+          <div>
+            <h5 className="text-center mb-2">
+              Do you really want to remove the projects that you have chosen?
+            </h5>
+            <h5 className="text-center">There is no turning back.</h5>
           </div>
-        </div>
+        </ModalComponent>
+        // <div className="wrapper-delete-popup-departments">
+        //   <div className="delete-popup-departments">
+        //     <div className="delete-department-top-departments">
+        //       <h4>Delete Department</h4>
+        //       <div onClick={() => setDeletePopUp(!deletePopUp)}>
+        //         <h4>
+        //           <FontAwesomeIcon icon={faCircleXmark} />
+        //         </h4>
+        //       </div>
+        //     </div>
+
+        //     <div className="delete-department-center-departments">
+        //       <h6>
+        //         Do you really want to remove the projects that you have chosen?
+        //       </h6>
+        //       <h6>There is no turning back.</h6>
+        //     </div>
+
+        //     <div className="delete-department-bottom-departments">
+        //       <h5 onClick={() => setDeletePopUp(false)}>Cancel</h5>
+        //       <h5 onClick={handleDeleteDepartment}>Delete</h5>
+        //     </div>
+        //   </div>
+        // </div>
       )}
 
       {/* <---- TOP DIV ----> */}
+      <Header
+        heading="Departments"
+        isDate={false}
+        isMonthFilter={false}
+        btnName="Create Department"
+        handleClick={togglecreateDeparment}
+      />
 
-      <div className="top-div-departments">
-        <div className="left-top-departments">
-          <div className="heading-departments">
-            <h4 className="heading-h4-departments">Departments</h4>
-            {/* <h4 className='responsive-h4-departments'>Teammates</h4> */}
-          </div>
-        </div>
-
-        <div className="right-top-departments">
-          <div className="calendar-departments">
-            <h4>
-              <FontAwesomeIcon icon={faCalendar} />
-            </h4>
-            <h4>April 11, 2024</h4>
-          </div>
-
-          <h4 className="filter-departments">
-            <FontAwesomeIcon icon={faFilter} />
-          </h4>
-
-          {/* <div className="calendar-responsive-departments">
-   <div className='day-teammates'><h6>Day</h6></div>
-   <div><h6>Week</h6></div>
-   <div><h6>Month</h6></div>
- </div> */}
-
-          <div className="add-departments" onClick={togglecreateDeparment}>
-            <h5>Create Department</h5>
-          </div>
-        </div>
-      </div>
       {/* <---------------- CENTER DIV MANAGE APPS ------------------> */}
 
-      <div className="center-div-departments">
-        <div className="center-top-departments">
-          <div className="search-departments">
-            <input type="text" placeholder="Search Departments..!" />
-            <div className="search-icon">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </div>
-          </div>
+      <div className="d-md-flex gap-6  px-md-5 px-3 py-4 position-relative">
+        <SearchInput
+          placeholder="Search Departments...!"
+          value={search}
+          setValue={setSearch}
+        />
 
-          <div className="center-top-right-departments">
-            <div className="center-departments-sort">
-              <FontAwesomeIcon icon={faArrowDownShortWide} />
-              <h6>Sort</h6>
-            </div>
+        <div className="d-flex gap-4 mt-3 mt-md-0">
+          <div
+            className="border-0 bg-white rounded"
+            onClick={() => setIsSort(!isSort)}
+          >
+            <SortButton />
           </div>
+          {isSort && (
+            <div
+              className="z-3 position-absolute bg-white custom-shadow"
+              style={{ top: "115%", left: "-50%" }}
+            >
+              <div className="px-3 py-2">
+                <select
+                  value={sortCriteria}
+                  onChange={handleSortCriteriaChange}
+                  className="py-1 rounded"
+                >
+                  <option value="" disabled selected>
+                    --Select--
+                  </option>
+                  <option value="department_name">Department Name</option>
+                  <option value="created">Created</option>
+                  <option value="members">Members</option>
+                </select>
+              </div>
+
+              <div className="d-flex flex-direction-column">
+                <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
+                  <input
+                    type="radio"
+                    value="asc"
+                    checked={sortOrder === "asc"}
+                    onChange={handleSortOrderChange}
+                  />
+                  Ascending <IoIosArrowRoundUp />
+                </label>
+                <label className="d-flex align-items-center gap-3 px-4 py-2 ">
+                  <input
+                    type="radio"
+                    value="desc"
+                    checked={sortOrder === "desc"}
+                    onChange={handleSortOrderChange}
+                  />
+                  Descending <IoIosArrowRoundDown />
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
       {/* <----------------- BOTTOM DIV -----------------> */}
       {createDeparment && (
         <div className="create-department-popup-wrapper">
@@ -244,8 +283,8 @@ const Departments = () => {
         </div>
       )}
 
-      <div className="bottom-div-departments">
-        <div className="content-bottom-div-departments">
+      <div className="">
+        <div className="px-5">
           <div className="top-div-bottom-departments">
             <div className="left-top-div-bottom-departments">
               <h5>Select All</h5>
@@ -253,91 +292,69 @@ const Departments = () => {
             <div className="right-top-div-bottom-departments">
               <h5>0 Departments Selected</h5>
               <h6>
-                <FontAwesomeIcon icon={faTrashCan} />
+                <RiDeleteBin6Line className="fs-3" />
               </h6>
             </div>
           </div>
-          {departmentsData.map((department, departmentIndex) => (
-            <div key={departmentIndex} className="table-container-departments">
-              <table>
-                <tr className="table-headding-departments">
-                  <th>
-                    <h6>Role Name</h6>
-                  </th>
-                  <th>
-                    <h6>Created</h6>
-                  </th>
-                  <th>
-                    <h6>Members</h6>
-                  </th>
-                  <th>
-                    <h6>Edit/Delete</h6>
-                  </th>
-                </tr>
-                <tr>
-                  <td className="table-data-appname-departments">
-                    <input type="checkbox" />{" "}
-                    <h6>{department.department_name}</h6>
-                  </td>
-                  <td>
-                    <h6>{department.created_at}</h6>
-                  </td>
-                  <td>
-                    <h6>3</h6>
-                  </td>
-                  <td>
-                    <h6
-                      onClick={() => {
-                        toggleEditOrDeletePopUp(department.id);
-                        setId(department.id);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faEllipsis} />
-                      {editOrDeletePopUp[department.id] && (
-                        <div>
-                          <h6>Edit</h6>
-                          <h6 onClick={handleDelete}>Delete</h6>
-                        </div>
-                      )}
-                    </h6>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          ))}
 
-          <div className="responsive-table-departments">
-            <table>
-              <tr>
-                <td>
-                  <input type="checkbox" />
-                  <h6>Management</h6>
-                </td>
-                <td className="table-data-appname-departments">
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Created</h6>
-                </td>
-                <td className="date2-responsive-departments">
-                  <h6>Wed 20 April, 2024 02:33 PM</h6>
-                </td>
-                <td className="date-responsive-departments">
-                  <h6>Wed 20 April</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Members</h6>
-                </td>
-                <td>
-                  <h6>3</h6>
-                </td>
-              </tr>
+          <div>
+            <table className="table table-borderless">
+              <thead>
+                <tr>
+                  <th className="border-0 text-start py-2 ps-5">
+                    Department Name
+                  </th>
+                  <th className="border-0 ">Created</th>
+                  <th className="border-0">Members</th>
+                  <th className="border-0">Edit/Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {departmentsData &&
+                  departmentsData.map((department, departmentIndex) => (
+                    <tr key={departmentIndex}>
+                      <td className="py-3 ps-5">
+                        <input
+                          type="checkbox"
+                          className="d-inline border-0 me-2"
+                          style={{ width: "1rem", height: "1rem" }}
+                        />{" "}
+                        {department?.department_name}
+                      </td>
+                      <td className="text-center">
+                        {formatDateToIST(department?.created_at)}
+                      </td>
+                      <td className="text-center">
+                        {department?.member_count}
+                      </td>
+                      <td
+                        className="text-center position-relative"
+                        onClick={() => {
+                          toggleEditOrDeletePopUp(department.id);
+                          setId(department.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faEllipsis}
+                          className="cursor-pointer"
+                        />
+                        {editOrDeletePopUp[department.id] && (
+                          <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
+                            <h6 className="py-3 px-5 border-bottom cursor-pointer">
+                              Edit
+                            </h6>
+                            <h6
+                              className="py-3 px-5 text-red cursor-pointer"
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </h6>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
             </table>
           </div>
         </div>

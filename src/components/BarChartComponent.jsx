@@ -24,7 +24,7 @@ const BarChartComponent = ({ barData }) => {
     () =>
       aggregatedSlotDataResult &&
       aggregatedSlotDataResult.map((slot, index) => ({
-        timeSlot: `Slot ${index + 1}`,
+        timeSlot: `${(index + 1) * 10}min`,
         productive: slot.productive || 0,
         unproductive: slot.unproductive || 0,
         neutral: slot.neutral || 0,
@@ -33,20 +33,34 @@ const BarChartComponent = ({ barData }) => {
     [aggregatedSlotDataResult]
   );
 
+  // console.log(chartData);
+
   const formatXAxis = useCallback((tickItem) => {
-    if (
-      tickItem === "10:00 AM" ||
-      tickItem === "01:00 PM" ||
-      tickItem === "04:00 PM"
-    ) {
-      return tickItem;
-    } else {
-      return "";
+    const minutes = parseInt(tickItem.replace("min", ""), 10);
+    if (minutes % 60 === 0) {
+      return `${minutes / 60}h`;
     }
+    return "";
   }, []);
 
+  if (barData?.length === 0) {
+    return (
+      <div
+        className="text-center h-100 d-flex justify-content-center align-items-center px-4 mb-4"
+        style={{ border: "4px dashed #efecec" }}
+      >
+        <div>
+          <h4>No, Bar Data found</h4>
+          <p className="fw-light text-secondary">
+            There is no tracking for this date, Please select another date!
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center barChart">
+    <div className="text-center mb-4 barChart">
       <BarChart
         width={
           chartData &&
