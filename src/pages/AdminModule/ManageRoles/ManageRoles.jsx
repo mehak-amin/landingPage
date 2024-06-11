@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaTrash, FaEllipsisH } from "react-icons/fa";
 import EditDdelete from "../../../components/Edit-Delete-PopUp/Edit-delete";
 import BASE_URI from "../../../../config";
@@ -12,6 +12,7 @@ function ManageRoles() {
   const [selectedRoles, setSelectedRoles] = useState([]); //selected role container
   const [showCreateModal, setShowCreateModal] = useState(false); //shows createRole modal
   const [showEditDeleteModal, setShowEditDeleteModal] = useState(false); //shows edit/delete modal
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   // const [status, setStatus] = useState("1");
   const [startDate, setStartDate] = useState(new Date()); //sabreena

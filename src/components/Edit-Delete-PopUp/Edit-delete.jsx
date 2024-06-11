@@ -1,3 +1,46 @@
+// import React, { useState } from "react";
+// // import EditRoles from "../../pages/AdminModule/ManageRoles/editRoles/EditRoles";
+// import "./EditDelete.css";
+
+// function EditDdelete({ showModal, closeModal, position }) {
+//   const [showEditModal, setShowEditModal] = useState(false);
+
+//   const handleShowEdit = () => {
+//     setShowEditModal(true);
+//   };
+
+//   const handleDelete = () => {
+//     console.log("delete");
+//   };
+
+//   if (!showModal) {
+//     return null;
+//   }
+
+//   return (
+//     <div className="popup-overlay" onClick={closeModal}>
+//       <div
+//         className="popup"
+//         style={{
+//           top: position.top,
+//           left: position.left,
+//         }}
+//         onClick={(e) => e.stopPropagation()}
+//       >
+//         <div className="popup-item" onClick={handleShowEdit}>
+//           Edit
+//         </div>
+//         <div className="popup-item delete" onClick={handleDelete}>
+//           Delete
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default EditDdelete;
+
+// -----------------------------------------------------------------------
 import React, { useState } from "react";
 import "./EditDelete.css"; // Assuming you still want to use some custom styles
 import EditRoles from "../../pages/AdminModule/ManageRoles/editRoles/EditRoles";
