@@ -12,6 +12,8 @@ axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole, user, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -27,6 +29,7 @@ function LoginPage({ role, setRole, user, setUser }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("role", role);
   }, [user, role]);
+
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -156,7 +159,6 @@ function LoginPage({ role, setRole, user, setUser }) {
               </div>
             </div>
 
-            {/* <div className="input-col">
             <label htmlFor="clientId" className="form-label">
               Client Id
             </label>
@@ -175,6 +177,7 @@ function LoginPage({ role, setRole, user, setUser }) {
             </div>
           </div> */}
 
+
             <div className="remember-forgot-link">
               <div className="remember-link m-0">
                 <div>
@@ -188,6 +191,7 @@ function LoginPage({ role, setRole, user, setUser }) {
                 <div className="remember-label ">
                   <label htmlFor="">remember me</label>
                 </div>
+
               </div>
               <div className="">
                 <Link to="forgetPassword" className="forgot-link">
