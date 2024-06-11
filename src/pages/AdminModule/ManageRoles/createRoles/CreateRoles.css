@@ -1,0 +1,73 @@
+.bg-darkgray {
+  background-color: #6d6d6d;
+}
+
+.close-btn {
+  height: 30px;
+  width: 30px;
+  border: 2px solid white;
+  border-radius: 50%;
+  padding-bottom: 5px;
+  cursor: pointer;
+}
+.fs-2 {
+  font-size: 2rem;
+}
+.no-border-radius {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+/* .popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;
+  max-width: 80%;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+} */

@@ -12,13 +12,12 @@ axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [clientId, setClientId] = useState("");
+  // const [clientId, setClientId] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
 
   const [user, setUser] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-
 
   // const navigate = useNavigate();
 
@@ -43,9 +42,8 @@ function LoginPage({ role, setRole }) {
     e.preventDefault();
 
     axios
-      .post(`${BASE_URI}/users/login`, { email, password, client_id: clientId })
+      .post(`${BASE_URI}/users/login`, { email, password })
       .then((response) => {
-
         console.log(response);
         // console.log(response.data.userData.token);
         setUser(response.data.Data);
@@ -150,7 +148,7 @@ function LoginPage({ role, setRole }) {
             </div>
           </div>
 
-          <div className="input-col">
+          {/* <div className="input-col">
             <label htmlFor="clientId" className="form-label">
               Client Id
             </label>
@@ -167,7 +165,7 @@ function LoginPage({ role, setRole }) {
                 onChange={(e) => setClientId(e.target.value)}
               />
             </div>
-          </div>
+          </div> */}
 
           <div className="remember-forgot-link">
             <div className="remember-link m-0">
