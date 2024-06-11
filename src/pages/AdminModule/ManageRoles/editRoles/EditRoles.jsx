@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import "./CreateRoles.css";
+// import "./CreateRoles.css";
 import axios from "axios";
 import BASE_URI from "../../../../../config";
 
-function CreateRoles({ handleShowCreate, handleCloseCreate }) {
+function EditRoles({ handleShowEdit, handleCloseEdit }) {
   const [roleName, setRoleName] = useState("");
   const [status, setStatus] = useState("1");
   console.log(status);
@@ -37,12 +37,12 @@ function CreateRoles({ handleShowCreate, handleCloseCreate }) {
   };
 
   return (
-    <Modal show={handleShowCreate} onHide={handleCloseCreate}>
+    <Modal show={handleShowEdit} onHide={handleCloseEdit}>
       <Modal.Header className="bg-darkgray d-flex justify-content-between no-border-radius">
-        <Modal.Title className="text-white">Create Role</Modal.Title>
+        <Modal.Title className="text-white">Edit Role</Modal.Title>
         <div
           className="text-white close-btn d-flex justify-content-center align-items-center fs-2"
-          onClick={handleCloseCreate}
+          onClick={handleCloseEdit}
         >
           &times;
         </div>
@@ -76,14 +76,14 @@ function CreateRoles({ handleShowCreate, handleCloseCreate }) {
           <Button
             className="px-4"
             variant="secondary"
-            onClick={handleCloseCreate}
+            //    onClick={handleClose}
           >
             Cancel
           </Button>
           <Button
             className="px-4 bg-darkgray"
             variant="primary"
-            onClick={handleCreate}
+            // onClick={handleCreate}
           >
             Create
           </Button>
@@ -93,66 +93,4 @@ function CreateRoles({ handleShowCreate, handleCloseCreate }) {
   );
 }
 
-export default CreateRoles;
-// import React from "react";
-// import "./CreateRoles.css";
-
-// function CreateRoles({
-//   show,
-//   handleClose,
-//   handleDelete,
-//   handleEdit,
-//   editRoleData,
-//   handleEditInputChange,
-// }) {
-//   if (!show) return null;
-
-//   return (
-//     <div className="popup-overlay">
-//       <div className="popup">
-//         <div className="popup-header">
-//           <h3>Create Role</h3>
-//           <button className="close-button" onClick={handleClose}>
-//             &times;
-//           </button>
-//         </div>
-//         <form>
-//           <div className="form-group">
-//             <label htmlFor="roleName">Role Name</label>
-//             <input
-//               type="text"
-//               id="roleName"
-//               name="name"
-//               value={editRoleData.name}
-//               onChange={handleEditInputChange}
-//               placeholder="Enter Department Name...!"
-//               required
-//             />
-//           </div>
-//           <div className="form-group">
-//             <label htmlFor="status">Status</label>
-//             <select
-//               id="status"
-//               name="is_active"
-//               value={editRoleData.is_active}
-//               onChange={handleEditInputChange}
-//             >
-//               <option value={1}>Active</option>
-//               <option value={0}>Inactive</option>
-//             </select>
-//           </div>
-//           <div className="form-buttons">
-//             <button type="button" onClick={handleClose}>
-//               Cancel
-//             </button>
-//             <button type="button" onClick={handleEdit}>
-//               Create
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CreateRoles;
+export default EditRoles;

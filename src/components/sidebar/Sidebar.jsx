@@ -44,18 +44,15 @@ function Sidebar({ isSideBarOpen, role }) {
   const adminOptions = [
     {
       heading: "Main menu",
-      items: [
-        { icon: faHome, text: "Dashboard", link: "/admin/dashboard" },
-        { icon: faUser, text: "My Screen", link: "/myscreen" },
-      ],
+      items: [{ icon: faHome, text: "Dashboard", link: "admin/dashboard" }],
       isMiddle: false,
     },
     {
       heading: "Data Administration",
       items: [
-        { icon: faUsers, text: "Teammates", link: "/teammates" },
-        { icon: faBriefcase, text: "Work Planners", link: "/workplanner" },
-        { icon: faComputer, text: "Ventures", link: "/ventures" },
+        { icon: faUsers, text: "Teammates", link: "admin/teammates" },
+        { icon: faBriefcase, text: "Work Planners", link: "admin/workplanner" },
+        { icon: faComputer, text: "Ventures", link: "users/ventures" },
         {
           icon: faCalendar,
           text: "Absence Calender",
@@ -92,7 +89,7 @@ function Sidebar({ isSideBarOpen, role }) {
 
             {
               text: "Manage Rolls",
-              link: "manageroles",
+              link: "admin/settings/manageroles",
             },
           ],
         },
@@ -151,10 +148,10 @@ function Sidebar({ isSideBarOpen, role }) {
               link: "/managecategories",
             },
 
-            {
-              text: "Manage Rolls",
-              link: "manageroles",
-            },
+            // {
+            //   text: "Manage Rolls",
+            //   link: "manageroles",
+            // },
           ],
         },
         { icon: faLink, text: "Affiliates", link: "/affiliates" },
@@ -210,11 +207,11 @@ function Sidebar({ isSideBarOpen, role }) {
               link: "/managecategories",
             },
 
-            {
-              icon: faSquarePollVertical,
-              text: "Manage Rolls",
-              link: "manageroles",
-            },
+            // {
+            //   icon: faSquarePollVertical,
+            //   text: "Manage Rolls",
+            //   link: "manageroles",
+            // },
           ],
         },
         { icon: faLink, text: "Affiliates", link: "/affiliates" },

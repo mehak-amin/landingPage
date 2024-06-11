@@ -12,7 +12,7 @@ axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [clientId, setClientId] = useState("");
+  // const [clientId, setClientId] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -148,7 +148,7 @@ function LoginPage({ role, setRole }) {
             </div>
           </div>
 
-          <div className="input-col">
+          {/* <div className="input-col">
             <label htmlFor="clientId" className="form-label">
               Client Id
             </label>
@@ -165,7 +165,7 @@ function LoginPage({ role, setRole }) {
                 onChange={(e) => setClientId(e.target.value)}
               />
             </div>
-          </div>
+          </div> */}
 
           <div className="remember-forgot-link">
             <div className="remember-link m-0">
