@@ -9,15 +9,13 @@ import { lazy, useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import BASE_URI from "../../../../config";
 import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
-// import ModalComponent from "../../../components/Modal/ModalComponent";
-import { FaSlack } from "react-icons/fa";
+import ModalComponent from "../../../components/Modal/ModalComponent";
+import { FaSlack, FaUserCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import { convertDate } from "../../../utils/formattingDate";
-
-const ModalComponent = lazy(() => "../../../components/Modal/ModalComponent");
 
 const Teamates = () => {
   const [activeTab, setActiveTab] = useState("employees");
@@ -316,7 +314,7 @@ const Teamates = () => {
   };
 
   return (
-    <div>
+    <div className="container-xxl px-0">
       <Header
         heading="Team Members"
         isDate={true}
@@ -344,7 +342,7 @@ const Teamates = () => {
             </div>
             {isFilter && (
               <div
-                className="z-3 position-absolute bg-white shadow"
+                className="z-3 position-absolute bg-white custom-shadow"
                 style={{ top: "115%", left: "-43%" }}
               >
                 <div className="py-2 px-4 fs-5 fw-light flex align-items-center gap-5">
@@ -406,14 +404,14 @@ const Teamates = () => {
 
             {isSort && (
               <div
-                className="z-3 position-absolute bg-white shadow"
+                className="z-3 position-absolute bg-white custom-shadow"
                 style={{ top: "115%", left: "40%" }}
               >
                 <div className="px-3 py-2">
                   <select
                     value={sortCriteria}
                     onChange={handleSortCriteriaChange}
-                    className="py-1"
+                    className="py-1 rounded"
                   >
                     <option value="" disabled selected>
                       --Select--
@@ -491,7 +489,7 @@ const Teamates = () => {
               </div>
               <div
                 className={`d-flex gap-4 px-3 py-2  ${
-                  activeTab === "slack" ? "bg-gray text-white" : "bg-white"
+                  activeTab === "slacking" ? "bg-gray text-white" : "bg-white"
                 }`}
                 onClick={() => setActiveTab("slacking")}
                 style={{ cursor: "pointer" }}
@@ -518,18 +516,30 @@ const Teamates = () => {
                   <tr>
                     <th className="text-center py-3 bg-lightGray1">Name</th>
                     {getCurrentItems()?.map((item, index) => (
-                      <th key={index} className="text-center py-3 fw-normal">
-                        <img
-                          src={item.user.picture}
-                          alt=""
-                          className="rounded-circle me-4"
-                          style={{
-                            width: "2rem",
-                            height: "2rem",
-                            objectFit: "cover",
-                          }}
-                        />
-                        {item.user.name}
+                      <th
+                        key={index}
+                        className="text-center py-3 fw-normal hover-effect "
+                      >
+                        <Link
+                          to={`teammateDetails/${item.user.user_id}`}
+                          className="text-black text-decoration-none"
+                        >
+                          {item.user.picture === "" ? (
+                            <FaUserCircle className="fs-1 me-4" />
+                          ) : (
+                            <img
+                              src={item.user.picture}
+                              alt=""
+                              className="rounded-circle me-4"
+                              style={{
+                                width: "2rem",
+                                height: "2rem",
+                                objectFit: "cover",
+                              }}
+                            />
+                          )}
+                          {item.user.name}
+                        </Link>
                       </th>
                     ))}
                   </tr>
@@ -545,48 +555,40 @@ const Teamates = () => {
                         {heading}
                       </td>
                       {getCurrentItems()?.map((item, itemIndex) => (
-                        <td
-                          key={itemIndex}
-                          className="text-center py-3 hover-effect"
-                        >
-                          <Link
-                            to={`teammateDetails/${item.user.user_id}`}
-                            className="text-black text-decoration-none"
-                          >
-                            {headingIndex === 0
-                              ? item.user.department_name
-                              : headingIndex === 1
-                              ? item.modeledData
-                                ? item.modeledData?.arrivedAt
-                                : "-"
-                              : headingIndex === 2
-                              ? item.modeledData
-                                ? item.modeledData?.leftAt
-                                : "-"
-                              : headingIndex === 3
-                              ? item.modeledData
-                                ? secondsToHoursMinutes(
-                                    item.modeledData?.productiveTime
-                                  )
-                                : "-"
-                              : headingIndex === 4
-                              ? item.modeledData
-                                ? secondsToHoursMinutes(
-                                    item.modeledData?.offlineTime
-                                  )
-                                : "-"
-                              : headingIndex === 5
-                              ? item.modeledData
-                                ? item.modeledData?.activeApp
-                                : "-"
-                              : headingIndex === 7
-                              ? item.modeledData
-                                ? secondsToHoursMinutes(
-                                    item.modeledData?.deskTime
-                                  )
-                                : "-"
-                              : "-"}
-                          </Link>
+                        <td key={itemIndex} className="text-center py-3 ">
+                          {headingIndex === 0
+                            ? item.user.department_name
+                            : headingIndex === 1
+                            ? item.modeledData
+                              ? item.modeledData?.arrivedAt
+                              : "-"
+                            : headingIndex === 2
+                            ? item.modeledData
+                              ? item.modeledData?.leftAt
+                              : "-"
+                            : headingIndex === 3
+                            ? item.modeledData
+                              ? secondsToHoursMinutes(
+                                  item.modeledData?.productiveTime
+                                )
+                              : "-"
+                            : headingIndex === 4
+                            ? item.modeledData
+                              ? secondsToHoursMinutes(
+                                  item.modeledData?.offlineTime
+                                )
+                              : "-"
+                            : headingIndex === 5
+                            ? item.modeledData
+                              ? item.modeledData?.activeApp
+                              : "-"
+                            : headingIndex === 7
+                            ? item.modeledData
+                              ? secondsToHoursMinutes(
+                                  item.modeledData?.deskTime
+                                )
+                              : "-"
+                            : "-"}
                         </td>
                       ))}
                     </tr>
@@ -618,113 +620,112 @@ const Teamates = () => {
           </div>
         </div>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        {addTeamMember && (
-          <ModalComponent
-            handleClose={closeModal}
-            heading="Add Teammate"
-            btn1="Cancel"
-            btn2="Invite"
-          >
-            <div className="px-4 py-3 mb-5">
-              <h5 className="text-center">
-                Add Team Members so you can Monitor their Output.
-              </h5>
-              <h5 className="text-center">
-                Forming Teams helps you stay Structured.
-              </h5>
-            </div>
-            <form className="mb-3" onSubmit={handleSubmit}>
-              <div className="d-flex gap-4 mb-5">
-                <label htmlFor="name" className="w-50">
-                  Full Name <span className="text-red">*</span>
-                  <input
-                    type="text"
-                    id="name"
-                    name="fullname"
-                    placeholder="Enter Full name..."
-                    className="d-block px-3 py-2 w-100 rounded border"
-                    value={formData.fullname}
-                    onChange={handleChange}
-                    required
-                  />
-                </label>
-                <label htmlFor="email" className="w-50">
-                  Email <span className="text-red">*</span>
-                  <input
-                    type="text"
-                    placeholder="Enter Email..."
-                    className="d-block px-3 py-2 w-100 rounded border"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </label>
-              </div>
-              <div className="d-flex gap-4 mb-5">
-                <div className="w-50 h-100">
-                  <label>Department</label>
-                  <select
-                    id="department-select"
-                    value={formData.department_id}
-                    name="department_id"
-                    onChange={handleChange}
-                    className="px-3 py-2"
-                  >
-                    <option value="" disabled>
-                      --Select Department--
-                    </option>
-                    {departments.map((department) => (
-                      <option key={department.id} value={department.id}>
-                        {department.department_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
 
-                <div className="w-50 h-100">
-                  <label>Role</label>
-                  <select
-                    id="role-select"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="px-3 py-2"
-                  >
-                    <option value="" disabled>
-                      --Select Role--
+      {addTeamMember && (
+        <ModalComponent
+          handleClose={closeModal}
+          heading="Add Teammate"
+          btn1="Cancel"
+          btn2="Invite"
+        >
+          <div className="px-4 py-3 mb-5">
+            <h5 className="text-center">
+              Add Team Members so you can Monitor their Output.
+            </h5>
+            <h5 className="text-center">
+              Forming Teams helps you stay Structured.
+            </h5>
+          </div>
+          <form className="mb-3" onSubmit={handleSubmit}>
+            <div className="d-flex gap-4 mb-5">
+              <label htmlFor="name" className="w-50">
+                Full Name <span className="text-red">*</span>
+                <input
+                  type="text"
+                  id="name"
+                  name="fullname"
+                  placeholder="Enter Full name..."
+                  className="d-block px-3 py-2 w-100 rounded border"
+                  value={formData.fullname}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+              <label htmlFor="email" className="w-50">
+                Email <span className="text-red">*</span>
+                <input
+                  type="text"
+                  placeholder="Enter Email..."
+                  className="d-block px-3 py-2 w-100 rounded border"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+            </div>
+            <div className="d-flex gap-4 mb-5">
+              <div className="w-50 h-100">
+                <label>Department</label>
+                <select
+                  id="department-select"
+                  value={formData.department_id}
+                  name="department_id"
+                  onChange={handleChange}
+                  className="px-3 py-2"
+                >
+                  <option value="" disabled>
+                    --Select Department--
+                  </option>
+                  {departments.map((department) => (
+                    <option key={department.id} value={department.id}>
+                      {department.department_name}
                     </option>
-                    {roles.map((role) => (
-                      <option key={role.id} value={role.id}>
-                        {role.role}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  ))}
+                </select>
               </div>
-              <div className="d-flex gap-6">
-                <button type="submit" className="btn">
-                  Add Team Members
+
+              <div className="w-50 h-100">
+                <label>Role</label>
+                <select
+                  id="role-select"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="px-3 py-2"
+                >
+                  <option value="" disabled>
+                    --Select Role--
+                  </option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="d-flex gap-6">
+              <button type="submit" className="btn">
+                Add Team Members
+              </button>
+              <div className="d-flex gap-4 align-items-center">
+                <p className="mb-0 ">
+                  Import<span className="ms-2">from:</span>
+                </p>
+                <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                  <FaSlack /> <span>Slack</span>
                 </button>
-                <div className="d-flex gap-4 align-items-center">
-                  <p className="mb-0 ">
-                    Import<span className="ms-2">from:</span>
-                  </p>
-                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
-                    <FaSlack /> <span>Slack</span>
-                  </button>
-                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
-                    <FcGoogle />
-                    <span>Workspace</span>
-                  </button>
-                </div>
+                <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                  <FcGoogle />
+                  <span>Workspace</span>
+                </button>
               </div>
-            </form>
-          </ModalComponent>
-        )}
-      </Suspense>
+            </div>
+          </form>
+        </ModalComponent>
+      )}
     </div>
   );
 };

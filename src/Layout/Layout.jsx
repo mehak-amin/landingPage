@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/Footer";
-export default function Layout({ role }) {
+export default function Layout({ role, user }) {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const sideBarRef = useRef(null);
@@ -45,12 +45,13 @@ export default function Layout({ role }) {
             toggleSidebar={toggleSidebar}
             toggleMessageBox={toggleMessageBox}
             showMessageBox={showMessageBox}
+            user={user}
           />
         </div>
 
         <Outlet />
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

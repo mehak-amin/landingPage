@@ -50,7 +50,9 @@ export default function Header({
   return (
     <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
       <div className="mb-4 mb-md-0">
-        <h4 className="mb-0 shadow d-inline px-2 py-2 rounded">{heading}</h4>
+        <h5 className="mb-0 custom-shadow d-inline px-3 py-2 rounded">
+          {heading}
+        </h5>
       </div>
       <div>
         <div className="d-md-flex gap-3 align-items-center">

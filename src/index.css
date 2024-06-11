@@ -4,6 +4,69 @@
   margin: 0;
   font-family: "Kumbh Sans", sans-serif;
 }
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.rotate-animation {
+  animation: rotate 0.3s linear infinite;
+}
+
+@keyframes scale-up {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.scale-animation {
+  animation: scale-up 0.3s ease-in-out forwards;
+}
+
+.scale-up-hover {
+  transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.scale-up-hover:hover {
+  transform: scale(1.1);
+}
+
 .col-custom {
   width: 12.5%;
+}
+.custom-shadow {
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+.x-axis-label {
+  font-size: 14px;
+  fill: #666;
+}
+
+.chart-container {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.tooltip {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+.min-width-17 {
+  min-width: 17rem;
+}
+
+@media screen and (max-width: 421px) {
+  .min-width-xs {
+    min-width: 13rem;
+  }
 }

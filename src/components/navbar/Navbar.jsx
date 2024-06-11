@@ -1,10 +1,6 @@
-import React from "react";
-// import {useState} from "react";
 import "./Navbar.css";
 import MessageBox from "../messages/MessageBox";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { Navbar } from "react-bootstrap";
 import {
   faBars,
   faBell,
@@ -12,9 +8,20 @@ import {
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 
-// navbar-expand navbar-light bg-light
-function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox }) {
+function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
+  const renderPopover = () => (
+    <Popover id="popover-basic">
+      <Popover.Body className="p-0">
+        <ul className="list-unstyled cursor-pointer fs-5">
+          <li className="py-2 px-3 border-bottom">Proflile</li>
+          <li className="py-2 px-3 border-bottom">Report a Bug</li>
+          <li className="py-2 px-3 ">Logout</li>
+        </ul>
+      </Popover.Body>
+    </Popover>
+  );
   return (
     <div className="navbar px-md-5 px-4">
       <div className="menu-search">
@@ -47,12 +54,26 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox }) {
       </div>
       <div className="profile">
         <div className="userName">
-          <h6 className="m-0">Hi, Basit</h6>
-          <p className="m-0">Raybit Tech</p>
+          <h6 className="m-0">Hi, {user?.fullname}</h6>
+          <p className="m-0 fw-light">Raybit Tech</p>
         </div>
-        <div className="profilePicture">
-          <FontAwesomeIcon icon={faUser} size="sm" className="navbar-icons" />
-        </div>
+        <OverlayTrigger
+          trigger={["click", "focus"]}
+          placement="bottom"
+          overlay={renderPopover()}
+        >
+          <div className="profilePicture">
+            {user?.picture === "" ? (
+              <FontAwesomeIcon
+                icon={faUser}
+                size="sm"
+                className="navbar-icons"
+              />
+            ) : (
+              user?.picture
+            )}
+          </div>
+        </OverlayTrigger>
       </div>
       <MessageBox
         showMessageBox={showMessageBox}

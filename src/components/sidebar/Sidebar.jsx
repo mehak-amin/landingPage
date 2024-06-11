@@ -26,6 +26,7 @@ import { DropdownItem } from "reactstrap";
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
 function Sidebar({ isSideBarOpen, role }) {
+
   // const [openDropdowns, setOpenDropdowns] = useState({});
 
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -41,6 +42,7 @@ function Sidebar({ isSideBarOpen, role }) {
   };
 
   console.log(role);
+
   const adminOptions = [
     {
       heading: "Main menu",

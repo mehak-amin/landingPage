@@ -34,7 +34,6 @@ export default function TimeCard({ title, data }) {
   const meanTime = data && calculateMeanTime(data);
 
   const timeToDecimalHours = (timeString) => {
-    console.log(timeString);
     const [hours, minutes, seconds] = timeString.match(/[0-9]+/g).map(Number);
     const period = timeString.match(/[a-zA-Z]+/)[0].toLowerCase();
     let hourValue = hours;
@@ -48,14 +47,14 @@ export default function TimeCard({ title, data }) {
 
   const formattedData =
     data &&
-    data.map((item) => ({
+    data?.map((item) => ({
       time: timeToDecimalHours(item),
     }));
   const dummyData = [...formattedData, { time: 45 }];
 
   return (
     <div className="mb-4">
-      <Card className=" shadow px-2 px-sm-4 ">
+      <Card className="custom-shadow px-2 px-sm-4 ">
         <Card.Body className="w-100 p-2 p-sm-3">
           <Card.Text className="fw-bold">{title}</Card.Text>
           <Card.Title className="text-green">{meanTime}</Card.Title>
@@ -72,7 +71,13 @@ export default function TimeCard({ title, data }) {
                 {/* <XAxis dataKey="index" /> */}
                 {/* <YAxis /> */}
                 <Tooltip />
-                <Line type="monotone" dataKey="time" stroke="#36c449" />
+                <Line
+                  type="monotone"
+                  dataKey="time"
+                  stroke="#36c449"
+                  dot={false}
+                  activeDot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>

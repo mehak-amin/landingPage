@@ -1,9 +1,8 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 
 export default function User() {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  // return <Outlet />;
+  return token && role === "user" ? <Outlet /> : <Navigate to="/" />;
 }

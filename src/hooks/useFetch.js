@@ -17,23 +17,23 @@ const useFetch = (url, options = {}) => {
         headers,
       });
       setData(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
-      // console.log(error.response.message);
       setError(error);
+      setData();
     } finally {
       setIsLoading(false);
     }
   }, [url, method, body, headers]);
 
   useEffect(() => {
-    console.log("Fetching data...");
+    // console.log("Fetching data...");
     fetchData();
   }, [url]);
 
   // console.log("Data:", data);
   // console.log("Is Loading:", isLoading);
-  console.log("Error:", error);
+  // console.log("Error:", error);
 
   return { data, isLoading, error, refetch: fetchData };
 };

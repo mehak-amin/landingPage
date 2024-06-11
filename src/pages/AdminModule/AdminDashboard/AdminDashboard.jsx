@@ -1,24 +1,22 @@
 import "./AdminDashboard.css";
 import AdminCard from "../../../components/Card/AdminCard";
-import { CgSandClock } from "react-icons/cg";
 import { BsExclamationSquare } from "react-icons/bs";
-import { AreaChart, Area, ResponsiveContainer } from "recharts";
-import { FaUserCheck } from "react-icons/fa";
+import { LuUserCheck2 } from "react-icons/lu";
+import { GiSandsOfTime } from "react-icons/gi";
 import { RxEyeNone } from "react-icons/rx";
 import { useState, lazy, Suspense, useMemo } from "react";
 import useFetch from "../../../hooks/useFetch";
 import BASE_URI from "../../../../config";
 import { convertDate } from "../../../utils/formattingDate";
+import BarChartComponent from "../../../components/BarChartComponent";
+import ChartCard from "../../../components/ChartCard";
+import NoData from "../../../components/NoData";
 
-const BarChartComponent = lazy(() =>
-  import("../../../components/BarChartComponent")
-);
 const EmployeeList = lazy(() => import("../../../components/EmployeeList"));
 const AppList = lazy(() => import("../../../components/AppList"));
 const Screenshots = lazy(() => import("../../../components/Screenshots"));
 const Header = lazy(() => import("../../../components/Header"));
 export default function AdminDashboard() {
-  // const [showAllSnaps, setShowAllSnaps] = useState(false);
   const token = localStorage.getItem("token");
   const [startDate, setStartDate] = useState(new Date());
   const formattedStartDate = convertDate(startDate);
@@ -33,6 +31,7 @@ export default function AdminDashboard() {
   const { data, isLoading, error, refetch } = useFetch(fetchUrl, fetchOptions);
 
   const usersData = data || {};
+  console.log(data);
   const {
     mostProductive,
     mostEffective,
@@ -59,7 +58,7 @@ export default function AdminDashboard() {
 
   // const snaps = showAllSnaps ? snaps : allSnaps?.slice(0, 8);
   if (error && !data) {
-    <>
+    <div className="container-xxl px-0">
       <Suspense fallback={<div>Loading...</div>}>
         <Header
           heading="Dashboard"
@@ -69,11 +68,11 @@ export default function AdminDashboard() {
           setSelectedStartDate={setStartDate}
         />
       </Suspense>
-      <p>No data found for this date!</p>
-    </>;
+      <NoData />
+    </div>;
   }
   return (
-    <>
+    <div className="container-xxl px-0">
       <Suspense fallback={<div>Loading...</div>}>
         <Header
           heading="Dashboard"
@@ -84,15 +83,23 @@ export default function AdminDashboard() {
         />
       </Suspense>
 
-      <div className="px-sm-5 px-2 py-1 border-lightgreen shadow display-tabs">
+      <div className="px-sm-5 p-2 border-lightgreen custom-shadow display-tabs">
         <ul className="list-unstyled d-flex gap-4 mb-0">
-          <li className="py-2 px-1 bg-darkGray rounded text-white">
+          <li className="py-2 px-1 bg-darkGray rounded text-white cursor-pointer">
             Team Members
           </li>
-          <li className="py-2 px-1 tab-item-hidden">Without Team</li>
-          <li className="py-2 px-1 tab-item-hidden">Accounting</li>
-          <li className="py-2 px-1 tab-item-hidden">Management</li>
-          <li className="py-2 px-1 tab-item-hidden">Product Oversight</li>
+          <li className="py-2 px-1 tab-item-hidden cursor-pointer">
+            Without Team
+          </li>
+          <li className="py-2 px-1 tab-item-hidden cursor-pointer">
+            Accounting
+          </li>
+          <li className="py-2 px-1 tab-item-hidden cursor-pointer">
+            Management
+          </li>
+          <li className="py-2 px-1 tab-item-hidden cursor-pointer">
+            Product Oversight
+          </li>
         </ul>
         <select className="py-2 px-2 w-auto rounded border dropdown-tabs">
           <option value="" disabled selected>
@@ -105,12 +112,14 @@ export default function AdminDashboard() {
         </select>
       </div>
 
-      <div className="p-3 p-sm-5 d-lg-flex justify-content-between">
-        <div className="d-md-flex gap-4 d-lg-block">
+      <div className="p-3 p-sm-5 d-xxl-flex  justify-content-between">
+        <div className="d-md-flex gap-4 d-xxl-block">
           <AdminCard
-            icon={<CgSandClock />}
+            icon={<GiSandsOfTime />}
             title="Productivity"
-            data={Math.round(usersData.totalProductivity)}
+            data={
+              usersData ? `${Math.round(usersData?.totalProductivity)}%` : "--"
+            }
           />
           <AdminCard
             icon={<BsExclamationSquare />}
@@ -119,26 +128,24 @@ export default function AdminDashboard() {
           />
         </div>
         <div
-          className="d-flex flex-column justify-content-between"
-          style={{ maxWidth: "41%" }}
+          className="d-flex flex-column justify-content-between w-100 max-w-41"
+          // style={{ minWidth: "41%" }}
         >
-          <div className="d-lg-flex gap-5 py-4 justify-content-center">
+          <div className="d-lg-flex  gap-5 py-4 justify-content-center custom-wrap-420">
             <p>Productivity Bar</p>
-            <ul className="d-flex flex-wrap list-unstyled gap-4">
+            <ul className="d-flex  list-unstyled gap-4">
               <li className="text-green">Productive</li>
               <li className="text-red">Unproductive</li>
               <li className="text-blue">Neutral</li>
             </ul>
           </div>
-          <Suspense fallback={<div>Loading...</div>}>
-            {/* <div style={{ maxWidth: "90%" }}> */}
-            <BarChartComponent barData={barData} />
-            {/* </div> */}
-          </Suspense>
+          {/* <Suspense fallback={<div>Loading...</div>}> */}
+          <BarChartComponent barData={barData} />
+          {/* </Suspense> */}
         </div>
-        <div className="d-md-flex gap-4 d-lg-block">
+        <div className="d-md-flex gap-4 d-xxl-block">
           <AdminCard
-            icon={<FaUserCheck />}
+            icon={<LuUserCheck2 />}
             title="Arrived"
             data={usersData.arrivedCount}
           />
@@ -156,21 +163,21 @@ export default function AdminDashboard() {
       </div>
 
       <div className="px-sm-5 mb-5">
-        <div className="container px-3">
+        <div className="container-fluid px-3">
           <div className="row mb-5">
-            <div className="col-md-6 pe-sm-4 ps-sm-0 mb-5 mb-md-0">
+            <div className="col-md-6 pe-md-4 ps-md-0 mb-5 mb-md-0">
               <Suspense fallback={<div>Loading...</div>}>
                 <EmployeeList heading="Most Productive" data={mostProductive} />
               </Suspense>
             </div>
-            <div className="col-md-6 pe-sm-0 ps-sm-4">
+            <div className="col-md-6 pe-md-0 ps-md-4">
               <Suspense fallback={<div>Loading...</div>}>
                 <EmployeeList heading="Most Effective" data={mostEffective} />
               </Suspense>
             </div>
           </div>
           <div className="row">
-            <div className="col-md-6 pe-sm-4 ps-sm-0 mb-5 mb-md-0">
+            <div className="col-md-6 pe-md-4 ps-md-0 mb-5 mb-md-0">
               <Suspense fallback={<div>Loading...</div>}>
                 <EmployeeList
                   heading="Most Unproductive"
@@ -178,7 +185,7 @@ export default function AdminDashboard() {
                 />
               </Suspense>
             </div>
-            <div className="col-md-6 pe-sm-0 ps-sm-4">
+            <div className="col-md-6 pe-md-0 ps-md-4">
               <Suspense fallback={<div>Loading...</div>}>
                 <EmployeeList heading="Most Offline" data={mostOffline} />
               </Suspense>
@@ -214,26 +221,6 @@ export default function AdminDashboard() {
         </div>
         <Screenshots data={allSnaps} />
       </Suspense>
-    </>
-  );
-}
-
-function ChartCard({ title, data, color }) {
-  return (
-    <div className="container border rounded shadow px-0 mb-3 mb-md-0">
-      <h3 className="p-4">{title}</h3>
-      <div style={{ width: "100%", height: 230 }}>
-        <ResponsiveContainer>
-          <AreaChart data={data}>
-            <Area
-              type="monotone"
-              dataKey={title.toLowerCase()}
-              stroke={color}
-              fill={color}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
     </div>
   );
 }

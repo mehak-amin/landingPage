@@ -10,38 +10,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 export default function CustomCard({ title, data }) {
-  // const newData = data
-  //   ? data.map((time, index) => ({
-  //       day: index + 1,
-  //       arrivalTime: time,
-  //     }))
-  //   : [];
-  // console.log(newData);
-
-  // const formatDeskTime = (hours, minutes) => {
-  //   if (hours === 0) {
-  //     return `${minutes}m`;
-  //   } else if (minutes === 0) {
-  //     return `${hours}h`;
-  //   } else {
-  //     return `${hours}h ${minutes}m`;
-  //   }
-  // };
-
-  // const deskTimesGraph = (durationsInSeconds) => {
-  // Convert durations from seconds to hours and minutes
   const data1 =
     data &&
     data.map((duration, index) => {
-      // const hours = Math.floor(duration / 3600);
       const minutes = Math.floor(duration / 60);
       return { time: minutes, day: index + 1 };
     });
-
-  console.log(data1);
-  // };
-
-  // deskTimesGraph(data);
 
   function calculateTotalDeskTimeInHoursAndMinutes(durationsInSeconds) {
     const totalSeconds =
@@ -59,7 +33,7 @@ export default function CustomCard({ title, data }) {
 
   return (
     <div className="mb-4">
-      <Card className=" shadow px-2 px-sm-4 ">
+      <Card className="custom-shadow px-2 px-sm-4 ">
         <Card.Body className="p-2 p-sm-3">
           <Card.Text className="fw-bold">{title}</Card.Text>
           <Card.Title className="text-green">
@@ -68,8 +42,6 @@ export default function CustomCard({ title, data }) {
           <div style={{ width: "100%", height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                // width={300}
-                // height={200}
                 data={data1}
                 margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
               >
@@ -81,7 +53,8 @@ export default function CustomCard({ title, data }) {
                   type="monotone"
                   dataKey="time"
                   stroke="#36c449"
-                  activeDot={{ r: 8 }}
+                  dot={false}
+                  activeDot={false}
                 />
               </LineChart>
             </ResponsiveContainer>
