@@ -182,7 +182,7 @@ h6 {
   gap: 1vw;
 }
 .top-div-bottom-departments {
-  height: 6vh;
+  /* height: 6vh; */
   width: 100%;
   background-color: #b3b3b3;
   display: flex;
@@ -665,14 +665,7 @@ select {
     gap: 1vw;
     background-color: transparent;
   }
-  .top-div-bottom-departments {
-    background-color: white;
-    color: black;
-    height: 6vh;
-  }
-  .top-div-bottom-departments div h5 {
-    color: black;
-  }
+
   .table-container-departments {
     display: none;
   }

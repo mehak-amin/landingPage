@@ -5,11 +5,12 @@ export default function ModalComponent({
   heading,
   children,
   handleClose,
+  handleClick,
   btn1,
   btn2,
 }) {
   return (
-    <Modal show onHide={handleClose} centered>
+    <Modal show onHide={handleClose} centered size="lg">
       <Modal.Header
         className="text-white d-flex justify-content-between border-0 rounded-0 px-5"
         style={{ backgroundColor: "#6D6D6D" }}
@@ -23,11 +24,15 @@ export default function ModalComponent({
           <Button
             variant="secondary"
             onClick={handleClose}
-            className="bg-transparent text-dark px-5 py-1"
+            className="bg-transparent text-dark px-5 py-2"
           >
             {btn1}
           </Button>
-          <Button variant="primary" className="border-0 px-5 py-1">
+          <Button
+            variant="primary"
+            className="border-0 px-5 py-2"
+            onClick={handleClick}
+          >
             {btn2}
           </Button>
         </div>
