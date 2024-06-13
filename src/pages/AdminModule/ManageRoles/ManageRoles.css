@@ -11,7 +11,16 @@
 table thead tr {
   border: none;
 }
-
+.main-content-holder {
+  background-color: #f0f0f0;
+}
+.table-responsive {
+  /* overflow-x: auto; */
+  /* width: auto; */
+}
+.right-10 {
+  right: 0%;
+}
 /* .text-success {
   color: green;
 } */
