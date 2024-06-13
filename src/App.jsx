@@ -24,9 +24,6 @@ import { useState } from "react";
 import ManageRoles from "./pages/AdminModule/ManageRoles/ManageRoles";
 import Settings from "./pages/AdminModule/Settings/Settings";
 
-import { useState } from "react";
-
-
 function App() {
   const [role, setRole] = useState(() => {
     return localStorage.getItem("role") || "";
@@ -61,9 +58,6 @@ function App() {
 
       {/* <Route element={<PrivateRoutes />}> */}
       <Route path="/" element={<Layout role={role} user={user} />}>
-
-
-
         <Route path="admin" element={<Admin />}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="departments" element={<Departments />} />
@@ -77,11 +71,9 @@ function App() {
 
           <Route path="workplanner" element={<WorkPlanner />} />
 
-
           <Route path="settings" element={<Settings />}>
             <Route path="manageroles" element={<ManageRoles />} />
           </Route>
-
         </Route>
         <Route path="users" element={<User />}>
           <Route path="myScreen" element={<MyScreen />} />

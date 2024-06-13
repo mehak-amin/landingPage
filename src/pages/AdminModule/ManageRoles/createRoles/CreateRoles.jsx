@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import "./CreateRoles.css";
 import axios from "axios";
@@ -6,12 +6,12 @@ import BASE_URI from "../../../../../config";
 
 function CreateRoles({ handleShowCreate, handleCloseCreate }) {
   const [roleName, setRoleName] = useState("");
+
   const [status, setStatus] = useState("1");
   console.log(status);
-
   const token = localStorage.getItem("token");
-
   const handleCreate = async () => {
+    console.log("creating role");
     try {
       const response = await axios.post(
         `${BASE_URI}/roles`,
@@ -30,7 +30,7 @@ function CreateRoles({ handleShowCreate, handleCloseCreate }) {
       );
       console.log("Role creation response:", response.data);
 
-      handleClose();
+      handleCloseCreate();
     } catch (error) {
       console.error("Role creation error:", error);
     }
