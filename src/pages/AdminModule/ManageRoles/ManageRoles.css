@@ -2,7 +2,15 @@
 .container {
   max-width: 100%;
 }
-
+.table-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
 .table th,
 .table td {
   vertical-align: middle;
@@ -14,9 +22,8 @@ table thead tr {
 .main-content-holder {
   background-color: #f0f0f0;
 }
-.table-responsive {
-  /* overflow-x: auto; */
-  /* width: auto; */
+.pl-2 {
+  padding-left: 1rem !important;
 }
 .right-10 {
   right: 0%;

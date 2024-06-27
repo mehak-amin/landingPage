@@ -9,19 +9,67 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { OverlayTrigger, Popover } from "react-bootstrap";
+import { useState } from "react";
+import axios from "axios";
+import BASE_URI from "../../../config";
+import { useNavigate } from "react-router-dom";
 
 function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
+  // const [profilePopup, setProfilePopup] = useState(false);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const logout = (e) => {
+    e.preventDefault();
+    console.log("logout");
+    console.log(token);
+    axios
+      .post(
+        `${BASE_URI}/users/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("role");
+          // setToken("");
+          // setUser("");
+          // setRole("");
+
+          // alert("Logged out successfully");
+
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        }
+      })
+      .catch((err) => {
+        console.error("Logout failed:", err);
+      });
+  };
   const renderPopover = () => (
     <Popover id="popover-basic">
       <Popover.Body className="p-0">
         <ul className="list-unstyled cursor-pointer fs-5">
           <li className="py-2 px-3 border-bottom">Proflile</li>
           <li className="py-2 px-3 border-bottom">Report a Bug</li>
-          <li className="py-2 px-3 ">Logout</li>
+          <li className="py-2 px-3 " onClick={logout}>
+            Logout
+          </li>
         </ul>
       </Popover.Body>
     </Popover>
   );
+  // const handleProfilePopup = () => {
+  //   console.log("profile");
+  //   setProfilePopup(!profilePopup);
+  // };
   return (
     <div className="navbar px-md-5 px-4">
       <div className="menu-search">
@@ -54,7 +102,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
       </div>
       <div className="profile">
         <div className="userName">
-          <h6 className="m-0">Hi, {user?.fullname}</h6>
+          <h6 className="m-0">Hi,Basit {user?.fullname}</h6>
           <p className="m-0 fw-light">Raybit Tech</p>
         </div>
         <OverlayTrigger
@@ -62,8 +110,11 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           placement="bottom"
           overlay={renderPopover()}
         >
-          <div className="profilePicture">
-            {user?.picture === "" ? (
+          <div
+            className="profilePicture"
+            //  onClick={handleProfilePopup}
+          >
+            {/* {user?.picture === "" ? (
               <FontAwesomeIcon
                 icon={faUser}
                 size="sm"
@@ -71,9 +122,19 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
               />
             ) : (
               user?.picture
-            )}
+            )} */}
+            <FontAwesomeIcon icon={faUser} size="sm" className="navbar-icons" />
           </div>
         </OverlayTrigger>
+        {/* {profilePopup && (
+          <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
+            <h6 className="py-3 px-5 border-bottom cursor-pointer">Profile</h6>
+            <h6 className="py-3 px-5 border-bottom cursor-pointer">
+              Report a Bug
+            </h6>
+            <h6 className="py-3 px-5 border-bottom cursor-pointer">Logout</h6>
+          </div>
+        )} */}
       </div>
       <MessageBox
         showMessageBox={showMessageBox}

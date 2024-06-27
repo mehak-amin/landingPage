@@ -57,55 +57,49 @@ export default function AppList({ heading, data = "", backgound, loading }) {
           </h5>
           <div className="row row-cols-4 py-3" style={{ minWidth: "40rem" }}>
             {Array.isArray(data) ? (
-              data?.length > 0 ? (
-                data?.map((app) => (
+              data.length > 0 ? (
+                data.map((app, index) => (
                   <OverlayTrigger
                     trigger={["click", "focus"]}
                     placement="bottom"
                     overlay={renderPopover(app)}
-                    key={Object.keys(app)}
+                    key={index} // Use a unique identifier here if available
                   >
                     <div className="col mb-4 d-flex align-items-center gap-3 px-5 cursor-pointer">
                       <p className="mb-0">{Object.keys(app)}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                        {(app[Object.keys(app)].AllTime / 60).toFixed(0)}m
+                        {(app[Object.keys(app)]?.AllTime / 60).toFixed(0)}m
                       </p>
                     </div>
                   </OverlayTrigger>
                 ))
               ) : (
-                <div className="px-4 d-flex align-items-center justify-content-center h-75">
+                <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                   <div>
                     <h5 className="text-center fw-light text-secondary">
                       No, data found!
                     </h5>
-                    {/* <p>
-                      No, tracking for this date please select another date.
-                    </p> */}
                   </div>
                 </div>
               )
-            ) : Object.entries(data)?.length > 0 ? (
-              Object.entries(data).map(([key, value], index) => {
-                return (
-                  <div
-                    key={index}
-                    className="col mb-4 d-flex align-items-center gap-2 px-5"
-                  >
-                    <p className="mb-0">{key}</p>
-                    <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                      {(value / 60).toFixed(0)}m
-                    </p>
-                  </div>
-                );
-              })
+            ) : data && Object.entries(data).length > 0 ? (
+              Object.entries(data).map(([key, value], index) => (
+                <div
+                  key={index}
+                  className="col mb-4 d-flex align-items-center gap-2 px-5"
+                >
+                  <p className="mb-0">{key}</p>
+                  <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
+                    {(value / 60).toFixed(0)}m
+                  </p>
+                </div>
+              ))
             ) : (
               <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                 <div>
                   <h5 className="text-center fw-light text-secondary">
                     No, data found!
                   </h5>
-                  {/* <p>No, tracking for this date please select another date.</p> */}
                 </div>
               </div>
             )}

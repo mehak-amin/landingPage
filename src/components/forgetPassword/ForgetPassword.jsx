@@ -9,14 +9,13 @@ import axios from "axios";
 import BASE_URI from "../../../config";
 
 function ForgetPassword() {
-  axios.defaults.withCredentials = true;
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
   const [user, setUser] = useState("");
-  // const navigate = useNavigate();
+  const [error, setError] = useState("");
+  axios.defaults.withCredentials = true;
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -25,37 +24,38 @@ function ForgetPassword() {
   const handleBlur = () => {
     setIsFocused(false);
   };
-
-  const handleResendLink = (e) => {
+  const token = localStorage.getItem("token");
+  const handleResendLink = async (e) => {
     e.preventDefault();
-    console.log("lalala");
-    axios
-      .post(`${BASE_URI}/api/v1/users/forgot-password`, { email, password })
-      .then((response) => {
-        console.log(response);
-        console.log(response.data.userData.token);
-        setUser(response.data.userData);
-        const token = response.data.userData.token;
-        localStorage.setItem("token", token);
-      });
-    // .catch((err) => {
-    //   console.log(err);
-    //   if (err?.response?.data?.message === "Invalid Credentials") {
-    //     setMessage("Incorrect Password");
-    //   } else if (
-    //     err?.response?.data?.message ===
-    //     "No user found with those credentials"
-    //   ) {
-    //     setMessage("Invalid User");
-    //   } else if (
-    //     err?.response?.data?.message === "Provide all the credentials"
-    //   ) {
-    //     setMessage("All fields Required");
-    //   }
-    // });
+    setMessage("");
+    setError("");
+
+    try {
+      const response = await axios.post(
+        `${BASE_URI}/users/forgot-password`,
+        {
+          email: email,
+        },
+        {
+          headers: {
+            // Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      console.log(response.data.status);
+      if (response.data.status === "Success") {
+        setMessage("Password reset link has been sent to your email.");
+      }
+      //  else {
+      //   setError("This email address does not have an account.");
+      // }
+    } catch (err) {
+      setError("An error occurred. Please try again later.");
+    }
   };
 
-  const token = localStorage.getItem("token");
   if (token && user) {
     return <Navigate to="/" />;
   }
@@ -108,7 +108,9 @@ function ForgetPassword() {
               Send Password Reset Link
             </button>
           </div>
-          <div className="validation">{message && message}</div>
+          {message && <div className="alert alert-success">{message}</div>}
+          {error && <div className="alert alert-danger">{error}</div>}
+          {/* <div className="validation">{message && message}</div> */}
           <div className="socio-login my-4">
             <div>or continue with</div>
             <div className="google-logo">
