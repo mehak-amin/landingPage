@@ -8,18 +8,19 @@ export default function ModalComponent({
   handleClick,
   btn1,
   btn2,
+  size,
 }) {
   return (
-    <Modal show onHide={handleClose} centered size="lg">
+    <Modal show onHide={handleClose} centered size={size}>
       <Modal.Header
-        className="text-white d-flex justify-content-between border-0 rounded-0 px-5"
+        className="text-white d-flex justify-content-between border-0 rounded-0 px-4"
         style={{ backgroundColor: "#6D6D6D" }}
       >
         <Modal.Title className="text-center">{heading}</Modal.Title>
         <RxCrossCircled className="fs-2 cursor-pointer" onClick={handleClose} />
       </Modal.Header>
-      <Modal.Body className="px-5">{children}</Modal.Body>
-      <Modal.Footer className="flex-nowrap justify-content-end px-5 pb-4 border-0">
+      <Modal.Body className="px-4 py-3 border-bottom">{children}</Modal.Body>
+      <Modal.Footer className="flex-nowrap justify-content-end px-4 pb-4 border-0">
         <div className="d-flex gap-4">
           <Button
             variant="secondary"

@@ -64,9 +64,47 @@
 .min-width-17 {
   min-width: 17rem;
 }
+.bg-graySecondary {
+  background-color: #bcbcbc;
+}
+.smaller-text {
+  font-size: 0.7rem;
+}
 
+.top-68 {
+  top: 68%;
+}
+.w-md-45 {
+  width: 100%;
+}
+.w-md-75 {
+  width: 100%;
+}
+.w-md-50 {
+  width: 100%;
+}
+.mb-custom-4 {
+  margin-bottom: 1.5rem;
+}
 @media screen and (max-width: 421px) {
   .min-width-xs {
     min-width: 13rem;
+  }
+}
+@media screen and (min-width: 800px) {
+  .w-md-45 {
+    width: 45%;
+  }
+  .w-md-75 {
+    width: 75%;
+  }
+  .w-md-50 {
+    width: 50%;
+  }
+  .d-custom-flex {
+    display: flex;
+  }
+  .mb-custom-4 {
+    margin-bottom: 0;
   }
 }

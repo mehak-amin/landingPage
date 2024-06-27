@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./Departments.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+
 import axios from "axios";
 
 import BASE_URI from "../../../../config";
@@ -14,6 +13,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import useFetch from "../../../hooks/useFetch";
 import ModalComponent from "../../../components/Modal/ModalComponent";
 import { ShimmerTable } from "react-shimmer-effects";
+import { RxDotsHorizontal } from "react-icons/rx";
+import { Link } from "react-router-dom";
 const Departments = () => {
   const [createDeparment, setcreateDeparment] = useState(false);
   const [departmentData, setDepartmentData] = useState("");
@@ -96,8 +97,6 @@ const Departments = () => {
     }
   };
 
-  //   DELETING DATA OF BACKEND (DELETE)
-
   const handleDeleteDepartment = async () => {
     try {
       console.log(id);
@@ -119,6 +118,7 @@ const Departments = () => {
       // fetchDepartments();
       refetch();
       setDeletePopUp(false);
+      setEditOrDeletePopUp(false);
       setSelectedDepartments([]);
       console.log(response);
     } catch (err) {
@@ -143,6 +143,7 @@ const Departments = () => {
       });
       refetch();
       setIsEdited(false);
+      setEditOrDeletePopUp(false);
       // console.log(response);
     } catch (err) {
       console.log(err);
@@ -158,10 +159,12 @@ const Departments = () => {
   };
 
   const handleCloseDelete = () => {
-    setDeletePopUp(!deletePopUp);
+    setEditOrDeletePopUp(false);
+    setDeletePopUp(false);
   };
 
   const handleCloseEdit = () => {
+    setEditOrDeletePopUp(false);
     setIsEdited(false);
   };
 
@@ -182,7 +185,7 @@ const Departments = () => {
         : [...prevSelected, id]
     );
   };
-  console.log(selectedDepartments);
+  // console.log(selectedDepartments);
   return (
     <div className="wrapper-div-departments container-xxl px-0">
       {/* <--------- DELETE POPUP STRUCTURE -----------> */}
@@ -194,11 +197,11 @@ const Departments = () => {
           btn1="Cancel"
           btn2="Delete"
         >
-          <div>
-            <h5 className="text-center mb-2">
+          <div className="py-3">
+            <h6 className="text-center mb-2">
               Do you really want to remove the projects that you have chosen?
-            </h5>
-            <h5 className="text-center">There is no turning back.</h5>
+            </h6>
+            <h6 className="text-center">There is no turning back.</h6>
           </div>
         </ModalComponent>
       )}
@@ -211,12 +214,14 @@ const Departments = () => {
           btn1="Cancel"
           btn2="Update"
         >
-          <div className="d-flex gap-4 align-items-center justify-content-center">
-            <label htmlFor="">Deapartment Name:</label>
+          <div className="py-3">
+            <label htmlFor="" className="d-block mb-1">
+              Deapartment Name
+            </label>
             <input
               type="text"
               value={departmentData}
-              className="px-3 py-2 rounded border w-50"
+              className="px-3 py-2 rounded border w-100"
               onChange={(e) => setDepartmentData(e.target.value)}
             />
           </div>
@@ -290,7 +295,6 @@ const Departments = () => {
         </div>
       </div>
 
-      {/* <----------------- BOTTOM DIV -----------------> */}
       {createDeparment && (
         <ModalComponent
           heading="Create Department"
@@ -298,14 +302,17 @@ const Departments = () => {
           handleClick={handleCreateDepartment}
           btn1="Cancel"
           btn2="Create"
+          // size="m"
         >
-          <div className="d-flex gap-4 align-items-center justify-content-center">
-            <label htmlFor="">Deapartment Name:</label>
+          <div className="py-3">
+            <label htmlFor="" className="d-block mb-1">
+              Deapartment Name
+            </label>
             <input
               type="text"
               value={deptName}
               placeholder="Enter department name...!"
-              className="px-3 py-2 rounded border w-50"
+              className="px-3 py-2 rounded border w-100"
               onChange={(e) => setDeptName(e.target.value)}
             />
           </div>
@@ -337,16 +344,16 @@ const Departments = () => {
                     <th className="border-0 text-start py-2 ps-5">
                       Department Name
                     </th>
-                    <th className="border-0 ">Created</th>
-                    <th className="border-0">Members</th>
-                    <th className="border-0">Edit/Delete</th>
+                    <th className="border-0 py-2">Created</th>
+                    <th className="border-0 py-2">Members</th>
+                    <th className="border-0 py-2">Edit/Delete</th>
                   </tr>
                 </thead>
                 <tbody>
                   {departmentsData &&
                     departmentsData.map((department, departmentIndex) => (
                       <tr key={departmentIndex}>
-                        <td className="py-3 ps-5">
+                        <td className="py-3 ps-5 text-capitalize">
                           <input
                             type="checkbox"
                             className="d-inline border-0 me-2"
@@ -358,25 +365,27 @@ const Departments = () => {
                           />{" "}
                           {department?.department_name}
                         </td>
-                        <td className="text-center">
+                        <td className="text-center py-3">
                           {formatDateToIST(department?.created_at)}
                         </td>
-                        <td className="text-center">
-                          {department?.member_count}
+                        <td className="text-center py-3">
+                          <Link
+                            to={`departmentMembers/${department.id}`}
+                            className="link-dark text-decoration-none"
+                          >
+                            {department?.member_count}
+                          </Link>
                         </td>
-                        <td
-                          className="text-center position-relative"
-                          onClick={() => {
-                            toggleEditOrDeletePopUp(department.id);
-                            setId(department.id);
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faEllipsis}
-                            className="cursor-pointer"
+                        <td className="text-center position-relative py-3">
+                          <RxDotsHorizontal
+                            className="fs-4 cursor-pointer"
+                            onClick={() => {
+                              toggleEditOrDeletePopUp(department.id);
+                              setId(department.id);
+                            }}
                           />
                           {editOrDeletePopUp[department.id] && (
-                            <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
+                            <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
                               <h6
                                 className="py-3 px-5 border-bottom cursor-pointer"
                                 onClick={handleEdit}

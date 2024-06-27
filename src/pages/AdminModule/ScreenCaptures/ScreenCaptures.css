@@ -1,0 +1,29 @@
+.screenshot-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+}
+
+.screenshot-container.show {
+  max-height: 1000px;
+}
+.scrollable-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+.scrollable-container .d-flex {
+  flex-wrap: nowrap;
+}
+
+@media screen and (min-width: 643px) {
+  .d-custom-inline {
+    display: inline;
+  }
+}
+@media screen and (max-width: 643px) {
+  .d-custom-inline {
+    display: none;
+  }
+}

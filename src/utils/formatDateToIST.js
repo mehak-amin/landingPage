@@ -1,4 +1,4 @@
-export default function formatDateToIST(dateString) {
+export default function formatDateToIST(dateString, format = "full") {
   const date = new Date(dateString);
 
   const options = {
@@ -18,7 +18,20 @@ export default function formatDateToIST(dateString) {
     dateParts[part.type] = part.value;
   });
 
-  const formattedDate = `${dateParts.weekday} ${dateParts.day} ${dateParts.month}, ${dateParts.year} ${dateParts.hour}:${dateParts.minute} ${dateParts.dayPeriod}`;
+  let formattedDate;
+  switch (format) {
+    case "full":
+      formattedDate = `${dateParts.weekday} ${dateParts.day} ${dateParts.month}, ${dateParts.year} ${dateParts.hour}:${dateParts.minute} ${dateParts.dayPeriod}`;
+      break;
+    case "dateMonthYear":
+      formattedDate = `${dateParts.day} ${dateParts.month}, ${dateParts.year}`;
+      break;
+    case "time":
+      formattedDate = `${dateParts.hour}:${dateParts.minute} ${dateParts.dayPeriod}`;
+      break;
+    default:
+      throw new Error("Invalid format specified");
+  }
 
   return formattedDate;
 }

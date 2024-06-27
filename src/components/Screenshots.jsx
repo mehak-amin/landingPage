@@ -3,7 +3,7 @@ import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import { useState } from "react";
 export default function Screenshots({ data }) {
   const [showAll, setShowAll] = useState(false);
-  const [isScaled, setIsScaled] = useState(false);
+  // const [isScaled, setIsScaled] = useState(false);
   const snaps = showAll ? data : data?.slice(0, 8);
 
   // const handleClick = () => {
@@ -14,7 +14,7 @@ export default function Screenshots({ data }) {
 
   return (
     <div className="mb-4">
-      <div className="px-sm-5 px-3 py-2 bg-gray d-flex align-items-center justify-content-between">
+      <div className="px-sm-5 px-3 py-2 bg-graySecondary d-flex align-items-center justify-content-between">
         <div className="bg-white px-3 py-1 rounded-1 shadow fw-bolder">
           <span className="d-none d-sm-inline">Screenshots Selected</span> 0
         </div>
