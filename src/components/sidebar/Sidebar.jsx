@@ -26,7 +26,6 @@ import { DropdownItem } from "reactstrap";
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
 
 function Sidebar({ isSideBarOpen, role }) {
-
   // const [openDropdowns, setOpenDropdowns] = useState({});
 
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -54,7 +53,7 @@ function Sidebar({ isSideBarOpen, role }) {
       items: [
         { icon: faUsers, text: "Teammates", link: "admin/teammates" },
         { icon: faBriefcase, text: "Work Planners", link: "admin/workplanner" },
-        { icon: faComputer, text: "Ventures", link: "users/ventures" },
+        // { icon: faComputer, text: "Ventures", link: "users/ventures" },
         {
           icon: faCalendar,
           text: "Absence Calender",
@@ -77,19 +76,22 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
+              icon: faPeopleGroup,
               text: "Departments",
-              link: "/departments",
+              link: "admin/settings/departments",
             },
             {
+              icon: faPeopleGroup,
               text: "Manage Apps",
-              link: "/manageapps",
+              link: "admin/settings/manageApps",
             },
-            {
-              text: "Manage Categories",
-              link: "/managecategories",
-            },
+            // {
+            //   text: "Manage Categories",
+            //   link: "admin/settings/managecategories",
+            // },
 
             {
+              icon: faPeopleGroup,
               text: "Manage Rolls",
               link: "admin/settings/manageroles",
             },
@@ -138,22 +140,25 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
+              icon: faPeopleGroup,
               text: "Departments",
-              link: "/departments",
+              link: "admin/settings/departments",
             },
             {
+              icon: faPeopleGroup,
               text: "Manage Apps",
-              link: "/manageapps",
+              link: "admin/settings/manageapps",
             },
-            {
-              text: "Manage Categories",
-              link: "/managecategories",
-            },
-
             // {
-            //   text: "Manage Rolls",
-            //   link: "manageroles",
+            //   text: "Manage Categories",
+            //   link: "admin/settings/managecategories",
             // },
+
+            {
+              icon: faPeopleGroup,
+              text: "Manage Rolls",
+              link: "admin/settings/manageroles",
+            },
           ],
         },
         { icon: faLink, text: "Affiliates", link: "/affiliates" },
@@ -194,26 +199,25 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
-              icon: faSquarePollVertical,
+              icon: faPeopleGroup,
               text: "Departments",
-              link: "/departments",
+              link: "admin/settings/departments",
             },
             {
-              icon: faSquarePollVertical,
+              icon: faPeopleGroup,
               text: "Manage Apps",
-              link: "/manageapps",
+              link: "admin/settings/manageapps",
             },
-            {
-              icon: faSquarePollVertical,
-              text: "Manage Categories",
-              link: "/managecategories",
-            },
-
             // {
-            //   icon: faSquarePollVertical,
-            //   text: "Manage Rolls",
-            //   link: "manageroles",
+            //   text: "Manage Categories",
+            //   link: "admin/settings/managecategories",
             // },
+
+            {
+              icon: faPeopleGroup,
+              text: "Manage Rolls",
+              link: "admin/settings/manageroles",
+            },
           ],
         },
         { icon: faLink, text: "Affiliates", link: "/affiliates" },
@@ -249,43 +253,6 @@ function Sidebar({ isSideBarOpen, role }) {
             <p>{section.heading}</p>
             <div className="menu">
               {section.items.map((item, itemIndex) => (
-                // -------------------------------
-
-                // <li key={itemIndex} className="menu-item">
-                //   {item.isDropdown ? (
-                //     <div>
-                //       <div
-                //         className="dropdown-toggle"
-                //         onClick={() => toggleSettingsSubmenu(itemIndex)}
-                //       >
-                //         <FontAwesomeIcon
-                //           icon={item.icon}
-                //           className="custom-icon"
-                //         />
-                //         <span className="mr-2">{item.text}</span>
-                //         {openDropdowns[itemIndex] ? (
-                //           <FontAwesomeIcon icon={faAngleUp} />
-                //         ) : (
-                //           <FontAwesomeIcon icon={faAngleDown} />
-                //         )}
-                //       </div>
-
-                //       <ul>
-                //         <li>lll</li>
-                //         <li>lll</li>
-                //         <li>lll</li>
-                //       </ul>
-                //     </div>
-                //   ) : (
-                //     <div>
-                //       <FontAwesomeIcon
-                //         icon={item.icon}
-                //         className="custom-icon"
-                //       />
-                //       <span>{item.text}</span>
-                //     </div>
-                //   )}
-                // </li>
                 <div key={itemIndex} className=" ">
                   {item.text === "Settings" ? (
                     <div

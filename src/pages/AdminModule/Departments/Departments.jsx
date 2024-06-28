@@ -146,30 +146,6 @@ const Departments = () => {
             <h5 className="text-center">There is no turning back.</h5>
           </div>
         </ModalComponent>
-        // <div className="wrapper-delete-popup-departments">
-        //   <div className="delete-popup-departments">
-        //     <div className="delete-department-top-departments">
-        //       <h4>Delete Department</h4>
-        //       <div onClick={() => setDeletePopUp(!deletePopUp)}>
-        //         <h4>
-        //           <FontAwesomeIcon icon={faCircleXmark} />
-        //         </h4>
-        //       </div>
-        //     </div>
-
-        //     <div className="delete-department-center-departments">
-        //       <h6>
-        //         Do you really want to remove the projects that you have chosen?
-        //       </h6>
-        //       <h6>There is no turning back.</h6>
-        //     </div>
-
-        //     <div className="delete-department-bottom-departments">
-        //       <h5 onClick={() => setDeletePopUp(false)}>Cancel</h5>
-        //       <h5 onClick={handleDeleteDepartment}>Delete</h5>
-        //     </div>
-        //   </div>
-        // </div>
       )}
 
       {/* <---- TOP DIV ----> */}

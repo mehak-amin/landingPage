@@ -88,7 +88,7 @@ function LoginPage({ role, setRole, user, setUser }) {
   };
 
   const token = localStorage.getItem("token");
-
+  //temporarily comment out for reset password
   if (token && user) {
     if (role === "admin") {
       return <Navigate to="/admin/dashboard" />;
@@ -96,7 +96,7 @@ function LoginPage({ role, setRole, user, setUser }) {
       return <Navigate to="/users/myScreen" />;
     }
   }
-  // console.log(role);
+  console.log(role);
 
   return (
     <div className="login">

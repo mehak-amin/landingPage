@@ -32,6 +32,7 @@ export default function AdminDashboard() {
 
   const usersData = data || {};
   console.log(data);
+  console.log("Hello");
   const {
     mostProductive,
     mostEffective,
