@@ -1,27 +1,29 @@
+import { useState } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { ShimmerTable } from "react-shimmer-effects";
+
 export default function AppList({ heading, data = "", backgound, loading }) {
-  const renderPopover = (app) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const renderPopover = (otherTabs) => {
+    const tabs = Object.entries(otherTabs);
+    const visibleTabs = showAll ? tabs : tabs.slice(0, 4);
+
     return (
       <Popover id="popover-basic" className="border-4 border-red border">
         <Popover.Body>
-          {Object.entries(app).map(([appName, appData], appIndex) => (
-            <div key={appIndex}>
-              <strong>{appName}</strong>
-              {Object.entries(appData).map(([tab, tabData], tabIndex) => (
-                <div
-                  key={`${appIndex}-${tabIndex}`}
-                  className="flex gap-4 py-2"
-                >
-                  {tab === "AllTime" ? "" : tab}
-
-                  {Object.entries(tabData).map(([key, value], index) => (
-                    <div key={`${tabIndex}-${index}`} className="fw-light">{`${(
-                      value / 60
-                    ).toFixed(2)}min`}</div>
-                  ))}
-                </div>
-              ))}
+          {visibleTabs.map(([tab, tabData], tabIndex) => (
+            <div key={tabIndex} className="flex gap-4 py-2">
+              <p className="mb-0">{tab === "" ? "Tab" : tab}</p>
+              <div>
+                {Object.entries(tabData).map(([key, value], index) => (
+                  <div key={`${tabIndex}-${index}`} className="fw-light">
+                    {Number.isFinite(value)
+                      ? `${(value / 60).toFixed(2)} min`
+                      : "No time spent data"}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </Popover.Body>
@@ -55,24 +57,33 @@ export default function AppList({ heading, data = "", backgound, loading }) {
           <h5 className={` text-white px-sm-5 px-3 py-3 ${backgound}`}>
             {heading}
           </h5>
-          <div className="row row-cols-4 py-3" style={{ minWidth: "40rem" }}>
-            {Array.isArray(data) ? (
+          <div className="row row-cols-3 py-3" style={{ minWidth: "40rem" }}>
+            {localStorage.getItem("role") === "admin" ? (
               data?.length > 0 ? (
-                data?.map((app) => (
-                  <OverlayTrigger
-                    trigger={["click", "focus"]}
-                    placement="bottom"
-                    overlay={renderPopover(app)}
-                    key={Object.keys(app)}
-                  >
-                    <div className="col mb-4 d-flex align-items-center gap-3 px-5 cursor-pointer">
-                      <p className="mb-0">{Object.keys(app)}</p>
+                data?.map((app, index) => {
+                  const appName = Object.keys(app)[0];
+                  const appTime = app[appName];
+                  return (
+                    <div
+                      className="col mb-4 d-flex align-items-center gap-2 px-5"
+                      key={index}
+                    >
+                      <img
+                        src={app.logo}
+                        alt={`${appName} logo`}
+                        style={{
+                          width: "1.5rem",
+                          height: "1.5rem",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                        {(app[Object.keys(app)].AllTime / 60).toFixed(0)}m
+                        {(appTime / 60).toFixed(0)}m
                       </p>
                     </div>
-                  </OverlayTrigger>
-                ))
+                  );
+                })
               ) : (
                 <div className="px-4 d-flex align-items-center justify-content-center h-75">
                   <div>
@@ -80,32 +91,50 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       No, data found!
                     </h5>
                     {/* <p>
-                      No, tracking for this date please select another date.
-                    </p> */}
+                    No, tracking for this date please select another date.
+                  </p> */}
                   </div>
                 </div>
               )
-            ) : Object.entries(data)?.length > 0 ? (
-              Object.entries(data).map(([key, value], index) => {
+            ) : data?.length > 0 ? (
+              data.map((app, index) => {
+                const appName = Object.keys(app).find((key) => key !== "logo");
+                const appDetails = app[appName];
+                const { AllTime, ...otherTabs } = appDetails;
+                const logo = app.logo;
+
                 return (
-                  <div
+                  <OverlayTrigger
+                    trigger={["click", "focus"]}
+                    placement="bottom"
+                    overlay={renderPopover(otherTabs)}
                     key={index}
-                    className="col mb-4 d-flex align-items-center gap-2 px-5"
                   >
-                    <p className="mb-0">{key}</p>
-                    <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                      {(value / 60).toFixed(0)}m
-                    </p>
-                  </div>
+                    <div className="col mb-4 d-flex align-items-center gap-2 px-5 cursor-pointer">
+                      <img
+                        src={logo}
+                        alt={appName}
+                        style={{
+                          width: "1.5rem",
+                          height: "1.5rem",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <p className="mb-0">{appName}</p>
+                      <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
+                        {(AllTime / 60).toFixed(0)}m
+                      </p>
+                    </div>
+                  </OverlayTrigger>
                 );
               })
             ) : (
               <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                 <div>
                   <h5 className="text-center fw-light text-secondary">
-                    No, data found!
+                    No data found!
                   </h5>
-                  {/* <p>No, tracking for this date please select another date.</p> */}
+                  {/* <p>No tracking for this date. Please select another date.</p> */}
                 </div>
               </div>
             )}

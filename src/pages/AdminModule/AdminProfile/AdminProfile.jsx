@@ -265,7 +265,7 @@ export default function AdminProfile() {
           <div className="w-md-50 d-flex flex-direction-column gap-4">
             <div className="p-4 bg-white d-flex flex-direction-column gap-3">
               <h5>Working Days</h5>
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex flex-wrap align-items-center gap-3">
                 {[
                   "monday",
                   "tuesday",
@@ -332,7 +332,7 @@ export default function AdminProfile() {
             </div>
             <div className="p-4 bg-white d-flex flex-direction-column gap-3">
               <h5>Tracking Days</h5>
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex flex-wrap align-items-center gap-3">
                 {[
                   "monday",
                   "tuesday",

@@ -54,7 +54,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
       </div>
       <div className="profile">
         <div className="userName">
-          <h6 className="m-0 text-capitalize">Hi, {user?.fullname}</h6>
+          <h6 className="m-0 text-capitalize">
+            Hi, {user?.fullname.split(" ")[0]}
+          </h6>
           <p className="m-0 fw-light">Raybit Tech</p>
         </div>
         <OverlayTrigger

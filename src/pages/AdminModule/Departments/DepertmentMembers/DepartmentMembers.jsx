@@ -383,12 +383,14 @@ export default function DepartmentMembers() {
                         />
                         {editOrDeletePopUp[member.id] && (
                           <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                            <h6
-                              className="py-3 px-5 border-bottom cursor-pointer"
-                              //   onClick={handleEdit}
-                            >
-                              Edit
-                            </h6>
+                            <Link to={`editMember/${memberId}`}>
+                              <h6
+                                className="py-3 px-5 border-bottom cursor-pointer"
+                                //   onClick={handleEdit}
+                              >
+                                Edit
+                              </h6>
+                            </Link>
                             <h6
                               className="py-3 px-5 text-red cursor-pointer"
                               onClick={handleDelete}

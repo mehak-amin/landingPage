@@ -4,12 +4,10 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
-  Scatter,
 } from "recharts";
+
 export default function TimeCard({ title, data }) {
   function calculateMeanTime(times) {
     const milliseconds = times.map((time) => {

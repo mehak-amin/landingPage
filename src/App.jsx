@@ -66,7 +66,10 @@ function App() {
             path="departments/departmentMembers/:id"
             element={<DepartmentMembers />}
           />
-          <Route path="editMember" element={<EditMember />} />
+          <Route
+            path="departments/departmentMembers/:id/editMember/:id"
+            element={<EditMember />}
+          />
 
           <Route path="manageApps" element={<ManageApps />} />
           <Route path="teammates" element={<Teamates />} />

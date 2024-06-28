@@ -1,15 +1,17 @@
-import { useState, useEffect, useMemo, Profiler, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import BASE_URI from "../../../../../../config";
 import ButtonActive from "../../../../../components/Button/ButtonActive";
 import ButtonInactive from "../../../../../components/Button/ButtonInactive";
 import useFetch from "../../../../../hooks/useFetch";
 import formatDateToIST from "../../../../../utils/formatDateToIST";
 import "./EditMember.css";
-import { PiUploadSimpleLight } from "react-icons/pi";
+// import { PiUploadSimpleLight } from "react-icons/pi";
 import TimezoneSelect from "react-timezone-select";
 import { PhoneInput } from "react-international-phone";
 import { CiImageOn } from "react-icons/ci";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+import NoData from "../../../../../components/NoData";
 
 const EditMember = () => {
   const [formData, setFormData] = useState({
@@ -60,11 +62,12 @@ const EditMember = () => {
       working_ends: "",
     },
   });
-  const [isImage, setIsImage] = useState(false);
-  const fileInputRef = useRef(null);
+  const { id } = useParams();
+
   const token = localStorage.getItem("token");
-  let url = `${BASE_URI}/admin/employeeProfile/2`;
+  let url = `${BASE_URI}/admin/employeeProfile/${id}`;
   let rolesURL = `${BASE_URI}/roles`;
+  let departmentURL = `${BASE_URI}/departments`;
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
@@ -74,15 +77,22 @@ const EditMember = () => {
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
 
   const user = useMemo(() => data?.user[0] || {}, [data]);
-
+  console.log(user);
   const { data: rolesData } = useFetch(rolesURL, fetchOptions);
-  const activeRoles =
-    rolesData?.data.roles.filter((item) => item.is_active === 1) || [];
-  // const activeRoles = [];
-  // console.log(rolesData.data.roles);
+  const activeRoles = useMemo(
+    () => rolesData?.data.roles.filter((item) => item.is_active === 1) || [],
+    [rolesData]
+  );
+
+  const { data: departmentsData } = useFetch(departmentURL, fetchOptions);
+  const departments = useMemo(
+    () => departmentsData?.data.filter((dept) => dept.is_active === 1) || [],
+    [departmentsData]
+  );
+  // console.log(departments);
 
   useEffect(() => {
-    if (data) {
+    if (user) {
       setFormData({
         profile: {
           fullname: user.fullname,
@@ -92,7 +102,7 @@ const EditMember = () => {
         },
         users: {
           email: user.email,
-          role_id: user.role,
+          role_id: user.role_id,
         },
 
         settings: {
@@ -123,7 +133,7 @@ const EditMember = () => {
         working_days: {
           monday: user.working_monday,
           tuesday: user.working_tuesday,
-          wednesday: user.working_wednesda,
+          wednesday: user.working_wednesday,
           thursday: user.working_thursday,
           friday: user.working_friday,
           saturday: user.working_saturday,
@@ -136,14 +146,22 @@ const EditMember = () => {
         // updated_at: user.updated_at,
       });
     }
-  }, [data]);
+  }, [user]);
 
   const handleSaveChanges = () => {
     axios
-      .patch(`${BASE_URI}/admin/employeeProfile/2`, formData, fetchOptions)
+      .patch(`${BASE_URI}/admin/employeeProfile/${id}`, formData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
       .then((resp) => {
         console.log(resp.data);
-        refetch;
+        refetch();
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -193,24 +211,11 @@ const EditMember = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prevState) => ({
-        ...prevState,
+  console.log(formData);
 
-        profile: {
-          picture: file,
-        },
-      }));
-    }
-  };
-
-  const handleFileUploadClick = () => {
-    fileInputRef.current.click();
-    setIsImage(true);
-  };
-  // console.log(formData);
+  if (JSON.stringify(user) === "{}") {
+    return <NoData />;
+  }
 
   return (
     <div className="container-xxl p-0">
@@ -236,14 +241,10 @@ const EditMember = () => {
             <div className="d-flex flex-direction-column gap-4 h-100">
               <div className="d-custom-flex align-items-center gap-5">
                 <div>
-                  {formData.profile.picture ? (
+                  {user.picture ? (
                     <div>
                       <img
-                        src={
-                          isImage
-                            ? URL.createObjectURL(formData.profile.picture)
-                            : formData.profile.picture
-                        }
+                        src={user.picture}
                         alt=""
                         style={{
                           width: "8rem",
@@ -251,68 +252,18 @@ const EditMember = () => {
                           objectFit: "cover",
                         }}
                       />
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        ref={fileInputRef}
-                        style={{
-                          position: "absolute",
-                          width: "100%",
-                          height: "100%",
-                          opacity: 0,
-                          cursor: "pointer",
-                        }}
-                      />
-                      <p
-                        className="cursor-pointer mb-0"
-                        onClick={handleFileUploadClick}
-                      >
-                        Upload Image <PiUploadSimpleLight />
-                      </p>
                     </div>
                   ) : (
-                    // <img
-                    //   src={
-                    //     isImage
-                    //       ? URL.createObjectURL(formData.profile.picture)
-                    //       : formData.profile.picture
-                    //   }
-                    //   alt=""
-                    //   className="mb-5 rounded-circle border"
-                    //   style={{
-                    //     width: "11rem",
-                    //     height: "11rem",
-                    //     objectFit: "cover",
-                    //   }}
-                    // />
                     <div
-                      className="mb-5 rounded-circle border flex align-items-center justify-content-center position-relative"
+                      className="d-flex justify-content-center align-items-center"
                       style={{
-                        width: "11rem",
-                        height: "11rem",
-                        objectFit: "cover",
+                        width: "8rem",
+                        height: "8rem",
+                        border: "2px dashed black",
+                        cursor: "pointer",
                       }}
-                      onClick={handleFileUploadClick}
                     >
-                      <CiImageOn className="fs-1" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        ref={fileInputRef}
-                        style={{
-                          position: "absolute",
-                          width: "100%",
-                          height: "100%",
-                          opacity: 0,
-                          cursor: "pointer",
-                        }}
-                      />
-                      <p className="position-absolute z-2 top-68 cursor-pointer">
-                        Upload Image <PiUploadSimpleLight />
-                      </p>
+                      <CiImageOn className="fs-2" />
                     </div>
                   )}
                 </div>
@@ -367,6 +318,24 @@ const EditMember = () => {
                 />
               </div>
               <div>
+                <label htmlFor="profile.department_id" className="d-block">
+                  Department
+                </label>
+                <select
+                  name="profile.department_id"
+                  value={formData.profile.department_id}
+                  onChange={handleChange}
+                  className="rounded-2 border py-2 px-3 w-100 text-capitalize"
+                >
+                  <option value="">--Select Department--</option>
+                  {departments.map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.department_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <p>
                   Created on:{" "}
                   <span>
@@ -387,10 +356,10 @@ const EditMember = () => {
             </div>
           </div>
 
-          <div className="w-md-50 d-flex flex-direction-column gap-4">
+          <div className="w-md-50 d-flex flex-direction-column gap-5">
             <div className="p-4 bg-white d-flex flex-direction-column gap-3">
               <h5>Working Days</h5>
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex flex-wrap align-items-center gap-3">
                 {[
                   "monday",
                   "tuesday",
@@ -457,7 +426,7 @@ const EditMember = () => {
             </div>
             <div className="p-4 bg-white d-flex flex-direction-column gap-3">
               <h5>Tracking Days</h5>
-              <div className="d-flex align-items-center gap-3">
+              <div className="d-flex flex-wrap align-items-center gap-3">
                 {[
                   "monday",
                   "tuesday",
