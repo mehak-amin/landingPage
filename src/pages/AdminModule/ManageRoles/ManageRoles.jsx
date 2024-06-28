@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { FaTrash, FaEllipsisH } from "react-icons/fa";
-// import EditDdelete from "../../../components/Edit-Delete-PopUp/Edit-delete";
 import BASE_URI from "../../../../config";
 import CreateRoles from "./createRoles/CreateRoles";
 import "./ManageRoles.css";
@@ -15,8 +14,7 @@ function ManageRoles() {
   const [roles, setRoles] = useState([]); //roles container
   const [selectedRoles, setSelectedRoles] = useState([]); //selected role container
   const [showCreateModal, setShowCreateModal] = useState(false); //shows createRole modal
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-
+  // const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState({}); //editDeletePOPup
   const [id, setId] = useState(null); //id of role we wanna edit
   const [editModal, setEditModal] = useState(false); //shows edit modal
@@ -28,7 +26,7 @@ function ManageRoles() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("role");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   //format date
   const formatDate = (apiDate) => {
@@ -69,10 +67,7 @@ function ManageRoles() {
 
   const handleShowCreate = () => setShowCreateModal(true); //shows create modal
   const handleCloseCreate = () => setShowCreateModal(false); //close create modal
-  const handleShowEdit = () => {
-    console.log("edit clicked");
-    setEditModal(true);
-  };
+
   const handleCloseEdit = () => {
     setEditModal(false);
   };
@@ -94,74 +89,53 @@ function ManageRoles() {
   };
 
   const token = localStorage.getItem("token");
-  // let url = `${BASE_URI}/roles`;
-  // if (sortCriteria && sortOrder) {
-  //   url += `?sort=${sortCriteria}&direction=${sortOrder}`;
-  // }
-
-  // if (search) {
-  //   url += `&search=${search}`;
-  // }
-
-  // const BASE_URI = 'your_base_uri';
-  // const search = 'your_search_query';
-  // const sortBy = 'field_name'; // e.g., 'name', 'created_at', etc.
-  // const sortOrder = 'asc'; // 'asc' for ascending or 'desc' for descending
-
-  // const fetchRoles = async () => {
-  //   try {
-  //     const response = await axios.get(`${BASE_URI}/roles`, {
-  //       params: {
-  //         search: search,
-  //         sortBy: sortBy,
-  //         sortOrder: sortOrder
-  //       },
-  //       headers: {
-  //         Authorization: `Bearer your_token_here`
-  //       }
-  //     });
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching roles:', error);
-  //   }
-  // };
-
-  // fetchRoles();
 
   //get Roles API
   let url = `${BASE_URI}/roles?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
   useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
-        console.log(response.data.data.roles);
-        setError(false);
-
-        const fetchedRoles = response.data.data.roles.map((role) => ({
-          ...role,
-          created_at: formatDate(role.created_at),
-        }));
-        setRoles(fetchedRoles);
-      } catch (error) {
-        setError(true);
-        console.error("Error fetching roles:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchRoles();
   }, [token, url]);
 
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(response);
+      console.log(response.data.data.roles);
+      response.data.data.roles.forEach((role) => {
+        console.log(role.role); // Logs each role name (e.g., "admin", "Manager", "user")
+        setRoleName(role.role); //user
+        console.log(roleName); //user
+      });
+      // setError(false);
+      setErrorMessage("");
+
+      const fetchedRoles = response.data.data.roles.map((role) => ({
+        ...role,
+        created_at: formatDate(role.created_at),
+      }));
+
+      setRoles(fetchedRoles);
+      // setErrorMessage("");//check
+    } catch (error) {
+      // setError(true);
+      setErrorMessage("No data found");
+      console.error("Error fetching roles:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // -------------edit role-------------------------
-  const getSingleRole = async () => {
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    fetchRoles(e.target.value);
+  };
+
+  // -------------get role to edit role-------------------------
+  const getSingleRole = async (id) => {
     try {
       const response = await axios({
         method: "GET",
@@ -171,18 +145,27 @@ function ManageRoles() {
         },
       });
       setRoleName(response.data.data[0].role);
-      console.log(response.data.data[0].role);
+      // console.log(response.data.data[0].role);
+
+      // setRoleName(response.data.data.role); // Ensure correct property access
+      setId(id);
+      setEditModal(true); // Move setting editModal here
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleEdit = () => {
-    getSingleRole();
-    setEditModal(!editModal);
+  const handleEdit = (id) => {
+    getSingleRole(id);
+    setEditModal(true);
+  };
+  const handleShowEdit = () => {
+    console.log("edit clicked");
+    setEditModal(true);
+    // setRoleName(`role.role`);
   };
 
-  //edit in editDelete
+  //---------------------------edit in editDelete----------------------------
   const handleEditRole = async () => {
     try {
       await axios({
@@ -196,6 +179,10 @@ function ManageRoles() {
           "Content-Type": "application/json",
         },
       });
+      // setRoleName(response.data.data[0].role);
+      // console.log(roleName);
+      fetchRoles();
+
       // refetch();
       setEditModal(false);
       // console.log(response);
@@ -204,7 +191,7 @@ function ManageRoles() {
     }
   };
 
-  //selectAll btn click fxn
+  //------------------selectAll btn click fxn-----------------------
   const handleSelectAll = () => {
     if (selectedRoles.length === roles.length) {
       setSelectedRoles([]);
@@ -213,7 +200,7 @@ function ManageRoles() {
     }
   };
 
-  //checkbox click fxn
+  //-------------------checkbox click fxn--------------------------
   const handleCheckboxChange = (id) => {
     setSelectedRoles((prevSelectedRoles) => {
       if (prevSelectedRoles.includes(id)) {
@@ -224,7 +211,7 @@ function ManageRoles() {
     });
   };
 
-  //delete in editDelete
+  //------------------delete in editDelete-------------------------
   const handleDeleteRoles = async (id) => {
     console.log("deleting");
     try {
@@ -248,8 +235,7 @@ function ManageRoles() {
     }
   };
 
-  //delete selected🗑️
-
+  //----------------------delete selected🗑️------------------------
   const handleDeleteSelectedRoles = async () => {
     console.log("delete all");
     try {
@@ -282,12 +268,11 @@ function ManageRoles() {
     }
   };
 
-  console.log(isSort);
   return (
     <div className="manageRolesWrapper container mt-5 px-0">
       <Header
         heading="Manage Roles"
-        isDate={true}
+        isDate={false}
         isFilter={false}
         btnName="Create Role"
         handleClick={handleShowCreate}
@@ -295,7 +280,7 @@ function ManageRoles() {
         setSelectedStartDate={setStartDate}
       />
       <div className="main-content-holder px-5">
-        {/* -------------------needs to be edited------------------------------ */}
+        {/* -------------------------serch & sort------------------------ */}
         <div className="d-md-flex gap-6  px-md-5 px-3 py-4 position-relative ">
           {/* SEARCH ROLES */}
           <SearchInput
@@ -326,9 +311,9 @@ function ManageRoles() {
                     <option value="" disabled selected>
                       --Select--
                     </option>
-                    <option value="department_name">role</option>
-                    <option value="created">created _at</option>
-                    <option value="status">is _active</option>
+                    <option value="role">role</option>
+                    <option value="created_at">created at</option>
+                    <option value="is_active">status</option>
                   </select>
                 </div>
 
@@ -356,10 +341,117 @@ function ManageRoles() {
             )}
           </div>
         </div>
-        {/* {filteredDepartments.map((department, departmentIndex) => (
-  // Render each filtered department here
-))} */}
-        {/* edit modal */}
+
+        {/*---------------------main UI -----------------------*/}
+        <div
+          className="d-flex justify-content-between align-items-center mb-2 p-2"
+          style={{ backgroundColor: "#d3d3d3" }}
+        >
+          <div>
+            <a
+              href="#"
+              className="text-white fw-medium underline-clickable"
+              onClick={handleSelectAll}
+            >
+              Select all
+            </a>
+          </div>
+          <div className="d-flex align-items-center gap-3">
+            <span className="text-white fw-medium">
+              {selectedRoles.length} Roles Selected
+            </span>
+            <button
+              className="btn-transparent p-2"
+              onClick={handleDeleteSelectedRoles}
+            >
+              <FaTrash />
+            </button>
+          </div>
+        </div>
+        {/* ------------------------table------------------------- */}
+        <div className=" table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th className="text-start pl-2">Role Name</th>
+                <th className="text-center">Created</th>
+                <th className="text-center">Status</th>
+                <th className="text-center">Edit / Delete</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    Loading...
+                  </td>
+                </tr>
+              ) : errorMessage ? (
+                <tr>
+                  <td colSpan="4">{errorMessage}</td>
+                </tr>
+              ) : (
+                roles.map((role) => (
+                  <tr key={role.id}>
+                    <td className="text-start ">
+                      <input
+                        type="checkbox"
+                        checked={selectedRoles.includes(role.id)}
+                        onChange={() => handleCheckboxChange(role.id)}
+                      />
+                      <span className="ml-2">{role.role}</span>
+                    </td>
+                    <td className="text-center">{role.created_at}</td>
+                    <td
+                      className={
+                        role.is_active === 1
+                          ? "text-success text-center text-decoration-underline"
+                          : "text-danger text-center text-decoration-underline"
+                      }
+                    >
+                      {role.is_active === 1 ? "Active" : "Inactive"}
+                    </td>
+
+                    <td
+                      className="text-center position-relative"
+                      onClick={() => {
+                        toggleEditOrDeletePopUp(role.id);
+                        setId(role.id);
+                      }}
+                    >
+                      <FaEllipsisH />
+                      {editOrDeletePopUp[role.id] && (
+                        <div className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white">
+                          <h6
+                            className="py-3 px-5 border-bottom cursor-pointer"
+                            onClick={handleEdit}
+                          >
+                            Edit
+                          </h6>
+                          <h6
+                            className="py-3 px-5 text-red cursor-pointer"
+                            onClick={() => handleDeleteRoles(role.id)}
+                          >
+                            Delete
+                          </h6>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+            {/* )} */}
+          </table>
+          {showCreateModal && (
+            <CreateRoles
+              handleShowCreate={handleShowCreate}
+              handleCloseCreate={handleCloseCreate}
+            />
+          )}
+        </div>
+        {/*------------------------- edit modal------------------------------ */}
         {editModal && (
           <Modal show={handleShowEdit} onHide={handleCloseEdit}>
             <Modal.Header className="bg-darkgray d-flex justify-content-between no-border-radius">
@@ -377,7 +469,9 @@ function ManageRoles() {
                   <Form.Label>Role Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter Role Name...!"
+                    // placeholder="Enter Role Name...!"
+                    placeholder={`Edit ${roleName}`}
+                    // plaintext={roles.role}
                     value={roleName}
                     onChange={(e) => setRoleName(e.target.value)}
                   />
@@ -417,162 +511,6 @@ function ManageRoles() {
             </Modal.Footer>
           </Modal>
         )}
-
-        <div
-          className="d-flex justify-content-between align-items-center mb-2 p-2"
-          style={{ backgroundColor: "#d3d3d3" }}
-        >
-          <div>
-            <a
-              href="#"
-              className="text-white fw-medium underline-clickable"
-              onClick={handleSelectAll}
-            >
-              Select all
-            </a>
-          </div>
-          <div className="d-flex align-items-center gap-3">
-            <span className="text-white fw-medium">
-              {selectedRoles.length} Roles Selected
-            </span>
-            <button
-              className="btn-transparent p-2"
-              onClick={handleDeleteSelectedRoles}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        </div>
-        <div className=" table-responsive">
-          {/* ------------------------- */}
-          {/* {loading && <p>Loading...</p>}
-          {error && <p>Error: {error.message}</p>}
-          {!loading && roles.length === 0 && (
-            <table>
-              <thead>
-                <tr>
-                  <th>Column 1</th>
-                  <th>Column 2</th>
-                  <th>Column 3</th>
-                  <th>Column 4</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colSpan="4">No data found</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
-          {!loading && roles.length > 0 && ( */}
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th className="text-start pl-2">Role Name</th>
-                <th className="text-center">Created</th>
-                <th className="text-center">Status</th>
-                <th className="text-center">Edit / Delete</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : roles.length > 0 ? (
-                roles.map((role) => (
-                  <tr key={role.id}>
-                    <td className="text-start ">
-                      <input
-                        type="checkbox"
-                        checked={selectedRoles.includes(role.id)}
-                        onChange={() => handleCheckboxChange(role.id)}
-                      />
-                      <span className="ml-2">{role.role}</span>
-                    </td>
-                    <td className="text-center">{role.created_at}</td>
-                    <td
-                      className={
-                        role.is_active === 1
-                          ? "text-success text-center text-decoration-underline"
-                          : "text-danger text-center text-decoration-underline"
-                      }
-                    >
-                      {role.is_active === 1 ? "Active" : "Inactive"}
-                    </td>
-                    {/* <td className="text-end ">
-                    <button
-                      className="btn-transparent p-2 mr-2"
-                      onClick={() => handleShowEditDelete(role)}
-                    >
-                      <FaEllipsisH />
-                    </button>
-                  </td> */}
-                    <td
-                      className="text-center position-relative"
-                      onClick={() => {
-                        toggleEditOrDeletePopUp(role.id);
-                        setId(role.id);
-                      }}
-                    >
-                      <FaEllipsisH />
-                      {editOrDeletePopUp[role.id] && (
-                        <div className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white">
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            // onClick={() => {
-                            //   handleEditRoles(role.id);
-                            // }}
-                            onClick={handleEdit}
-                            // onClick={() => handleShowEdit(role)}
-                          >
-                            Edit
-                          </h6>
-                          <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={() => handleDeleteRoles(role.id)}
-                          >
-                            Delete
-                          </h6>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    No data found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-            {/* )} */}
-          </table>
-          {/* // )} */}
-          {/* {showEditDeleteModal && (
-            <EditDdelete
-              showModal={showEditDeleteModal}
-              closeModal={handleCloseEditDelete}
-            />
-          )} */}
-          {showCreateModal && (
-            <CreateRoles
-              handleShowCreate={handleShowCreate}
-              handleCloseCreate={handleCloseCreate}
-            />
-          )}
-          {/* {editModal && (
-            <EditRoles
-              handleShowEdit={handleShowEdit}
-              handleEditRoles={handleEditRoles}
-              handleCloseEdit={handleCloseEdit}
-            />
-          )} */}
-        </div>
       </div>
     </div>
   );
