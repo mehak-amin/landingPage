@@ -627,6 +627,7 @@ const Teamates = () => {
           heading="Add Teammate"
           btn1="Cancel"
           btn2="Invite"
+          size="lg"
         >
           <div className="px-4 py-3 mb-5">
             <h5 className="text-center">

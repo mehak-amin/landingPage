@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./Departments.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { DiAppcelerator } from 'react-icons/di';
@@ -14,6 +13,11 @@ import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import useFetch from "../../../hooks/useFetch";
 import ModalComponent from "../../../components/Modal/ModalComponent";
+
+import { ShimmerTable } from "react-shimmer-effects";
+import { RxDotsHorizontal } from "react-icons/rx";
+import { Link } from "react-router-dom";
+
 const Departments = () => {
   const [createDeparment, setcreateDeparment] = useState(false);
   // const [departmentsData, setDepartmentsData] = useState([]);
@@ -81,8 +85,6 @@ const Departments = () => {
     }
   };
 
-  //   DELETING DATA OF BACKEND (DELETE)
-
   const handleDeleteDepartment = async () => {
     try {
       console.log(id);
@@ -92,6 +94,9 @@ const Departments = () => {
       });
       fetchDepartments();
       setDeletePopUp(false);
+
+      setEditOrDeletePopUp(false);
+      setSelectedDepartments([]);
 
       console.log(response);
     } catch (err) {
@@ -110,8 +115,12 @@ const Departments = () => {
           newName,
         },
       });
-      navigate("/loggedinpage");
-      console.log(response);
+
+      refetch();
+      setIsEdited(false);
+      setEditOrDeletePopUp(false);
+      // console.log(response);
+
     } catch (err) {
       console.log(err);
     }
@@ -125,9 +134,35 @@ const Departments = () => {
     setSortCriteria(event.target.value);
   };
 
-  const handleClose = () => {
-    setDeletePopUp(!deletePopUp);
+
+  const handleCloseDelete = () => {
+    setEditOrDeletePopUp(false);
+    setDeletePopUp(false);
   };
+
+  const handleCloseEdit = () => {
+    setEditOrDeletePopUp(false);
+    setIsEdited(false);
+  };
+
+  const handleSelectAll = () => {
+    if (selectedDepartments.length === departmentsData.length) {
+      setSelectedDepartments([]);
+    } else {
+      setSelectedDepartments(
+        departmentsData.map((department) => department.id)
+      );
+    }
+  };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedDepartments((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((departmentId) => departmentId !== id)
+        : [...prevSelected, id]
+    );
+  };
+  
 
   return (
     <div className="wrapper-div-departments">
@@ -139,16 +174,39 @@ const Departments = () => {
           btn1="Cancel"
           btn2="Delete"
         >
-          <div>
-            <h5 className="text-center mb-2">
+          <div className="py-3">
+            <h6 className="text-center mb-2">
               Do you really want to remove the projects that you have chosen?
-            </h5>
-            <h5 className="text-center">There is no turning back.</h5>
+            </h6>
+            <h6 className="text-center">There is no turning back.</h6>
           </div>
         </ModalComponent>
       )}
 
-      {/* <---- TOP DIV ----> */}
+
+      {isEdited && (
+        <ModalComponent
+          heading="Edit Department"
+          handleClose={handleCloseEdit}
+          handleClick={handleEditDepartment}
+          btn1="Cancel"
+          btn2="Update"
+        >
+          <div className="py-3">
+            <label htmlFor="" className="d-block mb-1">
+              Deapartment Name
+            </label>
+            <input
+              type="text"
+              value={departmentData}
+              className="px-3 py-2 rounded border w-100"
+              onChange={(e) => setDepartmentData(e.target.value)}
+            />
+          </div>
+        </ModalComponent>
+      )}
+
+
       <Header
         heading="Departments"
         isDate={false}
@@ -218,16 +276,41 @@ const Departments = () => {
         </div>
       </div>
 
-      {/* <----------------- BOTTOM DIV -----------------> */}
       {createDeparment && (
-        <div className="create-department-popup-wrapper">
-          <div className="create-department-popup-departments">
-            <div className="create-department-top-departments">
-              <h4>Create Department</h4>
-              <div onClick={togglecreateDeparment}>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleXmark} />
-                </h4>
+
+        <ModalComponent
+          heading="Create Department"
+          handleClose={togglecreateDeparment}
+          handleClick={handleCreateDepartment}
+          btn1="Cancel"
+          btn2="Create"
+          // size="m"
+        >
+          <div className="py-3">
+            <label htmlFor="" className="d-block mb-1">
+              Deapartment Name
+            </label>
+            <input
+              type="text"
+              value={deptName}
+              placeholder="Enter department name...!"
+              className="px-3 py-2 rounded border w-100"
+              onChange={(e) => setDeptName(e.target.value)}
+            />
+          </div>
+        </ModalComponent>
+      )}
+      {isLoading ? (
+        <ShimmerTable row={5} col={5} />
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+            <div className="top-div-bottom-departments py-3">
+              <div className="left-top-div-bottom-departments">
+                <h5 onClick={handleSelectAll} className="cursor-pointer">
+                  Select All
+                </h5>
+
               </div>
             </div>
             <div className="create-department-center-departments">
@@ -241,19 +324,77 @@ const Departments = () => {
                 />
               </div>
             </div>
-            <div className="create-department-bottom-departments">
-              <div
-                className="create-department-cancle-bottom-departments"
-                onClick={() => setDeptName("")}
-              >
-                <h6>Cancel</h6>
-              </div>
-              <div
-                className="create-department-invite-bottom-departments"
-                onClick={handleCreateDepartment}
-              >
-                <h6>Create</h6>
-              </div>
+
+
+            <div>
+              <table className="table table-borderless">
+                <thead>
+                  <tr>
+                    <th className="border-0 text-start py-2 ps-5">
+                      Department Name
+                    </th>
+                    <th className="border-0 py-2">Created</th>
+                    <th className="border-0 py-2">Members</th>
+                    <th className="border-0 py-2">Edit/Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {departmentsData &&
+                    departmentsData.map((department, departmentIndex) => (
+                      <tr key={departmentIndex}>
+                        <td className="py-3 ps-5 text-capitalize">
+                          <input
+                            type="checkbox"
+                            className="d-inline border-0 me-2"
+                            style={{ width: "1rem", height: "1rem" }}
+                            checked={selectedDepartments.includes(
+                              department.id
+                            )}
+                            onChange={() => handleCheckboxChange(department.id)}
+                          />{" "}
+                          {department?.department_name}
+                        </td>
+                        <td className="text-center py-3">
+                          {formatDateToIST(department?.created_at)}
+                        </td>
+                        <td className="text-center py-3">
+                          <Link
+                            to={`departmentMembers/${department.id}`}
+                            className="link-dark text-decoration-none"
+                          >
+                            {department?.member_count}
+                          </Link>
+                        </td>
+                        <td className="text-center position-relative py-3">
+                          <RxDotsHorizontal
+                            className="fs-4 cursor-pointer"
+                            onClick={() => {
+                              toggleEditOrDeletePopUp(department.id);
+                              setId(department.id);
+                            }}
+                          />
+                          {editOrDeletePopUp[department.id] && (
+                            <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                              <h6
+                                className="py-3 px-5 border-bottom cursor-pointer"
+                                onClick={handleEdit}
+                              >
+                                Edit
+                              </h6>
+                              <h6
+                                className="py-3 px-5 text-red cursor-pointer"
+                                onClick={handleDelete}
+                              >
+                                Delete
+                              </h6>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
             </div>
           </div>
         </div>

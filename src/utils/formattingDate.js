@@ -9,7 +9,3 @@ export function convertDate(dateString) {
 
   return formattedDate;
 }
-
-// const dateInput = "May 28, 2024";
-// const formattedDate = convertDate(dateInput);
-// console.log(formattedDate);

@@ -159,10 +159,10 @@ h6 {
   border-top-left-radius: 0.4vw;
   border-top-right-radius: 0.4vw;
 }
-.center-bottom-buttons-departments h5 {
+/* .center-bottom-buttons-departments h5 {
   font-weight: 400;
   font-size: 1.2vw;
-}
+} */
 
 /* <--------- BOTTOM DIV STYLING -----------> */
 
@@ -527,7 +527,7 @@ select {
   align-items: center;
   gap: 4vw;
 }
-.delete-department-bottom-departments h5 {
+/* .delete-department-bottom-departments h5 {
   height: 50%;
   width: 30%;
   display: flex;
@@ -535,16 +535,16 @@ select {
   justify-content: center;
   border-radius: 0.5vw;
   cursor: pointer;
-}
+} */
 
-.delete-department-bottom-departments h5:first-child {
+/* .delete-department-bottom-departments h5:first-child {
   border: 1px solid #4e4e4e;
 }
 .delete-department-bottom-departments h5:last-child {
   background-color: #ff662f;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   color: white;
-}
+} */
 
 /* <----------- MEDIA QUERIES -------------> */
 
@@ -557,7 +557,7 @@ select {
   .top-div-departments {
     /* border-bottom: 1px solid #B3B3B3; */
     display: block;
-    height: 20%;
+    /* height: 20%; */
     background-color: transparent;
   }
   .heading-departments {
@@ -608,9 +608,6 @@ select {
     height: 50%;
     width: 10%;
     border-radius: 0.5vw;
-  }
-  .center-bottom-departments div h5 {
-    font-size: 2vw;
   }
 
   .center-top-right-departments {
@@ -742,7 +739,7 @@ select {
     height: 95vh;
   }
   .top-div-departments {
-    height: 15%;
+    /* height: 15%; */
   }
   .heading-departments {
     height: 60%;
@@ -751,27 +748,27 @@ select {
     background-color: #f0f0f0;
     border-radius: 0.8vw;
   }
-  .heading-departments h4 {
+  /* .heading-departments h4 {
     font-size: 4.5vw;
     font-weight: 700;
-  }
+  } */
   .add-departments {
     width: 95%;
     height: 45%;
     letter-spacing: 0.2vw;
   }
-  .add-departments h5 {
+  /* .add-departments h5 {
     font-size: 3vw;
-  }
+  } */
   .search-departments {
     height: 40%;
   }
   .top-div-bottom-departments {
-    height: 5vh;
+    /* height: 5vh; */
   }
   .top-div-bottom-departments h5 {
-    font-size: 2.5vw;
-    font-weight: 700;
+    /* font-size: 2.5vw; */
+    /* font-weight: 700; */
   }
   .content-bottom-div-departments {
     gap: 2vh;

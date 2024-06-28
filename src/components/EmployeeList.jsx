@@ -61,6 +61,7 @@ const EmployeeList = ({ heading, data }) => {
                 <img
                   src={employee.user.picture}
                   alt=""
+                  className="rounded-circle"
                   style={{ width: "3rem", height: "3rem", objectFit: "cover" }}
                 />
               )}

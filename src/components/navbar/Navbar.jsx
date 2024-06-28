@@ -102,7 +102,11 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
       </div>
       <div className="profile">
         <div className="userName">
-          <h6 className="m-0">Hi,Basit {user?.fullname}</h6>
+
+          <h6 className="m-0 text-capitalize">
+            Hi, {user?.fullname.split(" ")[0]}
+          </h6>
+
           <p className="m-0 fw-light">Raybit Tech</p>
         </div>
         <OverlayTrigger
@@ -121,9 +125,19 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
                 className="navbar-icons"
               />
             ) : (
-              user?.picture
-            )} */}
-            <FontAwesomeIcon icon={faUser} size="sm" className="navbar-icons" />
+
+              <img
+                src={user?.picture}
+                alt="img"
+                className="rounded-circle"
+                style={{
+                  width: "2.5rem",
+                  height: "2.5rem",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+
           </div>
         </OverlayTrigger>
         {/* {profilePopup && (

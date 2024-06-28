@@ -96,7 +96,7 @@ function LoginPage({ role, setRole, user, setUser }) {
       return <Navigate to="/users/myScreen" />;
     }
   }
-  console.log(role);
+
 
   return (
     <div className="login">
@@ -106,7 +106,7 @@ function LoginPage({ role, setRole, user, setUser }) {
         </div>
       </div>
 
-      <div className="container form-section-login">
+      <div className="container form-section-login w-md-50">
         <div>
           <h1 className="signin-heading-login mb-2">Welcome Back</h1>
           <p className="signIn-subHeading-login mb-4">Login to continue</p>

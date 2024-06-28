@@ -17,11 +17,10 @@ const AppList = lazy(() => import("../../../components/AppList"));
 const Screenshots = lazy(() => import("../../../components/Screenshots"));
 const Header = lazy(() => import("../../../components/Header"));
 export default function AdminDashboard() {
-  const token = localStorage.getItem("token");
   const [startDate, setStartDate] = useState(new Date());
   const formattedStartDate = convertDate(startDate);
-
-  let fetchUrl = `${BASE_URI}/admin/allEmplReport?sort_by=name&date=${formattedStartDate}`;
+  const token = localStorage.getItem("token");
+  let fetchUrl = `${BASE_URI}/admin/allEmplReport?date=${formattedStartDate}`;
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
