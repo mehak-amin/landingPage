@@ -57,6 +57,7 @@ export default function AppList({ heading, data = "", backgound, loading }) {
           <h5 className={` text-white px-sm-5 px-3 py-3 ${backgound}`}>
             {heading}
           </h5>
+
           <div className="row row-cols-3 py-3" style={{ minWidth: "40rem" }}>
             {localStorage.getItem("role") === "admin" ? (
               data?.length > 0 ? (
@@ -80,16 +81,18 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
                         {(appTime / 60).toFixed(0)}m
+
                       </p>
                     </div>
                   );
                 })
               ) : (
-                <div className="px-4 d-flex align-items-center justify-content-center h-75">
+                <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                   <div>
                     <h5 className="text-center fw-light text-secondary">
                       No, data found!
                     </h5>
+
                     {/* <p>
                     No, tracking for this date please select another date.
                   </p> */}
@@ -128,13 +131,14 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                   </OverlayTrigger>
                 );
               })
+
             ) : (
               <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                 <div>
                   <h5 className="text-center fw-light text-secondary">
                     No data found!
                   </h5>
-                  {/* <p>No tracking for this date. Please select another date.</p> */}
+
                 </div>
               </div>
             )}

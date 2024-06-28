@@ -12,6 +12,7 @@ axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole, user, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -87,7 +88,7 @@ function LoginPage({ role, setRole, user, setUser }) {
   };
 
   const token = localStorage.getItem("token");
-
+  //temporarily comment out for reset password
   if (token && user) {
     if (role === "admin") {
       return <Navigate to="/admin/dashboard" />;
@@ -95,6 +96,7 @@ function LoginPage({ role, setRole, user, setUser }) {
       return <Navigate to="/users/myScreen" />;
     }
   }
+
 
   return (
     <div className="login">

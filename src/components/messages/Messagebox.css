@@ -22,7 +22,7 @@
   transition: right 0.3s ease-in-out;
   position: absolute;
   top:77px;
-  right:-390px;
+  right:-415px;
 }
 .active {
   right:-6px;
