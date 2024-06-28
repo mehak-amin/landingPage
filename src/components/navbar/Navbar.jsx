@@ -15,7 +15,7 @@ import BASE_URI from "../../../config";
 import { useNavigate } from "react-router-dom";
 
 function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
-  // const [profilePopup, setProfilePopup] = useState(false);
+  const [profilePopup, setProfilePopup] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -42,7 +42,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           // setUser("");
           // setRole("");
 
-          // alert("Logged out successfully");
+          alert("Logged out successfully");
 
           setTimeout(() => {
             navigate("/");
@@ -66,10 +66,10 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
       </Popover.Body>
     </Popover>
   );
-  // const handleProfilePopup = () => {
-  //   console.log("profile");
-  //   setProfilePopup(!profilePopup);
-  // };
+  const handleProfilePopup = () => {
+    console.log("profile");
+    setProfilePopup(!profilePopup);
+   };
   return (
     <div className="navbar px-md-5 px-4">
       <div className="menu-search">
@@ -104,7 +104,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
         <div className="userName">
 
           <h6 className="m-0 text-capitalize">
-            Hi, {user?.fullname.split(" ")[0]}
+            Hi, {user?.fullname?.split(" ")[0]}
           </h6>
 
           <p className="m-0 fw-light">Raybit Tech</p>
@@ -118,7 +118,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             className="profilePicture"
             //  onClick={handleProfilePopup}
           >
-            {/* {user?.picture === "" ? (
+            {user?.picture === "" ? (
               <FontAwesomeIcon
                 icon={faUser}
                 size="sm"
@@ -140,7 +140,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
 
           </div>
         </OverlayTrigger>
-        {/* {profilePopup && (
+       {profilePopup && (
           <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
             <h6 className="py-3 px-5 border-bottom cursor-pointer">Profile</h6>
             <h6 className="py-3 px-5 border-bottom cursor-pointer">
@@ -148,7 +148,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             </h6>
             <h6 className="py-3 px-5 border-bottom cursor-pointer">Logout</h6>
           </div>
-        )} */}
+        )} 
       </div>
       <MessageBox
         showMessageBox={showMessageBox}
