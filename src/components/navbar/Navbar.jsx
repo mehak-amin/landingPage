@@ -42,7 +42,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           // setUser("");
           // setRole("");
 
-          // alert("Logged out successfully");
+          alert("Logged out successfully");
 
           setTimeout(() => {
             navigate("/");
@@ -69,7 +69,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
   const handleProfilePopup = () => {
     console.log("profile");
     setProfilePopup(!profilePopup);
+
   };
+
   return (
     <div className="navbar px-md-5 px-4">
       <div className="menu-search">
@@ -103,7 +105,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
       <div className="profile">
         <div className="userName">
           <h6 className="m-0 text-capitalize">
-            Hi, {user?.fullname.split(" ")[0]}
+            Hi, {user?.fullname?.split(" ")[0]}
           </h6>
 
           <p className="m-0 fw-light">Raybit Tech</p>
@@ -113,7 +115,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           placement="bottom"
           overlay={renderPopover()}
         >
+
           <div className="profilePicture" onClick={handleProfilePopup}>
+
             {user?.picture === "" ? (
               <FontAwesomeIcon
                 icon={faUser}
@@ -134,7 +138,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             )}
           </div>
         </OverlayTrigger>
-        {profilePopup && (
+
+       {profilePopup && (
+
           <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
             <h6 className="py-3 px-5 border-bottom cursor-pointer">Profile</h6>
             <h6 className="py-3 px-5 border-bottom cursor-pointer">
@@ -142,7 +148,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             </h6>
             <h6 className="py-3 px-5 border-bottom cursor-pointer">Logout</h6>
           </div>
+
         )}
+
       </div>
       <MessageBox
         showMessageBox={showMessageBox}
