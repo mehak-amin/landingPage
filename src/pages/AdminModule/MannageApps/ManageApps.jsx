@@ -33,7 +33,7 @@ const ManageApps = () => {
   const [newAppData, setNewAppData] = useState({
     application_name: "",
     category: "",
-    type: "",
+    type_id: "",
     url: "",
   });
 
@@ -75,10 +75,11 @@ const ManageApps = () => {
           Authorization: "Bearer " + token,
         },
       });
+      console.log(response);
       setSingleAppData({
         application_name: response.data.data.logs.application_name,
         category: response.data.data.logs.category,
-        type: response.data.data.logs.type,
+        type_id: response.data.data.logs.type,
       });
       // console.log(response.data.data.logs.category);
     } catch (err) {
@@ -252,13 +253,11 @@ const ManageApps = () => {
                 onChange={handleEditChange}
               >
                 <option value="" disabled>
-                  --Select Category
+                  --Select category--
                 </option>
-                {categoryList.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.type}
-                  </option>
-                ))}
+                <option value="productive">Productive</option>
+                <option value="unproductive">Unproductive</option>
+                <option value="neutral">Neutral</option>
               </select>
             </div>
             <div className="mb-3">
@@ -267,13 +266,18 @@ const ManageApps = () => {
               </label>
               <select
                 className="px-3 py-2 rounded border w-100"
-                value={appSingleData?.type}
-                name="type"
+                value={appSingleData?.type_id}
+                name="type_id"
                 onChange={handleEditChange}
               >
-                <option value="productive">Productive</option>
-                <option value="unproductive">Unproductive</option>
-                <option value="neutral">Neutral</option>
+                <option value="" disabled>
+                  --Select Type--
+                </option>
+                {categoryList.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.type}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

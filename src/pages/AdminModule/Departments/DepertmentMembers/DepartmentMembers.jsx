@@ -26,6 +26,7 @@ export default function DepartmentMembers() {
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
   const [selectedMembers, setSelectedMembers] = useState([]);
+
   const { id } = useParams();
   const [newMemberData, setNewMemberData] = useState({
     email: "",
@@ -84,7 +85,7 @@ export default function DepartmentMembers() {
 
   const handleDeleteMember = async () => {
     try {
-      console.log(id);
+      // console.log(id);
       const response = await axios({
         method: selectedMembers?.length === 0 ? "PATCH" : "DELETE",
         url:
@@ -328,7 +329,7 @@ export default function DepartmentMembers() {
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
                 <h5
-                  // onClick={handleSelectAll}
+                  //  onClick={handleSelectAll}
                   className="cursor-pointer"
                 >
                   {selectAll ? "Deselect all" : "Select all"}
@@ -337,10 +338,7 @@ export default function DepartmentMembers() {
               <div className="right-top-div-bottom-departments">
                 <h5>{selectedMembers.length} Departments Selected</h5>
                 <h6>
-                  <RiDeleteBin6Line
-                    className="fs-3"
-                    //   onClick={handleDelete}
-                  />
+                  <RiDeleteBin6Line className="fs-3" onClick={handleDelete} />
                 </h6>
               </div>
             </div>
@@ -365,13 +363,15 @@ export default function DepartmentMembers() {
                             type="checkbox"
                             className="d-inline border-0 me-2"
                             style={{ width: "1rem", height: "1rem" }}
-                            //   checked={selectedDepartments.includes(member.id)}
-                            //   onChange={() => handleCheckboxChange(member.id)}
+                            // checked={selectedDepartments.includes(member.id)}
+                            // onChange={() => handleCheckboxChange(member.id)}
                           />
                           {member.fullname}
                         </td>
-                        <td className="text-center py-3">{member.email}</td>
-                        <td className="text-center py-3">
+                        <td className="text-center py-3 fs-09rem">
+                          {member.email}
+                        </td>
+                        <td className="text-center py-3 fs-09rem">
                           {formatDateToIST(member.created_at)}
                         </td>
                         <td className="text-center py-3 text-capitalize">

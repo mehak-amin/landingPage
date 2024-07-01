@@ -16,6 +16,9 @@ import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import { convertDate } from "../../../utils/formattingDate";
+import { ShimmerTable } from "react-shimmer-effects";
+import toast from "react-hot-toast";
+import PulseLoader from "react-spinners/PulseLoader";
 
 const Teamates = () => {
   const [activeTab, setActiveTab] = useState("employees");
@@ -25,6 +28,7 @@ const Teamates = () => {
   const [sortCriteria, setSortCriteria] = useState("");
   const [departments, setDepartments] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -61,9 +65,10 @@ const Teamates = () => {
     },
   };
 
-  const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
+  const { data, isLoading, error } = useFetch(url, fetchOptions);
 
   const teamsData = data || {};
+  // console.log(data);
 
   const {
     absentCount,
@@ -76,10 +81,16 @@ const Teamates = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URI}/departments`)
+      .get(`${BASE_URI}/departments`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
-        console.log(res.data);
-        setDepartments(res.data.data);
+        // console.log(res.data);
+        setDepartments(
+          res.data.data.filter((department) => department.is_active === 1)
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -88,10 +99,14 @@ const Teamates = () => {
 
   useEffect(() => {
     axios
-      .get(`${BASE_URI}/roles`)
+      .get(`${BASE_URI}/roles`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((res) => {
-        console.log(res.data.data.roles);
-        setRoles(res.data.data.roles);
+        // console.log(res.data.data.roles);
+        setRoles(res.data.data.roles.filter((role) => role.is_active === 1));
       })
       .catch((err) => {
         console.log(err);
@@ -123,19 +138,24 @@ const Teamates = () => {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     axios
-      .post(`${BASE_URI}/api/v1/employee/myReport`, formData, {
+      .post(`${BASE_URI}/employee/addUser`, formData, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
       })
       .then((resp) => {
-        console.log(resp.data);
+        setLoading(false);
         if (resp.data.status === "Success") {
           setAddTeamMember(false);
         }
+        setFormData({ fullname: "", email: "", department_id: "", role: "" });
+      })
+      .catch((err) => {
+        setLoading(false);
       });
   };
 
@@ -204,6 +224,7 @@ const Teamates = () => {
   };
   const closeModal = () => {
     setAddTeamMember(false);
+    setFormData({ fullname: "", email: "", department_id: "", role: "" });
   };
 
   const handleChange = (event) => {
@@ -213,7 +234,7 @@ const Teamates = () => {
       [name]: value,
     });
   };
-  console.log(formData);
+  // console.log(formData);
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -454,171 +475,184 @@ const Teamates = () => {
           </div>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <div style={{ minWidth: "50rem" }}>
-            <div className="d-flex px-4 pt-4 gap-3 ms-2">
-              <div
-                className={`d-flex gap-4 px-3 py-2  ${
-                  activeTab === "employees" ? "bg-gray text-white" : "bg-white"
-                }`}
-                onClick={() => setActiveTab("employees")}
-                style={{ cursor: "pointer" }}
-              >
-                <h5 className="mb-0 fw-normal">Employees</h5>
-                <h5 className="mb-0 fw-normal">{employeesCount}</h5>
+        {isLoading ? (
+          <ShimmerTable row={5} col={5} />
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <div style={{ minWidth: "50rem" }}>
+              <div className="d-flex px-4 pt-4 gap-3 ms-2">
+                <div
+                  className={`d-flex gap-4 px-3 py-2  ${
+                    activeTab === "employees"
+                      ? "bg-gray text-white"
+                      : "bg-white"
+                  }`}
+                  onClick={() => setActiveTab("employees")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <h5 className="mb-0 fw-normal">Employees</h5>
+                  <h5 className="mb-0 fw-normal">{employeesCount}</h5>
+                </div>
+                <div
+                  className={`d-flex gap-4 px-3 py-2  ${
+                    activeTab === "working" ? "bg-gray text-white" : "bg-white"
+                  }`}
+                  onClick={() => setActiveTab("working")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <h5 className="mb-0 fw-normal">Working</h5>
+                  <h5 className="mb-0 fw-normal">{workingCount}</h5>
+                </div>
+                <div
+                  className={`d-flex gap-4 px-3 py-2 ${
+                    activeTab === "late" ? "bg-gray text-white" : "bg-white"
+                  }`}
+                  onClick={() => setActiveTab("late")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <h5 className="mb-0 fw-normal">Late</h5>
+                  <h5 className="mb-0 fw-normal">{lateCount}</h5>
+                </div>
+                <div
+                  className={`d-flex gap-4 px-3 py-2  ${
+                    activeTab === "slacking" ? "bg-gray text-white" : "bg-white"
+                  }`}
+                  onClick={() => setActiveTab("slacking")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <h5 className="mb-0 fw-normal">Slack</h5>
+                  <h5 className="mb-0 fw-normal">{slackingCount}</h5>
+                </div>
+                <div
+                  className={`d-flex gap-4 px-3 py-2  ${
+                    activeTab === "absent" ? "bg-gray text-white" : "bg-white"
+                  }`}
+                  onClick={() => setActiveTab("absent")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <h5 className="mb-0 fw-normal">Absent</h5>
+                  <h5 className="mb-0 fw-normal">{absentCount}</h5>
+                </div>
               </div>
-              <div
-                className={`d-flex gap-4 px-3 py-2  ${
-                  activeTab === "working" ? "bg-gray text-white" : "bg-white"
-                }`}
-                onClick={() => setActiveTab("working")}
-                style={{ cursor: "pointer" }}
-              >
-                <h5 className="mb-0 fw-normal">Working</h5>
-                <h5 className="mb-0 fw-normal">{workingCount}</h5>
-              </div>
-              <div
-                className={`d-flex gap-4 px-3 py-2 ${
-                  activeTab === "late" ? "bg-gray text-white" : "bg-white"
-                }`}
-                onClick={() => setActiveTab("late")}
-                style={{ cursor: "pointer" }}
-              >
-                <h5 className="mb-0 fw-normal">Late</h5>
-                <h5 className="mb-0 fw-normal">{lateCount}</h5>
-              </div>
-              <div
-                className={`d-flex gap-4 px-3 py-2  ${
-                  activeTab === "slacking" ? "bg-gray text-white" : "bg-white"
-                }`}
-                onClick={() => setActiveTab("slacking")}
-                style={{ cursor: "pointer" }}
-              >
-                <h5 className="mb-0 fw-normal">Slack</h5>
-                <h5 className="mb-0 fw-normal">{slackingCount}</h5>
-              </div>
-              <div
-                className={`d-flex gap-4 px-3 py-2  ${
-                  activeTab === "absent" ? "bg-gray text-white" : "bg-white"
-                }`}
-                onClick={() => setActiveTab("absent")}
-                style={{ cursor: "pointer" }}
-              >
-                <h5 className="mb-0 fw-normal">Absent</h5>
-                <h5 className="mb-0 fw-normal">{absentCount}</h5>
-              </div>
-            </div>
-            {/* </div> */}
+              {/* </div> */}
 
-            <div>
-              <table className="table table-bordered ">
-                <thead>
-                  <tr>
-                    <th className="text-center py-3 bg-lightGray1">Name</th>
-                    {getCurrentItems()?.map((item, index) => (
-                      <th
-                        key={index}
-                        className="text-center py-3 fw-normal hover-effect "
-                      >
-                        <Link
-                          to={`teammateDetails/${item.user.user_id}`}
-                          className="text-black text-decoration-none"
+              <div>
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th className="text-center py-3 bg-lightGray1">Name</th>
+                      {getCurrentItems()?.map((item, index) => (
+                        <th
+                          key={index}
+                          className="text-center py-3 fw-normal hover-effect border"
                         >
-                          {item.user.picture === "" ? (
-                            <FaUserCircle className="fs-1 me-4" />
-                          ) : (
-                            <img
-                              src={item.user.picture}
-                              alt=""
-                              className="rounded-circle me-4"
-                              style={{
-                                width: "2rem",
-                                height: "2rem",
-                                objectFit: "cover",
-                              }}
-                            />
-                          )}
-                          {item.user.name}
-                        </Link>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {sideHeadings.map((heading, headingIndex) => (
-                    <tr key={headingIndex}>
-                      <td
-                        className={`text-center py-3 fw-bold ${
-                          headingIndex % 2 !== 0 ? "bg-lightGray1" : "bg-white"
-                        }`}
-                      >
-                        {heading}
-                      </td>
-                      {getCurrentItems()?.map((item, itemIndex) => (
-                        <td key={itemIndex} className="text-center py-3 ">
-                          {headingIndex === 0
-                            ? item.user.department_name
-                            : headingIndex === 1
-                            ? item.modeledData
-                              ? item.modeledData?.arrivedAt
-                              : "-"
-                            : headingIndex === 2
-                            ? item.modeledData
-                              ? item.modeledData?.leftAt
-                              : "-"
-                            : headingIndex === 3
-                            ? item.modeledData
-                              ? secondsToHoursMinutes(
-                                  item.modeledData?.productiveTime
-                                )
-                              : "-"
-                            : headingIndex === 4
-                            ? item.modeledData
-                              ? secondsToHoursMinutes(
-                                  item.modeledData?.offlineTime
-                                )
-                              : "-"
-                            : headingIndex === 5
-                            ? item.modeledData
-                              ? item.modeledData?.activeApp
-                              : "-"
-                            : headingIndex === 7
-                            ? item.modeledData
-                              ? secondsToHoursMinutes(
-                                  item.modeledData?.deskTime
-                                )
-                              : "-"
-                            : "-"}
-                        </td>
+                          <Link
+                            to={`teammateDetails/${item.user.user_id}`}
+                            className="text-black text-decoration-none"
+                          >
+                            {item.user.picture === "" ? (
+                              <FaUserCircle className="fs-1 me-4" />
+                            ) : (
+                              <img
+                                src={item.user.picture}
+                                alt=""
+                                className="rounded-circle me-4"
+                                style={{
+                                  width: "2rem",
+                                  height: "2rem",
+                                  objectFit: "cover",
+                                }}
+                              />
+                            )}
+                            {item.user.name}
+                          </Link>
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="pagination-controls d-flex justify-content-md-end mt-3">
-                <div className="d-flex gap-1 px-4 py-3">
-                  <button
-                    className="rounded border border-secondary"
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                  >
-                    <IoIosArrowRoundBack className="fs-3" />
-                    <span className="d-md-inline d-none">Previous</span>
-                  </button>
-                  {renderPaginationButtons()}
-                  <button
-                    className="rounded border border-secondary"
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                  >
-                    <span className="d-md-inline d-none">Next</span>
-                    <IoIosArrowRoundForward className="fs-3" />
-                  </button>
+                  </thead>
+                  <tbody>
+                    {sideHeadings.map((heading, headingIndex) => (
+                      <tr key={headingIndex}>
+                        <td
+                          className={`text-center py-3 fw-bold ${
+                            headingIndex % 2 !== 0
+                              ? "bg-lightGray1"
+                              : "bg-white"
+                          }`}
+                        >
+                          {heading}
+                        </td>
+                        {getCurrentItems()?.map((item, itemIndex) => (
+                          <td
+                            key={itemIndex}
+                            className="text-center py-3 border"
+                          >
+                            {headingIndex === 0
+                              ? item.user.department_name
+                              : headingIndex === 1
+                              ? item.modeledData
+                                ? item.modeledData?.arrivedAt
+                                : "-"
+                              : headingIndex === 2
+                              ? item.modeledData
+                                ? item.modeledData?.leftAt
+                                : "-"
+                              : headingIndex === 3
+                              ? item.modeledData
+                                ? secondsToHoursMinutes(
+                                    item.modeledData?.productiveTime
+                                  )
+                                : "-"
+                              : headingIndex === 4
+                              ? item.modeledData
+                                ? item.modeledData?.offlineTime === "-"
+                                  ? "-"
+                                  : secondsToHoursMinutes(
+                                      item.modeledData?.offlineTime
+                                    )
+                                : "-"
+                              : headingIndex === 5
+                              ? item.modeledData
+                                ? item.modeledData?.activeApp
+                                : "-"
+                              : headingIndex === 7
+                              ? item.modeledData
+                                ? secondsToHoursMinutes(
+                                    item.modeledData?.deskTime
+                                  )
+                                : "-"
+                              : "-"}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="pagination-controls d-flex justify-content-md-end mt-3">
+                  <div className="d-flex gap-1 px-4 py-3">
+                    <button
+                      className="rounded border border-secondary"
+                      onClick={handlePrevious}
+                      disabled={currentPage === 1}
+                    >
+                      <IoIosArrowRoundBack className="fs-3" />
+                      <span className="d-md-inline d-none">Previous</span>
+                    </button>
+                    {renderPaginationButtons()}
+                    <button
+                      className="rounded border border-secondary"
+                      onClick={handleNext}
+                      disabled={currentPage === totalPages}
+                    >
+                      <span className="d-md-inline d-none">Next</span>
+                      <IoIosArrowRoundForward className="fs-3" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {addTeamMember && (
@@ -709,7 +743,11 @@ const Teamates = () => {
             </div>
             <div className="d-flex gap-6">
               <button type="submit" className="btn">
-                Add Team Members
+                {loading ? (
+                  <PulseLoader size={8} color="white" />
+                ) : (
+                  "Add Team Members"
+                )}
               </button>
               <div className="d-flex gap-4 align-items-center">
                 <p className="mb-0 ">

@@ -40,7 +40,7 @@ function Sidebar({ isSideBarOpen, role }) {
     setDropdownOpen(!dropdownOpen);
   };
 
-  console.log(role);
+  // console.log(role);
 
   const adminOptions = [
     {

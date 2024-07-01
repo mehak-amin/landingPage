@@ -2,6 +2,7 @@ import { useState } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { ShimmerTable } from "react-shimmer-effects";
+import convertSecondsToTime from "../utils/formattingTime";
 
 export default function AppList({ heading, data = "", backgound, loading }) {
   const [showAll, setShowAll] = useState(false);
@@ -82,7 +83,8 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       />
                       <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                        {(appTime / 60).toFixed(0)}m
+                        {convertSecondsToTime(appTime)}
+                        {/* {(appTime / 60).toFixed(0)}m */}
                       </p>
                     </div>
                   );

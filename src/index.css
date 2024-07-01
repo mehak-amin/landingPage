@@ -70,6 +70,9 @@
 .smaller-text {
   font-size: 0.7rem;
 }
+.fs-09rem {
+  font-size: 0.9rem;
+}
 
 .top-68 {
   top: 68%;

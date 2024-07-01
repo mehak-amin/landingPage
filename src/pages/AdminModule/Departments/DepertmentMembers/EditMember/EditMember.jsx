@@ -207,14 +207,44 @@ const EditMember = () => {
   const handlePhoneChange = (value) => {
     setFormData((prevState) => ({
       ...prevState,
-      phoneNo: value,
+      profile: {
+        phone_Number: value,
+      },
     }));
   };
 
-  console.log(formData);
+  const handleTimezoneChange = (selectedOption) => {
+    setFormData({
+      ...formData,
+      settings: {
+        ...formData.settings,
+        time_zone: selectedOption.value,
+      },
+    });
+  };
+
+  // console.log(formData);
 
   if (JSON.stringify(user) === "{}") {
-    return <NoData />;
+    return (
+      <div className="container-xxl p-0">
+        <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
+          <div className="mb-4 mb-md-0">
+            <h5 className="mb-0 custom-shadow d-inline px-3 py-2 rounded text-capitalize">
+              {formData.profile.fullname || "fullname"}
+            </h5>
+          </div>
+          <div className="d-md-flex gap-3 align-items-center">
+            <ButtonActive
+              heading="Save Changes"
+              handleClick={handleSaveChanges}
+            />
+            <ButtonInactive heading="Reset Settings" />
+          </div>
+        </div>
+        <NoData />
+      </div>
+    );
   }
 
   return (
@@ -260,7 +290,6 @@ const EditMember = () => {
                         width: "8rem",
                         height: "8rem",
                         border: "2px dashed black",
-                        cursor: "pointer",
                       }}
                     >
                       <CiImageOn className="fs-2" />
@@ -572,8 +601,12 @@ const EditMember = () => {
                   labelStyle="abbrev"
                   displayValue="UTC"
                   name="settings.time_zone"
-                  value={formData.settings.time_zone}
-                  // onChange={handleTimezoneChange}
+                  value={
+                    formData.settings.time_zone
+                      ? formData.settings.time_zone
+                      : "UTC"
+                  }
+                  onChange={handleTimezoneChange}
                   className="rounded-2 border w-100"
                 />
               </div>

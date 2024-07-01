@@ -28,6 +28,7 @@ const Departments = () => {
   const [sortCriteria, setSortCriteria] = useState("");
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(false);
+  const [isActive, setIsActive] = useState(0);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const token = localStorage.getItem("token");
   let url = `${BASE_URI}/departments?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
@@ -58,7 +59,8 @@ const Departments = () => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (activeStatus) => {
+    setIsActive(activeStatus);
     setDeletePopUp(!deletePopUp);
   };
   const handleEdit = () => {
@@ -109,7 +111,7 @@ const Departments = () => {
             : `${BASE_URI}/departments`,
         data:
           selectedDepartments?.length === 0
-            ? { is_active: 0 }
+            ? { is_active: isActive === 0 ? 1 : 0 }
             : { ids: selectedDepartments },
 
         headers: {
@@ -199,11 +201,12 @@ const Departments = () => {
           handleClose={handleCloseDelete}
           handleClick={handleDeleteDepartment}
           btn1="Cancel"
-          btn2="Delete"
+          btn2={isActive === 0 ? "Enable" : "Disable"}
         >
           <div className="py-3">
             <h6 className="text-center mb-2">
-              Do you really want to remove the projects that you have chosen?
+              Do you really want to enable/disable the projects that you have
+              chosen?
             </h6>
             <h6 className="text-center">There is no turning back.</h6>
           </div>
@@ -398,9 +401,13 @@ const Departments = () => {
                               </h6>
                               <h6
                                 className="py-3 px-5 text-red cursor-pointer"
-                                onClick={handleDelete}
+                                onClick={() =>
+                                  handleDelete(department.is_active)
+                                }
                               >
-                                Delete
+                                {department.is_active === 0
+                                  ? "Enable"
+                                  : "Disable"}
                               </h6>
                             </div>
                           )}

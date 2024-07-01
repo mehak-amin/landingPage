@@ -370,7 +370,7 @@ function ManageRoles() {
         </div>
         {/* ------------------------table------------------------- */}
         <div className=" table-responsive">
-          <table className="table table-bordered">
+          <table className="table table-borderless">
             <thead>
               <tr>
                 <th className="text-start pl-2">Role Name</th>
