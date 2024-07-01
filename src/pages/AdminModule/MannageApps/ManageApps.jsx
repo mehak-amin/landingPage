@@ -1,17 +1,16 @@
 import { useState } from "react";
 import "./ManageApps.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../../components/Header";
 import SearchInput from "../../../components/SearchInput";
 import SortButton from "../../../components/Button/SortButton";
 import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
-import { RiDeleteBin6Line } from "react-icons/ri";
+
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
-import { RxDotsHorizontal } from "react-icons/rx";
+
 import axios from "axios";
 import ModalComponent from "../../../components/Modal/ModalComponent";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 const ManageApps = () => {
   const [addApp, setAddApp] = useState(false);
@@ -20,11 +19,11 @@ const ManageApps = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
   const [isFilter, setIsFilter] = useState("");
-  const [selectedApps, setSelectedApps] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("productive");
+  // const [selectedApps, setSelectedApps] = useState([]);
+  // const [selectedOption, setSelectedOption] = useState("productive");
   const [isEdited, setIsEdited] = useState(false);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState("");
-  const [deletePopUp, setDeletePopUp] = useState(false);
+  // const [deletePopUp, setDeletePopUp] = useState(false);
   const [id, setId] = useState("");
   const [appSingleData, setSingleAppData] = useState({
     application_name: "",
@@ -64,7 +63,7 @@ const ManageApps = () => {
   const { data: categoryData } = useFetch(categoryUrl, categoryFetchOptions);
   // console.log(categoryData?.data.appCategories);
   const categoryList = categoryData?.data?.appCategories || [];
-  console.log(categoryList);
+  // console.log(categoryList);
 
   const getSingleApp = async () => {
     try {
@@ -81,7 +80,7 @@ const ManageApps = () => {
         category: response.data.data.logs.category,
         type: response.data.data.logs.type,
       });
-      // console.log(response.data.data.logs);
+      // console.log(response.data.data.logs.category);
     } catch (err) {
       console.log(err);
     }
@@ -108,32 +107,7 @@ const ManageApps = () => {
     }
   };
 
-  const handleDeleteApp = async () => {
-    try {
-      // console.log(id);
-      const response = await axios({
-        method: selectedApps?.length === 0 ? "PATCH" : "DELETE",
-        url:
-          selectedApps?.length === 0
-            ? `${BASE_URI}/appList/${id}`
-            : `${BASE_URI}/appList`,
-        data:
-          selectedApps?.length === 0 ? { is_active: 0 } : { ids: selectedApps },
-
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      // fetchDepartments();
-      refetch();
-      setDeletePopUp(false);
-      setEditOrDeletePopUp(false);
-      setSelectedApps([]);
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //
 
   const handleCreateApp = async () => {
     console.log(newAppData);
@@ -156,7 +130,7 @@ const ManageApps = () => {
       });
       console.log(response);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -164,9 +138,9 @@ const ManageApps = () => {
     setAddApp(!addApp);
   };
 
-  const handleChange = (e) => {
-    setSelectedOption(e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   setSelectedOption(e.target.value);
+  // };
 
   const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
@@ -176,13 +150,13 @@ const ManageApps = () => {
     setSortCriteria(event.target.value);
   };
 
-  const handleDelete = () => {
-    setDeletePopUp(!deletePopUp);
-  };
-  const handleCloseDelete = () => {
-    setEditOrDeletePopUp(false);
-    setDeletePopUp(false);
-  };
+  // const handleDelete = () => {
+  //   setDeletePopUp(!deletePopUp);
+  // };
+  // const handleCloseDelete = () => {
+  //   setEditOrDeletePopUp(false);
+  //   setDeletePopUp(false);
+  // };
   const handleEdit = () => {
     getSingleApp();
     setIsEdited(!isEdited);
@@ -215,21 +189,21 @@ const ManageApps = () => {
     }));
   };
 
-  const handleSelectAll = () => {
-    if (selectedApps.length === appList.length) {
-      setSelectedApps([]);
-    } else {
-      setSelectedApps(appList.map((app) => app.id));
-    }
-  };
+  // const handleSelectAll = () => {
+  //   if (selectedApps.length === appList.length) {
+  //     setSelectedApps([]);
+  //   } else {
+  //     setSelectedApps(appList.map((app) => app.id));
+  //   }
+  // };
 
-  const handleCheckboxChange = (id) => {
-    setSelectedApps((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((appId) => appId !== id)
-        : [...prevSelected, id]
-    );
-  };
+  // const handleCheckboxChange = (id) => {
+  //   setSelectedApps((prevSelected) =>
+  //     prevSelected.includes(id)
+  //       ? prevSelected.filter((appId) => appId !== id)
+  //       : [...prevSelected, id]
+  //   );
+  // };
 
   const getCategoryColor = (category) => {
     switch (category?.toLowerCase()) {
@@ -246,23 +220,6 @@ const ManageApps = () => {
 
   return (
     <div className="wrapper-div-manageapps container-xxl p-0">
-      {deletePopUp && (
-        <ModalComponent
-          heading="Delete App"
-          handleClose={handleCloseDelete}
-          handleClick={handleDeleteApp}
-          btn1="Cancel"
-          btn2="Delete"
-        >
-          <div className="py-3">
-            <h6 className="text-center mb-2">
-              Do you really want to remove the apps that you have chosen?
-            </h6>
-            <h6 className="text-center">There is no turning back.</h6>
-          </div>
-        </ModalComponent>
-      )}
-
       {isEdited && (
         <ModalComponent
           heading="Edit App"
@@ -288,25 +245,36 @@ const ManageApps = () => {
               <label htmlFor="" className="d-block text-secondary">
                 Category
               </label>
-              <input
-                type="text"
+              <select
+                className="px-3 py-2 rounded border w-100"
                 name="category"
                 value={appSingleData?.category}
-                className="px-3 py-2 rounded border w-100"
                 onChange={handleEditChange}
-              />
+              >
+                <option value="" disabled>
+                  --Select Category
+                </option>
+                {categoryList.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.type}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mb-3">
               <label htmlFor="" className="d-block text-secondary">
                 Application Type
               </label>
-              <input
-                type="text"
-                name="type"
-                value={appSingleData?.type}
+              <select
                 className="px-3 py-2 rounded border w-100"
+                value={appSingleData?.type}
+                name="type"
                 onChange={handleEditChange}
-              />
+              >
+                <option value="productive">Productive</option>
+                <option value="unproductive">Unproductive</option>
+                <option value="neutral">Neutral</option>
+              </select>
             </div>
           </div>
         </ModalComponent>
@@ -336,13 +304,16 @@ const ManageApps = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="" className="d-block mb-1">
-                Select App Type
+                Select Category
               </label>
               <select
                 className="px-3 py-2 rounded border w-100"
                 name="type"
                 onChange={handleAddChange}
               >
+                <option value="" disabled>
+                  --Select Category
+                </option>
                 {categoryList.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.type}
@@ -352,7 +323,7 @@ const ManageApps = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="" className="d-block mb-1">
-                Select Category
+                Select App Type
               </label>
               <select
                 className="px-3 py-2 rounded border w-100"
@@ -413,7 +384,7 @@ const ManageApps = () => {
                   onChange={handleSortCriteriaChange}
                   className="py-1 rounded"
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     --Select--
                   </option>
                   <option value="department_name">App Name</option>
@@ -460,69 +431,20 @@ const ManageApps = () => {
         </div>
       </div>
 
-      {/* {addApp && (
-        <div className="addapp-popup-wrapper">
-          <div className="addapp-popup-manageapps">
-            <div className="addapp-top-manageapps">
-              <h4>Add App</h4>
-              <div onClick={toggleAddApp}>
-                <h4>
-                  <FontAwesomeIcon icon={faCircleXmark} />
-                </h4>
-              </div>
-            </div>
-            <div className="addapp-center-manageapps">
-              <div className="addapp-top-center-manageapps">
-                <h6>App Name</h6>
-                <input type="text" placeholder="Enter App Name...!" />
-              </div>
-              <div className="addapp-bottom-center-manageapps">
-                <h6>Select App Type</h6>
-                <select
-                  value={selectedOption}
-                  onChange={handleChange}
-                  // style={selectStyle}
-                >
-                  <option value="productive">Productive</option>
-                  <option value="unproductive">Unproductive</option>
-                  <option value="neutral">Neutral</option>
-                </select>
-              </div>
-            </div>
-            <div className="addapp-bottom-manageapps">
-              <div className="addapp-cancle-bottom-manageapps">
-                <h6>Cancel</h6>
-              </div>
-              <div className="addapp-invite-bottom-manageapps">
-                <h6>Add App</h6>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
-
       <div style={{ overflowX: "auto" }}>
         <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
           <div className="top-div-bottom-departments py-3">
-            <div className="left-top-div-bottom-departments">
-              <h5 onClick={handleSelectAll} className="cursor-pointer">
-                Select All
-              </h5>
-            </div>
-            <div className="right-top-div-bottom-departments">
-              <h5>{selectedApps.length} Departments Selected</h5>
-              <h6>
-                <RiDeleteBin6Line className="fs-3" onClick={handleDelete} />
-              </h6>
+            <div className="text-white px-3 px-sm-5">
+              <h5 className="cursor-pointer">Applications List</h5>
             </div>
           </div>
           <table className="table">
             <thead>
               <tr>
                 <th className="text-start px-3 ps-5 py-3">App name</th>
-                <th className="py-3">Type</th>
-                <th className="py-3">Category</th>
-                <th className="py-3">Change Type</th>
+                <th className="py-3 text-center">Category</th>
+                <th className="py-3 text-center">Type</th>
+                <th className="py-3 text-center">Change Type</th>
               </tr>
             </thead>
             <tbody>
@@ -531,20 +453,33 @@ const ManageApps = () => {
                 return (
                   <tr key={item?.id}>
                     <td className="py-3 ps-5 w-25">
-                      <input
-                        type="checkbox"
-                        className="d-inline border-0 me-2 text-capitalize"
-                        style={{ width: "1rem", height: "1rem" }}
-                        checked={selectedApps.includes(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      />{" "}
-                      {item?.application_name}
+                      <div className="d-flex align-items-center gap-2">
+                        {/* <input
+                          type="checkbox"
+                          className="border-0"
+                          style={{ width: "1rem", height: "1rem" }}
+                          checked={selectedApps.includes(item.id)}
+                          onChange={() => handleCheckboxChange(item.id)}
+                        />{" "} */}
+                        <p className="mb-0">{item?.application_name}</p>
+                        {/* <img
+                          src={item?.url}
+                          alt=""
+                          style={{
+                            height: "1.2rem",
+                            width: "1.2rem",
+                            objectFit: "cover",
+                          }}
+                        /> */}
+                      </div>
                     </td>
-                    <td
-                      className="text-center text-capitalize py-3"
-                      style={{ color: categoryColor, fontWeight: "500" }}
-                    >
-                      {item?.category}
+                    <td className="text-center text-capitalize py-3">
+                      <p
+                        className="mb-0"
+                        style={{ color: categoryColor, fontWeight: "500" }}
+                      >
+                        {item?.category}
+                      </p>
                     </td>
                     <td className="text-center text-capitalize py-3">
                       {item?.type}
@@ -571,12 +506,12 @@ const ManageApps = () => {
                           >
                             Edit
                           </h6>
-                          <h6
+                          {/* <h6
                             className="py-3 px-5 text-red cursor-pointer"
                             onClick={handleDelete}
                           >
                             Delete
-                          </h6>
+                          </h6> */}
                         </div>
                       )}
                     </td>
@@ -587,115 +522,6 @@ const ManageApps = () => {
           </table>
         </div>
       </div>
-
-      {/* <div className="bottom-div-manageapps">
-        <div className="content-bottom-div-manageapps">
-          <div className="top-div-bottom-manageapps">
-            <div className="left-top-div-bottom-manageapps">
-              <h5>Select All</h5>
-            </div>
-            <div className="right-top-div-bottom-manageapps">
-              <h5>0 Apps Selected</h5>
-              <h6>
-                <FontAwesomeIcon icon={faTrashCan} />
-              </h6>
-            </div>
-          </div>
-          <div className="table-container-manageapps">
-            <table>
-              <tr className="table-headding-manageapps">
-                <th>
-                  <h6>App Name</h6>
-                </th>
-                <th>
-                  <h6>Type</h6>
-                </th>
-
-                <th>
-                  <h6>Change Type</h6>
-                </th>
-              </tr>
-              <tr>
-                <td className="table-data-appname-manageapps">
-                  <input type="checkbox" /> <h6>Figma</h6>{" "}
-                  <img src="" alt="image" />
-                </td>
-                <td>
-                  <h6 style={{ color: "green" }}>Productive</h6>
-                </td>
-
-                <td>
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-              <tr>
-                <td className="table-data-appname-manageapps">
-                  <input type="checkbox" /> <h6>Youtube</h6>{" "}
-                  <img src="" alt="image" />
-                </td>
-                <td>
-                  <h6 style={{ color: "red" }}>Unproductive</h6>
-                </td>
-
-                <td>
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-              <tr>
-                <td className="table-data-appname-manageapps">
-                  <input type="checkbox" /> <h6>Discord</h6>{" "}
-                  <img src="" alt="image" />
-                </td>
-                <td>
-                  <h6 style={{ color: "#b3b3b3" }}>Neutral</h6>
-                </td>
-
-                <td>
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div className="responsive-table-manageapps">
-            <table>
-              <tr>
-                <td>
-                  <h6>App Name</h6>
-                </td>
-                <td className="table-data-appname-manageapps">
-                  {" "}
-                  <h6>Figma</h6> <img src="" alt="image" />
-                  <input type="checkbox" />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Type</h6>
-                </td>
-                <td style={{ color: "green" }}>
-                  <h6>Productive</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Change Type</h6>
-                </td>
-                <td>
-                  <h6>
-                    <FontAwesomeIcon icon={faEllipsis} />
-                  </h6>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

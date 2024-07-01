@@ -20,6 +20,7 @@ export default function DepartmentMembers() {
   const [addMember, setAddMember] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
+  const [selectAll, setSelectAll] = useState(false);
   const [search, setSearch] = useState("");
   const [memberId, setMemberId] = useState("");
   const [sortOrder, setSortOrder] = useState("");
@@ -139,10 +140,12 @@ export default function DepartmentMembers() {
     }));
   };
 
-  // console.log(newMemberData);
+  // if (error) {
+  //   return <div>Error fetching data</div>;
+  // }
 
   return (
-    <div className="wrapper-div-departments container-xxl px-0">
+    <div className="bg-lightGray1 pb-5 container-xxl px-0">
       {deletePopUp && (
         <ModalComponent
           heading="Delete Department"
@@ -215,7 +218,7 @@ export default function DepartmentMembers() {
                   onChange={handleSortCriteriaChange}
                   className="py-1 rounded"
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     --Select--
                   </option>
                   <option value="name">Name</option>
@@ -328,7 +331,7 @@ export default function DepartmentMembers() {
                   // onClick={handleSelectAll}
                   className="cursor-pointer"
                 >
-                  Select All
+                  {selectAll ? "Deselect all" : "Select all"}
                 </h5>
               </div>
               <div className="right-top-div-bottom-departments">
@@ -342,69 +345,85 @@ export default function DepartmentMembers() {
               </div>
             </div>
 
-            <table className="table table-borderless">
-              <thead>
-                <tr>
-                  <th className="border-0 text-start py-2 ps-4">Name</th>
-                  <th className="border-0 py-2">Email</th>
-                  <th className="border-0 py-2">Created</th>
-                  <th className="border-0 py-2">Role</th>
-                  <th className="border-0 py-2">Edit</th>
-                </tr>
-              </thead>
-              <tbody>
-                {membersdata.map((member) => {
-                  return (
-                    <tr key={member.id}>
-                      <td className="py-3 ps-4 text-capitalize">
-                        <input
-                          type="checkbox"
-                          className="d-inline border-0 me-2"
-                          style={{ width: "1rem", height: "1rem" }}
-                          //   checked={selectedDepartments.includes(member.id)}
-                          //   onChange={() => handleCheckboxChange(member.id)}
-                        />
-                        {member.fullname}
-                      </td>
-                      <td className="text-center py-3">{member.email}</td>
-                      <td className="text-center py-3">
-                        {formatDateToIST(member.created_at)}
-                      </td>
-                      <td className="text-center py-3 text-capitalize">
-                        {member.role}
-                      </td>
-                      <td className="text-center position-relative py-3">
-                        <RxDotsHorizontal
-                          className="fs-4 cursor-pointer"
-                          onClick={() => {
-                            toggleEditOrDeletePopUp(member.id);
-                            setMemberId(member.id);
-                          }}
-                        />
-                        {editOrDeletePopUp[member.id] && (
-                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                            <Link to={`editMember/${memberId}`}>
+            {!error ? (
+              <table className="table table-borderless">
+                <thead>
+                  <tr>
+                    <th className="border-0 text-start py-2 ps-4">Name</th>
+                    <th className="border-0 py-2 text-center">Email</th>
+                    <th className="border-0 py-2 text-center">Created</th>
+                    <th className="border-0 py-2 text-center">Role</th>
+                    <th className="border-0 py-2 text-center">Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {membersdata.map((member) => {
+                    return (
+                      <tr key={member.id}>
+                        <td className="py-3 ps-4 text-capitalize">
+                          <input
+                            type="checkbox"
+                            className="d-inline border-0 me-2"
+                            style={{ width: "1rem", height: "1rem" }}
+                            //   checked={selectedDepartments.includes(member.id)}
+                            //   onChange={() => handleCheckboxChange(member.id)}
+                          />
+                          {member.fullname}
+                        </td>
+                        <td className="text-center py-3">{member.email}</td>
+                        <td className="text-center py-3">
+                          {formatDateToIST(member.created_at)}
+                        </td>
+                        <td className="text-center py-3 text-capitalize">
+                          {member.role}
+                        </td>
+                        <td className="text-center position-relative py-3">
+                          <RxDotsHorizontal
+                            className="fs-4 cursor-pointer"
+                            onClick={() => {
+                              toggleEditOrDeletePopUp(member.id);
+                              setMemberId(member.id);
+                            }}
+                          />
+                          {editOrDeletePopUp[member.id] && (
+                            <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                              <Link to={`editMember/${memberId}`}>
+                                <h6
+                                  className="py-3 px-5 border-bottom cursor-pointer"
+                                  //   onClick={handleEdit}
+                                >
+                                  Edit
+                                </h6>
+                              </Link>
                               <h6
-                                className="py-3 px-5 border-bottom cursor-pointer"
-                                //   onClick={handleEdit}
+                                className="py-3 px-5 text-red cursor-pointer"
+                                onClick={handleDelete}
                               >
-                                Edit
+                                Delete
                               </h6>
-                            </Link>
-                            <h6
-                              className="py-3 px-5 text-red cursor-pointer"
-                              onClick={handleDelete}
-                            >
-                              Delete
-                            </h6>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
+              <div
+                className="bg-white flex justify-content-center align-items-center"
+                style={{ height: "23.5rem" }}
+              >
+                <div>
+                  <h4 className="text-secondary text-center">
+                    No Member found!
+                  </h4>
+                  <p className="text-center text-secondary">
+                    Please search something else
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import { ShimmerTable } from "react-shimmer-effects";
 
 export default function AppList({ heading, data = "", backgound, loading }) {
   const [showAll, setShowAll] = useState(false);
-
+  const location = useLocation();
+  // console.log(location);
   const renderPopover = (otherTabs) => {
     const tabs = Object.entries(otherTabs);
     const visibleTabs = showAll ? tabs : tabs.slice(0, 4);
@@ -59,7 +61,7 @@ export default function AppList({ heading, data = "", backgound, loading }) {
           </h5>
 
           <div className="row row-cols-3 py-3" style={{ minWidth: "40rem" }}>
-            {localStorage.getItem("role") === "admin" ? (
+            {location.pathname === "/admin/dashboard" ? (
               data?.length > 0 ? (
                 data?.map((app, index) => {
                   const appName = Object.keys(app)[0];
@@ -81,7 +83,6 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
                         {(appTime / 60).toFixed(0)}m
-
                       </p>
                     </div>
                   );
@@ -131,14 +132,12 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                   </OverlayTrigger>
                 );
               })
-
             ) : (
               <div className="px-4 d-flex align-items-center justify-content-center h-75 w-100">
                 <div>
                   <h5 className="text-center fw-light text-secondary">
                     No data found!
                   </h5>
-
                 </div>
               </div>
             )}

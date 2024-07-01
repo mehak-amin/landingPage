@@ -19,6 +19,7 @@ export default function ScreenCaptures() {
   const [selectAll, setSelectAll] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [activeDepartment, setActiveDepartment] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const formattedDate = convertDate(date);
   const token = localStorage.getItem("token");
@@ -31,39 +32,39 @@ export default function ScreenCaptures() {
   };
 
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
-
   const screenCaptures = useMemo(() => data?.data || [], [data]);
 
   let departmentsUrl = `${BASE_URI}/departments`;
   const { data: departmentsData } = useFetch(departmentsUrl, fetchOptions);
   const departments = useMemo(
-    () => (departmentsData?.data || []).filter((dept) => dept.is_active === 1),
+    () =>
+      (departmentsData?.data || []).filter(
+        (department) => department.is_active === 1
+      ),
     [departmentsData]
   );
-
-  const handleDeleteScreenshots = async () => {
-    // console.log(selectedScreenshots);
-    try {
-      const response = await axios({
-        method: "DELETE",
-        url: `${BASE_URI}/snapshots/snap`,
-        data: { ids: selectedScreenshots },
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      refetch();
-      setIsDelete(false);
-      console.log(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
     if (departments.length > 0) {
       setActiveDepartment(departments[0].id);
     }
+  }, [departments]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const containerWidth = document.getElementById(
+        "department-container"
+      ).offsetWidth;
+      const itemsWidth = departments.length * 120;
+      setShowDropdown(itemsWidth > containerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [departments]);
 
   useEffect(() => {
@@ -82,6 +83,24 @@ export default function ScreenCaptures() {
     setSelectedUsers(newSelectedUsers);
     setSelectedScreenshots(newSelectedScreenshots);
   }, [selectAll, screenCaptures]);
+
+  const handleDeleteScreenshots = async () => {
+    try {
+      const response = await axios({
+        method: "DELETE",
+        url: `${BASE_URI}/snapshots/snap`,
+        data: { ids: selectedScreenshots },
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      refetch();
+      setIsDelete(false);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const toggleScreenshots = (userId) => {
     setVisibleScreenshots((prevState) => ({
@@ -131,8 +150,6 @@ export default function ScreenCaptures() {
     refetch();
   };
 
-  const activeDepartments = departments.filter((dept) => dept.is_active === 1);
-
   const countSelectedScreenshotsForUser = (userId) => {
     const userScreenshots =
       screenCaptures
@@ -169,47 +186,56 @@ export default function ScreenCaptures() {
         setSelectedStartDate={setDate}
       />
       <div className="bg-lightGray1">
-        <div className="px-sm-5 p-2 border-lightgreen custom-shadow">
-          <ul className="list-unstyled d-flex gap-4 mb-0">
-            <li
-              key={departments[0]?.id}
-              className={`p-2 rounded cursor-pointer ${
-                activeDepartment === departments[0]?.id
-                  ? "bg-darkGray text-white"
-                  : ""
-              }`}
-              onClick={() => handleDepartmentChange(departments[0]?.id)}
-            >
-              {departments[0]?.department_name}
-            </li>
-            <div className="d-md-none">
-              <select
-                className="form-select h-100"
-                onChange={(e) => handleDepartmentChange(e.target.value)}
-                value={activeDepartment}
-              >
-                {departments.slice(1).map((dept) => (
-                  <option key={dept.id} value={dept.id}>
-                    {dept.department_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="d-none d-md-flex">
-              {departments.slice(1).map((dept) => (
+        <div
+          id="department-container"
+          className="px-sm-5 p-2 border-lightgreen custom-shadow"
+        >
+          <ul className="list-unstyled d-flex gap-3 mb-0">
+            {departments
+              .slice(0, showDropdown ? 1 : departments.length)
+              .map((dept) => (
                 <li
                   key={dept.id}
                   className={`p-2 rounded cursor-pointer ${
-                    activeDepartment === dept.id
-                      ? "bg-darkGray text-white"
-                      : "tab-item-hidden"
+                    activeDepartment === dept.id ? "bg-darkGray text-white" : ""
                   }`}
                   onClick={() => handleDepartmentChange(dept.id)}
                 >
                   {dept.department_name}
                 </li>
               ))}
-            </div>
+            {showDropdown && (
+              <div className="">
+                <select
+                  className="form-select h-100"
+                  onChange={(e) => handleDepartmentChange(e.target.value)}
+                  value={activeDepartment}
+                >
+                  {departments.slice(1).map((dept) => (
+                    <option key={dept.id} value={dept.id}>
+                      {dept.department_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {/* {!showDropdown && (
+              <div className="d-none d-md-flex">
+                {departments.slice(1).map((dept) => (
+                  <li
+                    key={dept.id}
+                    className={`p-2 rounded cursor-pointer ${
+                      activeDepartment === dept.id
+                        ? "bg-darkGray text-white"
+                        : ""
+                    }`}
+                    onClick={() => handleDepartmentChange(dept.id)}
+                  >
+                    {dept.department_name}
+                  </li>
+                ))}
+              </div>
+            )} */}
           </ul>
         </div>
 
@@ -255,7 +281,21 @@ export default function ScreenCaptures() {
                           }
                           style={{ width: "1.2rem", height: "1.2rem" }}
                         />
-                        <FaRegUserCircle className="fs-3 text-green" />
+                        {capture.user.picture === "" ? (
+                          <FaRegUserCircle className="fs-3 text-secondary" />
+                        ) : (
+                          <img
+                            src={capture.user.picture}
+                            alt="User"
+                            className="rounded-circle"
+                            style={{
+                              width: "2.5rem",
+                              height: "2.5rem",
+                              objectFit: "cover",
+                            }}
+                          />
+                        )}
+
                         <div>
                           <h5 className="text-capitalize fw-light">
                             {capture.user.fullname === ""

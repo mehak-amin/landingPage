@@ -58,24 +58,12 @@ function App() {
       <Route path="/forgetPassword" element={<ForgetPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
 
-      
       <Route path="/" element={<Layout role={role} user={user} />}>
         <Route path="admin" element={<Admin />}>
           <Route path="profile" element={<AdminProfile />} />
           <Route path="dashboard" element={<AdminDashboard />} />
 
-          <Route path="departments" element={<Departments />} />
-          <Route
-            path="departments/departmentMembers/:id"
-            element={<DepartmentMembers />}
-          />
-          <Route
-            path="departments/departmentMembers/:id/editMember/:id"
-            element={<EditMember />}
-          />
-
           <Route path="manageApps" element={<ManageApps />} />
-
 
           <Route path="teammates" element={<Teamates />} />
           <Route path="manageCategories" element={<Categories />} />
@@ -89,6 +77,14 @@ function App() {
 
           <Route path="settings" element={<Settings />}>
             <Route path="departments" element={<Departments />} />
+            <Route
+              path="departments/departmentMembers/:id"
+              element={<DepartmentMembers />}
+            />
+            <Route
+              path="departments/departmentMembers/:id/editMember/:id"
+              element={<EditMember />}
+            />
             <Route path="manageApps" element={<ManageApps />} />
             <Route path="manageroles" element={<ManageRoles />} />
           </Route>

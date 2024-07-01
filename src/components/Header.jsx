@@ -48,16 +48,15 @@ export default function Header({
   const showWeekNumbers = activeButton === "week";
 
   return (
-    <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
-      {/* <div className="mb-4 mb-md-0"> */}
-      <h5 className="mb-4 mb-md-0 custom-shadow d-inline px-3 py-2 rounded">
+    <div className="flex-885px justify-content-between px-md-5 px-3 py-4 bg-white">
+      <h5 className="mb-885px custom-shadow d-inline-flex px-3 py-2 rounded">
         {heading}
       </h5>
-      {/* </div> */}
+
       <div>
         <div className="d-md-flex gap-3 align-items-center">
           {isDate && (
-            <div className="d-flex gap-3 align-items-center justify-content-md-end mb-3 mb-md-0">
+            <div className="d-flex gap-3 align-items-center justify-content-lg-end justify-content-start mb-3 mb-md-0">
               <div className="calendar-icon " onClick={toggleCalendar}>
                 <CiCalendar className="fs-2 cursor-pointer" />
               </div>
