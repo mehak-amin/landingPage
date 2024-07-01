@@ -59,7 +59,11 @@ function Sidebar({ isSideBarOpen, role }) {
           text: "Absence Calender",
           link: "/absencecalender",
         },
-        { icon: faCamera, text: "Screen Captures", link: "/screencaptures" },
+        {
+          icon: faCamera,
+          text: "Screen Captures",
+          link: "admin/screenCaptures",
+        },
         { icon: faPeopleGroup, text: "Fellow Workers", link: "/fellowworkers" },
         { icon: faSquarePollVertical, text: "Reports", link: "/reports" },
         { icon: faFileExport, text: "Data Export", link: "/dataexport" },

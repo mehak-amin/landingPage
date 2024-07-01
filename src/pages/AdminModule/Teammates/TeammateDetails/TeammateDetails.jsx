@@ -71,7 +71,7 @@ export default function TeammateDetails() {
         selectedEndDate={endDate}
         setSelectedEndDate={setEndDate}
       />
-      <div className="bg-lightGray1">
+      <div className="bg-lightGray1 pb-3">
         <div className="justify-content-between p-3 p-sm-5 responsive-container">
           <div className="gap-4 align-items-center ss-display-flex">
             <Suspense fallback={<ShimmerThumbnail height={100} rounded />}>

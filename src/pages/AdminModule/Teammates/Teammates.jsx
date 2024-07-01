@@ -413,7 +413,7 @@ const Teamates = () => {
                     onChange={handleSortCriteriaChange}
                     className="py-1 rounded"
                   >
-                    <option value="" disabled selected>
+                    <option value="" disabled>
                       --Select--
                     </option>
                     <option value="name">Name</option>
