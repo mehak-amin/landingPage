@@ -15,7 +15,7 @@ function ManageRoles() {
   const [selectedRoles, setSelectedRoles] = useState([]); //selected role container
   const [showCreateModal, setShowCreateModal] = useState(false); //shows createRole modal
   // const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [editOrDeletePopUp, setEditOrDeletePopUp] = useState({}); //editDeletePOPup
+  const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(""); //editDeletePOPup
   const [id, setId] = useState(null); //id of role we wanna edit
   const [editModal, setEditModal] = useState(false); //shows edit modal
   const [roleName, setRoleName] = useState(""); //name in role we wanna edit
@@ -27,6 +27,31 @@ function ManageRoles() {
   const [sortCriteria, setSortCriteria] = useState("role");
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  //   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(null); // Track which popup is open
+  const sortButtonRef = useRef(null);
+  // const popupRefs = useRef([]); // Store refs for each edit/delete popup
+  const popupRefs = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sortButtonRef.current &&
+        !sortButtonRef.current.contains(event.target)
+      ) {
+        setIsSort(false);
+      }
+      if (popupRefs.current && !popupRefs.current.contains(event.target)) {
+        setEditOrDeletePopUp(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   //format date
   const formatDate = (apiDate) => {
@@ -135,7 +160,7 @@ function ManageRoles() {
   };
 
   // -------------get role to edit role-------------------------
-  const getSingleRole = async (id) => {
+  const getSingleRole = async () => {
     try {
       const response = await axios({
         method: "GET",
@@ -144,23 +169,19 @@ function ManageRoles() {
           Authorization: "Bearer " + token,
         },
       });
-      // setRoleName(response.data.data); //empty array. Shows [object Object]
-      // console.log(response.data.data); //empty array
-      setRoleName(response.data); //
-      console.log(response.data); //
 
-      // setRoleName(response.data.data.role); // Ensure correct property access
-      setId(id);
-      setEditModal(true); // Move setting editModal here
+      setRoleName(response.data.data.roles[0].role);
+      console.log(response.data.data.roles[0].role);
+      setEditModal(true);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleEdit = () => {
-    getSingleRole();
-    setEditModal(true);
-  };
+  // const handleEdit = () => {
+  //   getSingleRole();
+  //   setEditModal(true);
+  // };
   const handleShowEdit = () => {
     console.log("edit clicked");
     getSingleRole();
@@ -360,6 +381,7 @@ function ManageRoles() {
               <div
                 className="z-3 position-absolute bg-white custom-shadow"
                 style={{ top: "115%", left: "-50%" }}
+                ref={sortButtonRef}
               >
                 <div className="px-3 py-2">
                   <select
@@ -415,7 +437,7 @@ function ManageRoles() {
               Select all
             </a>
           </div>
-          <div className="d-flex align-items-center gap-3">
+          <div className="selected-delete-holder d-flex align-items-center gap-3">
             <span className="text-white fw-medium">
               {selectedRoles.length} Roles Selected
             </span>
@@ -481,7 +503,10 @@ function ManageRoles() {
                     >
                       <FaEllipsisH />
                       {editOrDeletePopUp[role.id] && (
-                        <div className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white">
+                        <div
+                          className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white"
+                          ref={popupRefs}
+                        >
                           <h6
                             className="py-3 px-5 border-bottom cursor-pointer"
                             onClick={handleShowEdit}

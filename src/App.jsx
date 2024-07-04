@@ -73,7 +73,7 @@ function App() {
             element={<TeammateDetails />}
           />
 
-          <Route path="workplanner" element={<ScheduleTable />} />
+          <Route path="workplanner" element={<WorkPlanner />} />
 
           <Route path="settings" element={<Settings />}>
             <Route path="departments" element={<Departments />} />

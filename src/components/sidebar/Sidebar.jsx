@@ -44,6 +44,7 @@ function Sidebar({ isSideBarOpen, role }) {
   };
   const handleActiveElement = (link) => {
     setActiveElement(link);
+    setActiveSubElement(null);
   };
   const handleSubActiveElement = (subLink) => {
     setActiveSubElement(subLink);
