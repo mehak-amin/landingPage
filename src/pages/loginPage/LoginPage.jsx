@@ -97,7 +97,6 @@ function LoginPage({ role, setRole, user, setUser }) {
     }
   }
 
-
   return (
     <div className="login">
       <div className="image-section-login">

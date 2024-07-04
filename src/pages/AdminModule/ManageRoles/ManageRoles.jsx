@@ -144,8 +144,10 @@ function ManageRoles() {
           Authorization: "Bearer " + token,
         },
       });
-      setRoleName(response.data.data[0].role);
-      // console.log(response.data.data[0].role);
+      // setRoleName(response.data.data); //empty array. Shows [object Object]
+      // console.log(response.data.data); //empty array
+      setRoleName(response.data); //
+      console.log(response.data); //
 
       // setRoleName(response.data.data.role); // Ensure correct property access
       setId(id);
@@ -155,14 +157,14 @@ function ManageRoles() {
     }
   };
 
-  const handleEdit = (id) => {
-    getSingleRole(id);
+  const handleEdit = () => {
+    getSingleRole();
     setEditModal(true);
   };
   const handleShowEdit = () => {
     console.log("edit clicked");
+    getSingleRole();
     setEditModal(true);
-    // setRoleName(`role.role`);
   };
 
   //---------------------------edit in editDelete----------------------------
@@ -279,6 +281,63 @@ function ManageRoles() {
         selectedStartDate={startDate}
         setSelectedStartDate={setStartDate}
       />
+      {/*------------------------- edit modal------------------------------ */}
+      {editModal && (
+        <Modal show={handleShowEdit} onHide={handleCloseEdit}>
+          <Modal.Header className="bg-darkgray d-flex justify-content-between no-border-radius">
+            <Modal.Title className="text-white">Edit Role</Modal.Title>
+            <div
+              className="text-white close-btn d-flex justify-content-center align-items-center fs-2"
+              onClick={handleCloseEdit}
+            >
+              &times;
+            </div>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formRoleName">
+                <Form.Label>Role Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={roleName}
+                  onChange={(e) => setRoleName(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formStatus">
+                <Form.Label>Status</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <option value="1">Active</option>
+                  <option value="0">Inactive</option>
+                </Form.Control>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <div className="d-flex gap-4 ">
+              <Button
+                className="px-4"
+                variant="secondary"
+                onClick={handleCloseEdit}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="px-4 bg-darkgray"
+                variant="primary"
+                onClick={() => {
+                  handleEditRole();
+                }}
+              >
+                Update
+              </Button>
+            </div>
+          </Modal.Footer>
+        </Modal>
+      )}
       <div className="main-content-holder px-5">
         {/* -------------------------serch & sort------------------------ */}
         <div className="d-md-flex gap-6  px-md-5 px-3 py-4 position-relative ">
@@ -425,7 +484,7 @@ function ManageRoles() {
                         <div className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white">
                           <h6
                             className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleEdit}
+                            onClick={handleShowEdit}
                           >
                             Edit
                           </h6>
@@ -451,66 +510,6 @@ function ManageRoles() {
             />
           )}
         </div>
-        {/*------------------------- edit modal------------------------------ */}
-        {editModal && (
-          <Modal show={handleShowEdit} onHide={handleCloseEdit}>
-            <Modal.Header className="bg-darkgray d-flex justify-content-between no-border-radius">
-              <Modal.Title className="text-white">Edit Role</Modal.Title>
-              <div
-                className="text-white close-btn d-flex justify-content-center align-items-center fs-2"
-                onClick={handleCloseEdit}
-              >
-                &times;
-              </div>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="formRoleName">
-                  <Form.Label>Role Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    // placeholder="Enter Role Name...!"
-                    placeholder={`Edit ${roleName}`}
-                    // plaintext={roles.role}
-                    value={roleName}
-                    onChange={(e) => setRoleName(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formStatus">
-                  <Form.Label>Status</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="d-flex gap-4 ">
-                <Button
-                  className="px-4"
-                  variant="secondary"
-                  onClick={handleCloseEdit}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="px-4 bg-darkgray"
-                  variant="primary"
-                  onClick={() => {
-                    handleEditRole();
-                  }}
-                >
-                  Update
-                </Button>
-              </div>
-            </Modal.Footer>
-          </Modal>
-        )}
       </div>
     </div>
   );

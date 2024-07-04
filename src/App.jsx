@@ -29,6 +29,8 @@ import { useState } from "react";
 import ManageRoles from "./pages/AdminModule/ManageRoles/ManageRoles";
 import Settings from "./pages/AdminModule/Settings/Settings";
 
+import ScheduleTable from "./components/practice2/ScheduleTable";
+
 function App() {
   const [role, setRole] = useState(() => {
     return localStorage.getItem("role") || "";
@@ -63,17 +65,15 @@ function App() {
           <Route path="profile" element={<AdminProfile />} />
           <Route path="dashboard" element={<AdminDashboard />} />
 
-          <Route path="manageApps" element={<ManageApps />} />
-
           <Route path="teammates" element={<Teamates />} />
-          <Route path="manageCategories" element={<Categories />} />
+
           <Route path="screenCaptures" element={<ScreenCaptures />} />
           <Route
             path="teammates/teammateDetails/:id"
             element={<TeammateDetails />}
           />
 
-          <Route path="workplanner" element={<WorkPlanner />} />
+          <Route path="workplanner" element={<ScheduleTable />} />
 
           <Route path="settings" element={<Settings />}>
             <Route path="departments" element={<Departments />} />
@@ -85,6 +85,7 @@ function App() {
               path="departments/departmentMembers/:id/editMember/:id"
               element={<EditMember />}
             />
+            <Route path="manageCategories" element={<Categories />} />
             <Route path="manageApps" element={<ManageApps />} />
             <Route path="manageroles" element={<ManageRoles />} />
           </Route>
