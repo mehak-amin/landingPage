@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import SearchInput from "../../../components/SearchInput";
 import FilterButton from "../../../components/Button/FilterButton";
 import SortButton from "../../../components/Button/SortButton";
-import { lazy, useEffect, useState, Suspense } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import BASE_URI from "../../../../config";
 import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
@@ -41,6 +41,11 @@ const Teamates = () => {
     role: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const filterButtonRef = useRef(null);
+  const filterPopupRef = useRef(null);
+  const sortButtonRef = useRef(null);
+  const sortPopupRef = useRef(null);
+
   const itemsPerPage = 4;
   const formattedStartDate = convertDate(startDate);
 
@@ -78,6 +83,30 @@ const Teamates = () => {
     slackingCount,
     workingCount,
   } = teamsData;
+
+  // const handleClickOutside = (event) => {
+  //   if (
+  //     filterPopupRef.current &&
+  //     !filterPopupRef.current.contains(event.target) &&
+  //     !filterButtonRef.current.contains(event.target) &&
+  //     sortPopupRef.current &&
+  //     !sortPopupRef.current.contains(event.target) &&
+  //     !sortButtonRef.current.contains(event.target)
+  //   ) {
+  //     setIsFilter(true);
+  //     setIsSort(true);
+  //   } else {
+  //     setIsFilter(false);
+  //     setIsSort(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   useEffect(() => {
     axios
@@ -153,8 +182,10 @@ const Teamates = () => {
           setAddTeamMember(false);
         }
         setFormData({ fullname: "", email: "", department_id: "", role: "" });
+        toast.success("New Team Member added successfully");
       })
       .catch((err) => {
+        toast.error(err.message);
         setLoading(false);
       });
   };
@@ -356,15 +387,18 @@ const Teamates = () => {
 
           <div className="d-flex gap-4 mt-3 mt-md-0">
             <div
+              ref={filterButtonRef}
               className="border-0 bg-white rounded py-2 py-md-0"
               onClick={() => setIsFilter(!isFilter)}
             >
               <FilterButton />
             </div>
+
             {isFilter && (
               <div
                 className="z-3 position-absolute bg-white custom-shadow"
                 style={{ top: "115%", left: "-43%" }}
+                ref={filterPopupRef}
               >
                 <div className="py-2 px-4 fs-5 fw-light flex align-items-center gap-5">
                   <input
@@ -417,6 +451,7 @@ const Teamates = () => {
             )}
 
             <div
+              ref={sortButtonRef}
               className="border-0 bg-white rounded"
               onClick={() => setIsSort(!isSort)}
             >
@@ -425,8 +460,9 @@ const Teamates = () => {
 
             {isSort && (
               <div
+                ref={sortPopupRef}
                 className="z-3 position-absolute bg-white custom-shadow"
-                style={{ top: "115%", left: "40%" }}
+                style={{ top: "115%", left: "-40%" }}
               >
                 <div className="px-3 py-2">
                   <select
@@ -556,10 +592,10 @@ const Teamates = () => {
                               <img
                                 src={item.user.picture}
                                 alt=""
-                                className="rounded-circle me-4"
+                                className="rounded-circle me-4 border"
                                 style={{
-                                  width: "2rem",
-                                  height: "2rem",
+                                  width: "2.7rem",
+                                  height: "2.7rem",
                                   objectFit: "cover",
                                 }}
                               />

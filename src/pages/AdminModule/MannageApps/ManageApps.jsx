@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./ManageApps.css";
 import Header from "../../../components/Header";
 import SearchInput from "../../../components/SearchInput";
@@ -11,19 +11,18 @@ import useFetch from "../../../hooks/useFetch";
 import axios from "axios";
 import ModalComponent from "../../../components/Modal/ModalComponent";
 import { RxDotsHorizontal } from "react-icons/rx";
+import toast from "react-hot-toast";
 
 const ManageApps = () => {
   const [addApp, setAddApp] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [search, setSearch] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("");
-  const [isFilter, setIsFilter] = useState("");
-  // const [selectedApps, setSelectedApps] = useState([]);
-  // const [selectedOption, setSelectedOption] = useState("productive");
+
   const [isEdited, setIsEdited] = useState(false);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState("");
-  // const [deletePopUp, setDeletePopUp] = useState(false);
+
   const [id, setId] = useState("");
   const [appSingleData, setSingleAppData] = useState({
     application_name: "",
@@ -36,13 +35,11 @@ const ManageApps = () => {
     type_id: "",
     url: "",
   });
+  const sortPopupRef = useRef(null);
+  const editPopupRefs = useRef({});
 
   const token = localStorage.getItem("token");
-  let url = `${BASE_URI}/appList?search=${search}`;
-
-  if (isFilter) {
-    url += `&sort=${sortCriteria}&direction=${sortOrder}`;
-  }
+  let url = `${BASE_URI}/appList?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
 
   const fetchOptions = {
     headers: {
@@ -61,9 +58,35 @@ const ManageApps = () => {
     },
   };
   const { data: categoryData } = useFetch(categoryUrl, categoryFetchOptions);
-  // console.log(categoryData?.data.appCategories);
+
   const categoryList = categoryData?.data?.appCategories || [];
-  // console.log(categoryList);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sortPopupRef.current &&
+        !sortPopupRef.current.contains(event.target)
+      ) {
+        setIsSort(false);
+      }
+      Object.keys(editPopupRefs.current).forEach((id) => {
+        if (
+          editPopupRefs.current[id] &&
+          !editPopupRefs.current[id].contains(event.target)
+        ) {
+          setEditOrDeletePopUp((prev) => ({
+            ...prev,
+            [id]: false,
+          }));
+        }
+      });
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const getSingleApp = async () => {
     try {
@@ -75,20 +98,18 @@ const ManageApps = () => {
           Authorization: "Bearer " + token,
         },
       });
-      console.log(response);
+
       setSingleAppData({
         application_name: response.data.data.logs.application_name,
         category: response.data.data.logs.category,
         type_id: response.data.data.logs.type,
       });
-      // console.log(response.data.data.logs.category);
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
   const handleEditDepartment = async () => {
-    // console.log(id);
     try {
       await axios({
         method: "PATCH",
@@ -102,18 +123,15 @@ const ManageApps = () => {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      // console.log(response);
+      toast.success("App updated successfully");
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
-  //
-
   const handleCreateApp = async () => {
-    console.log(newAppData);
     try {
-      const response = await axios({
+      await axios({
         method: "POST",
         url: `${BASE_URI}/appList`,
         data: newAppData,
@@ -129,19 +147,21 @@ const ManageApps = () => {
         type: "",
         url: "",
       });
-      console.log(response);
+      toast.success("App created Sucesfully");
     } catch (err) {
-      // console.log(err);
+      toast.error(err?.message);
     }
   };
 
   const toggleAddApp = () => {
     setAddApp(!addApp);
+    setNewAppData({
+      application_name: "",
+      category: "",
+      type_id: "",
+      url: "",
+    });
   };
-
-  // const handleChange = (e) => {
-  //   setSelectedOption(e.target.value);
-  // };
 
   const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
@@ -151,13 +171,6 @@ const ManageApps = () => {
     setSortCriteria(event.target.value);
   };
 
-  // const handleDelete = () => {
-  //   setDeletePopUp(!deletePopUp);
-  // };
-  // const handleCloseDelete = () => {
-  //   setEditOrDeletePopUp(false);
-  //   setDeletePopUp(false);
-  // };
   const handleEdit = () => {
     getSingleApp();
     setIsEdited(!isEdited);
@@ -181,7 +194,6 @@ const ManageApps = () => {
       [name]: value,
     }));
   };
-  // console.log(newAppData);
 
   const toggleEditOrDeletePopUp = (id) => {
     setEditOrDeletePopUp((prevEditOrDeletePopUp) => ({
@@ -189,22 +201,6 @@ const ManageApps = () => {
       [id]: !prevEditOrDeletePopUp[id],
     }));
   };
-
-  // const handleSelectAll = () => {
-  //   if (selectedApps.length === appList.length) {
-  //     setSelectedApps([]);
-  //   } else {
-  //     setSelectedApps(appList.map((app) => app.id));
-  //   }
-  // };
-
-  // const handleCheckboxChange = (id) => {
-  //   setSelectedApps((prevSelected) =>
-  //     prevSelected.includes(id)
-  //       ? prevSelected.filter((appId) => appId !== id)
-  //       : [...prevSelected, id]
-  //   );
-  // };
 
   const getCategoryColor = (category) => {
     switch (category?.toLowerCase()) {
@@ -239,7 +235,8 @@ const ManageApps = () => {
                 name="application_name"
                 value={appSingleData?.application_name}
                 className="px-3 py-2 rounded border w-100"
-                onChange={handleEditChange}
+                readOnly
+                disabled
               />
             </div>
             <div className="mb-3">
@@ -372,6 +369,7 @@ const ManageApps = () => {
 
         <div className="d-flex gap-4 mt-3 mt-md-0">
           <div
+            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -416,57 +414,51 @@ const ManageApps = () => {
                   Descending <IoIosArrowRoundDown />
                 </label>
               </div>
-              <div className="d-flex gap-4 align-items-center px-3 py-2">
-                <button
-                  className=" border px-3 text-center py-1 rounded fw-light shadow cursor-pointer fs-5 bg-transparent"
-                  onClick={() => setIsFilter(false)}
-                >
-                  Reset
-                </button>
-                <button
-                  className=" border  text-center px-3 py-1 rounded bg-gray text-white shadow cursor-pointer fs-5"
-                  onClick={() => setIsFilter(true)}
-                >
-                  Apply
-                </button>
-              </div>
             </div>
           )}
         </div>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
-          <div className="top-div-bottom-departments py-3">
-            <div className="text-white px-3 px-sm-5">
-              <h5 className="cursor-pointer">Applications List</h5>
+      {appList?.length === 0 ? (
+        <div
+          className="bg-white flex align-items-center justify-content-center"
+          style={{ height: "20rem" }}
+        >
+          <h4 className="text-secondary">No Application found</h4>
+        </div>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+            <div className="top-div-bottom-departments py-3">
+              <div className="text-white px-3 px-sm-5">
+                <h5 className="cursor-pointer">Applications List</h5>
+              </div>
             </div>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="text-start px-3 ps-5 py-3">App name</th>
-                <th className="py-3 text-center">Category</th>
-                <th className="py-3 text-center">Type</th>
-                <th className="py-3 text-center">Change Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appList?.map((item) => {
-                const categoryColor = getCategoryColor(item?.category);
-                return (
-                  <tr key={item?.id}>
-                    <td className="py-3 ps-5 w-25">
-                      <div className="d-flex align-items-center gap-2">
-                        {/* <input
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="text-start px-3 ps-5 py-3">App name</th>
+                  <th className="py-3 text-center">Category</th>
+                  <th className="py-3 text-center">Type</th>
+                  <th className="py-3 text-center">Change Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appList?.map((item) => {
+                  const categoryColor = getCategoryColor(item?.category);
+                  return (
+                    <tr key={item?.id}>
+                      <td className="py-3 ps-5 w-25">
+                        <div className="d-flex align-items-center gap-2">
+                          {/* <input
                           type="checkbox"
                           className="border-0"
                           style={{ width: "1rem", height: "1rem" }}
                           checked={selectedApps.includes(item.id)}
                           onChange={() => handleCheckboxChange(item.id)}
                         />{" "} */}
-                        <p className="mb-0">{item?.application_name}</p>
-                        {/* <img
+                          <p className="mb-0">{item?.application_name}</p>
+                          {/* <img
                           src={item?.url}
                           alt=""
                           style={{
@@ -475,57 +467,55 @@ const ManageApps = () => {
                             objectFit: "cover",
                           }}
                         /> */}
-                      </div>
-                    </td>
-                    <td className="text-center text-capitalize py-3">
-                      <p
-                        className="mb-0"
-                        style={{ color: categoryColor, fontWeight: "500" }}
+                        </div>
+                      </td>
+                      <td className="text-center text-capitalize py-3">
+                        <p
+                          className="mb-0"
+                          style={{ color: categoryColor, fontWeight: "500" }}
+                        >
+                          {item?.category}
+                        </p>
+                      </td>
+                      <td className="text-center text-capitalize py-3">
+                        {item?.type}
+                      </td>
+                      <td
+                        className="text-center position-relative py-3"
+                        ref={(el) => (editPopupRefs.current[item.id] = el)}
                       >
-                        {item?.category}
-                      </p>
-                    </td>
-                    <td className="text-center text-capitalize py-3">
-                      {item?.type}
-                    </td>
-                    <td
-                      className="text-center position-relative py-3"
-                      // onClick={() => {
-                      //   toggleEditOrDeletePopUp(item.id);
-                      //   setId(item.id);
-                      // }}
-                    >
-                      <RxDotsHorizontal
-                        className="fs-4 cursor-pointer"
-                        onClick={() => {
-                          toggleEditOrDeletePopUp(item.id);
-                          setId(item.id);
-                        }}
-                      />
-                      {editOrDeletePopUp[item.id] && (
-                        <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleEdit}
-                          >
-                            Edit
-                          </h6>
-                          {/* <h6
+                        <RxDotsHorizontal
+                          className="fs-4 cursor-pointer"
+                          onClick={() => {
+                            toggleEditOrDeletePopUp(item.id);
+                            setId(item.id);
+                          }}
+                        />
+                        {editOrDeletePopUp[item.id] && (
+                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                            <h6
+                              className="py-3 px-5 border-bottom cursor-pointer"
+                              onClick={handleEdit}
+                            >
+                              Edit
+                            </h6>
+                            {/* <h6
                             className="py-3 px-5 text-red cursor-pointer"
                             onClick={handleDelete}
                           >
                             Delete
                           </h6> */}
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
