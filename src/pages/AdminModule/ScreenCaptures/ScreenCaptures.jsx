@@ -282,7 +282,7 @@ export default function ScreenCaptures() {
                           style={{ width: "1.2rem", height: "1.2rem" }}
                         />
                         {capture.user.picture === "" ? (
-                          <FaRegUserCircle className="fs-3 text-secondary" />
+                          <FaRegUserCircle className="fs-1 text-secondary" />
                         ) : (
                           <img
                             src={capture.user.picture}

@@ -22,7 +22,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
 
   const logout = (e) => {
     e.preventDefault();
-    console.log("logout");
+    // console.log("logout");
     console.log(token);
     axios
       .post(
@@ -39,6 +39,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           localStorage.removeItem("role");
+          localStorage.removeItem("rememberMe");
           // setToken("");
           // setUser("");
           // setRole("");
@@ -80,7 +81,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
   );
 
   const handleProfilePopup = () => {
-    console.log("profile");
+    // console.log("profile");
     setProfilePopup(!profilePopup);
   };
 

@@ -5,7 +5,7 @@ import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 import SortButton from "../../../../components/Button/SortButton";
 import SearchInput from "../../../../components/SearchInput";
 import Header from "../../../../components/Header";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import BASE_URI from "../../../../../config";
 import useFetch from "../../../../hooks/useFetch";
 import { useParams } from "react-router-dom";
@@ -13,10 +13,10 @@ import formatDateToIST from "../../../../utils/formatDateToIST";
 import { RxDotsHorizontal } from "react-icons/rx";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function DepartmentMembers() {
   const [deletePopUp, setDeletePopUp] = useState(false);
-  const [isEdited, setIsEdited] = useState(false);
   const [addMember, setAddMember] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
@@ -26,16 +26,17 @@ export default function DepartmentMembers() {
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [selectedAddMembers, setSelectedAddMembers] = useState([]);
+  const [addMemberselectAll, setAddMemberSelectAll] = useState(false);
+
   const { id } = useParams();
-  const [newMemberData, setNewMemberData] = useState({
-    email: "",
-    fullname: "",
-    department_id: id,
-    role: "",
-  });
+
+  const sortPopupRef = useRef(null);
+  const editDeletePopupRefs = useRef({});
 
   const token = localStorage.getItem("token");
   let url = `${BASE_URI}/departments/getMembers/${id}?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
+  let newMembersUrl = `${BASE_URI}/employee/${id}`;
 
   const fetchOptions = {
     headers: {
@@ -46,15 +47,35 @@ export default function DepartmentMembers() {
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
   const membersdata = data?.data || {};
 
-  let rolesUrl = `${BASE_URI}/roles`;
+  const { data: newData } = useFetch(newMembersUrl, fetchOptions);
+  const newMembersData = useMemo(() => newData?.data || [], [newData]);
 
-  const { data: rolesData } = useFetch(rolesUrl, fetchOptions);
-  const roles = useMemo(() => {
-    return (rolesData?.data?.roles || []).filter(
-      (role) => role.is_active === 1
-    );
-  }, [rolesData]);
-  // console.log(rolesData);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sortPopupRef.current &&
+        !sortPopupRef.current.contains(event.target)
+      ) {
+        setIsSort(false);
+      }
+      Object.keys(editDeletePopupRefs.current).forEach((id) => {
+        if (
+          editDeletePopupRefs.current[id] &&
+          !editDeletePopupRefs.current[id].contains(event.target)
+        ) {
+          setEditOrDeletePopUp((prev) => ({
+            ...prev,
+            [id]: false,
+          }));
+        }
+      });
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleEditOrDeletePopUp = (id) => {
     setEditOrDeletePopUp((prevEditOrDeletePopUp) => ({
@@ -65,54 +86,55 @@ export default function DepartmentMembers() {
 
   const handleAddMember = async () => {
     try {
-      const response = await axios({
-        method: "POST",
-        url: `${BASE_URI}/employee/addUser`,
-        data: newMemberData,
+      await axios({
+        method: "PATCH",
+        url: `${BASE_URI}/admin/addMember`,
+        data: {
+          ids: selectedAddMembers,
+          dept: Number(id),
+        },
         headers: {
           Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
         },
       });
+      toast.success("Member added successfully");
       setAddMember(false);
       refetch();
-
-      console.log(response);
     } catch (err) {
       console.log(err);
+      toast.error(err?.message);
     }
   };
 
   const handleDeleteMember = async () => {
     try {
-      console.log(id);
-      const response = await axios({
-        method: selectedMembers?.length === 0 ? "PATCH" : "DELETE",
-        url:
-          selectedMembers?.length === 0
-            ? `${BASE_URI}/departments/${id}`
-            : `${BASE_URI}/departments`,
-        data:
-          selectedMembers?.length === 0
-            ? { is_active: 0 }
-            : { ids: selectedMembers },
+      await axios({
+        method: "PATCH",
+        url: `${BASE_URI}/departments/removeMember/${id}`,
+        data: { ids: selectedMembers },
 
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      // fetchDepartments();
+
       refetch();
       setDeletePopUp(false);
       setEditOrDeletePopUp(false);
       setSelectedMembers([]);
-      console.log(response);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     setDeletePopUp(!deletePopUp);
+    setSelectedMembers((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((id) => id !== id)
+        : [...prevSelected, id]
+    );
   };
 
   const handleCloseDelete = () => {
@@ -122,6 +144,7 @@ export default function DepartmentMembers() {
 
   const toggleAddTeamMember = () => {
     setAddMember(!addMember);
+    setSelectedAddMembers([]);
   };
 
   const handleSortOrderChange = (event) => {
@@ -132,55 +155,56 @@ export default function DepartmentMembers() {
     setSortCriteria(event.target.value);
   };
 
-  const handleAddMemberChange = (e) => {
-    const { name, value } = e.target;
-    setNewMemberData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    if (selectedMembers.length === membersdata.length) {
+      setSelectedMembers([]);
+    } else {
+      setSelectedMembers(membersdata.map((department) => department.id));
+    }
   };
 
-  // if (error) {
-  //   return <div>Error fetching data</div>;
-  // }
+  const handleCheckboxChange = (id) => {
+    setSelectedMembers((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((departmentId) => departmentId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const handleAddMemberCheckboxChange = (userId) => {
+    setSelectedAddMembers((prevSelected) =>
+      prevSelected.includes(userId)
+        ? prevSelected.filter((id) => id !== userId)
+        : [...prevSelected, userId]
+    );
+  };
+
+  const handleAddMemberSelectAll = () => {
+    setAddMemberSelectAll(!addMemberselectAll);
+    if (!addMemberselectAll) {
+      const allMemberIds = newMembersData.map((member) => member.user_id);
+      setSelectedAddMembers(allMemberIds);
+    } else {
+      setSelectedAddMembers([]);
+    }
+  };
 
   return (
-    <div className="bg-lightGray1 pb-5 container-xxl px-0">
+    <div className="wrapper-div-departments container-xxl px-0">
       {deletePopUp && (
         <ModalComponent
           heading="Delete Department"
           handleClose={handleCloseDelete}
           handleClick={handleDeleteMember}
           btn1="Cancel"
-          btn2="Delete"
+          btn2="Remove"
         >
           <div className="py-3">
             <h6 className="text-center mb-2">
-              Do you really want to remove the members that you have chosen?
+              Do you really want to remove members that you have chosen?
             </h6>
             <h6 className="text-center">There is no turning back.</h6>
-          </div>
-        </ModalComponent>
-      )}
-
-      {isEdited && (
-        <ModalComponent
-          heading="Edit Department"
-          //   handleClose={handleCloseEdit}
-          //   handleClick={handleEditDepartment}
-          btn1="Cancel"
-          btn2="Update"
-        >
-          <div className="py-3">
-            <label htmlFor="" className="d-block mb-1">
-              Deapartment Name
-            </label>
-            <input
-              type="text"
-              //   value={departmentData}
-              className="px-3 py-2 rounded border w-100"
-              //   onChange={(e) => setDepartmentData(e.target.value)}
-            />
           </div>
         </ModalComponent>
       )}
@@ -202,6 +226,7 @@ export default function DepartmentMembers() {
 
         <div className="d-flex gap-4 mt-3 mt-md-0">
           <div
+            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -257,67 +282,43 @@ export default function DepartmentMembers() {
           handleClick={handleAddMember}
           btn1="Cancel"
           btn2="Add"
+          size="lg"
         >
-          <div className="py-3">
-            <label htmlFor="fullname" className="d-block mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="fullname"
-              value={newMemberData.fullname}
-              placeholder="Enter your name...!"
-              className="px-3 py-2 rounded border w-100"
-              onChange={handleAddMemberChange}
-            />
+          <div>
+            <h5 className="mb-3">Select Members</h5>
+            <div className="py-2 px-4 d-flex align-items-center justify-content-between border bg-lightGray1">
+              <p className="mb-0">
+                <span>{selectedAddMembers.length}</span> Members Selected
+              </p>
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={addMemberselectAll}
+                  style={{ width: "1.2rem", height: "1.2rem" }}
+                  onChange={handleAddMemberSelectAll}
+                />
+                <label>
+                  {addMemberselectAll ? "Deselect all" : "Select all"}
+                </label>
+              </div>
+            </div>
           </div>
-          <div className="py-3">
-            <label htmlFor="email" className="d-block mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={newMemberData.email}
-              placeholder="Enter email...!"
-              className="px-3 py-2 rounded border w-100"
-              onChange={handleAddMemberChange}
-            />
-          </div>
-          <div className="py-3">
-            <label htmlFor="role_id" className="d-block mb-1">
-              Select Role
-            </label>
-            <select
-              name="role"
-              value={newMemberData.role}
-              className="px-3 py-2 rounded border w-100"
-              onChange={handleAddMemberChange}
-              defaultValue=""
+          {newMembersData.map((member) => (
+            <div
+              key={member.id}
+              className="py-2 px-4 d-flex align-items-center gap-5 border"
             >
-              <option value="" disabled>
-                --Select Role--
-              </option>
-              {roles.map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.role}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="py-3">
-            <label htmlFor="department_id" className="d-block mb-1">
-              Department Id
-            </label>
-            <input
-              type="text"
-              name="department_id"
-              value={newMemberData.department_id}
-              placeholder="Enter department id...!"
-              className="px-3 py-2 rounded border w-100"
-              readOnly
-            />
-          </div>
+              <input
+                type="checkbox"
+                style={{ width: "1.2rem", height: "1.2rem" }}
+                checked={selectedAddMembers.includes(member.id)}
+                onChange={() => handleAddMemberCheckboxChange(member.id)}
+              />
+              <label className="text-capitalize">
+                {member.fullname || "noName"}
+              </label>
+            </div>
+          ))}
         </ModalComponent>
       )}
       {isLoading ? (
@@ -327,20 +328,14 @@ export default function DepartmentMembers() {
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
-                <h5
-                  // onClick={handleSelectAll}
-                  className="cursor-pointer"
-                >
+                <h5 onClick={handleSelectAll} className="cursor-pointer">
                   {selectAll ? "Deselect all" : "Select all"}
                 </h5>
               </div>
               <div className="right-top-div-bottom-departments">
                 <h5>{selectedMembers.length} Departments Selected</h5>
                 <h6>
-                  <RiDeleteBin6Line
-                    className="fs-3"
-                    //   onClick={handleDelete}
-                  />
+                  <RiDeleteBin6Line className="fs-3" onClick={handleDelete} />
                 </h6>
               </div>
             </div>
@@ -365,19 +360,26 @@ export default function DepartmentMembers() {
                             type="checkbox"
                             className="d-inline border-0 me-2"
                             style={{ width: "1rem", height: "1rem" }}
-                            //   checked={selectedDepartments.includes(member.id)}
-                            //   onChange={() => handleCheckboxChange(member.id)}
+                            checked={selectedMembers.includes(member.id)}
+                            onChange={() => handleCheckboxChange(member.id)}
                           />
                           {member.fullname}
                         </td>
-                        <td className="text-center py-3">{member.email}</td>
-                        <td className="text-center py-3">
+                        <td className="text-center py-3 fs-09rem px-0">
+                          {member.email}
+                        </td>
+                        <td className="text-center py-3 fs-09rem px-0">
                           {formatDateToIST(member.created_at)}
                         </td>
-                        <td className="text-center py-3 text-capitalize">
+                        <td className="text-center py-3 text-capitalize px-0">
                           {member.role}
                         </td>
-                        <td className="text-center position-relative py-3">
+                        <td
+                          ref={(el) =>
+                            (editDeletePopupRefs.current[member.id] = el)
+                          }
+                          className="text-center position-relative py-3 px-0"
+                        >
                           <RxDotsHorizontal
                             className="fs-4 cursor-pointer"
                             onClick={() => {
@@ -386,7 +388,7 @@ export default function DepartmentMembers() {
                             }}
                           />
                           {editOrDeletePopUp[member.id] && (
-                            <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                            <div className="position-absolute top-75 start-50 translate-middle-x  z-1 border bg-white">
                               <Link to={`editMember/${memberId}`}>
                                 <h6
                                   className="py-3 px-5 border-bottom cursor-pointer"
@@ -397,9 +399,9 @@ export default function DepartmentMembers() {
                               </Link>
                               <h6
                                 className="py-3 px-5 text-red cursor-pointer"
-                                onClick={handleDelete}
+                                onClick={() => handleDelete(member.id)}
                               >
-                                Delete
+                                Remove
                               </h6>
                             </div>
                           )}
@@ -416,11 +418,8 @@ export default function DepartmentMembers() {
               >
                 <div>
                   <h4 className="text-secondary text-center">
-                    No Member found!
+                    {error?.response?.data?.message}
                   </h4>
-                  <p className="text-center text-secondary">
-                    Please search something else
-                  </p>
                 </div>
               </div>
             )}

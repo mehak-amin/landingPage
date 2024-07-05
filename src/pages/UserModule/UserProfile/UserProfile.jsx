@@ -123,20 +123,37 @@ export default function UserProfile() {
             <h4 className="mb-4 text-center">Personal Details</h4>
             <div className="text-center flex align-items-center justify-content-center">
               {formData.image ? (
-                <img
-                  src={
-                    isImage
-                      ? URL.createObjectURL(formData.image)
-                      : formData.image
-                  }
-                  alt=""
-                  className="mb-5 rounded-circle border"
-                  style={{
-                    width: "11rem",
-                    height: "11rem",
-                    objectFit: "cover",
-                  }}
-                />
+                <div>
+                  <img
+                    src={
+                      isImage
+                        ? URL.createObjectURL(formData.image)
+                        : formData.image
+                    }
+                    alt=""
+                    className="mb-5 rounded-circle border"
+                    style={{
+                      width: "11rem",
+                      height: "11rem",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <button
+                    onClick={handleFileUploadClick}
+                    className="btn btn-primary mt-2"
+                  >
+                    Change Picture
+                  </button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    ref={fileInputRef}
+                    style={{
+                      display: "none",
+                    }}
+                  />
+                </div>
               ) : (
                 <div
                   className="mb-5 rounded-circle border flex align-items-center justify-content-center position-relative"

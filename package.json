@@ -31,6 +31,7 @@
     "react-international-phone": "^4.3.0",
     "react-router-dom": "^6.0.0",
     "react-shimmer-effects": "^1.0.3",
+    "react-spinners": "^0.14.1",
     "react-timezone-select": "^3.2.5",
     "reactstrap": "^9.2.2",
     "recharts": "^2.12.6"

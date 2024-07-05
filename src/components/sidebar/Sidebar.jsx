@@ -50,7 +50,7 @@ function Sidebar({ isSideBarOpen, role }) {
     setActiveSubElement(subLink);
   };
 
-  // console.log(role);
+ 
   const adminOptions = [
     {
       heading: "Main menu",

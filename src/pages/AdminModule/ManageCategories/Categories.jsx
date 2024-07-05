@@ -4,12 +4,13 @@ import SortButton from "../../../components/Button/SortButton";
 import SearchInput from "../../../components/SearchInput";
 import Header from "../../../components/Header";
 import ModalComponent from "../../../components/Modal/ModalComponent";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Categories() {
   const [deletePopUp, setDeletePopUp] = useState(false);
@@ -17,8 +18,11 @@ export default function Categories() {
   const [isAddCategory, setIsAddCategory] = useState(false);
   const [search, setSearch] = useState("");
   const [isSort, setIsSort] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
+  const [sortCriteria, setSortCriteria] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
+  const [isActive, setIsActive] = useState(0);
   const [id, setId] = useState(false);
 
   const [singleCategoryData, setSingleCategoryData] = useState({
@@ -27,9 +31,11 @@ export default function Categories() {
   const [newCategory, setNewCategory] = useState({
     type: "",
   });
+  const sortPopupRef = useRef(null);
+  const editDeletePopupRefs = useRef({});
 
   const token = localStorage.getItem("token");
-  let url = `${BASE_URI}/category?search=${search}`;
+  let url = `${BASE_URI}/category?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
 
   const fetchOptions = {
     headers: {
@@ -39,6 +45,33 @@ export default function Categories() {
 
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
   const categoryData = data?.data?.appCategories || [];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sortPopupRef.current &&
+        !sortPopupRef.current.contains(event.target)
+      ) {
+        setIsSort(false);
+      }
+      Object.keys(editDeletePopupRefs.current).forEach((id) => {
+        if (
+          editDeletePopupRefs.current[id] &&
+          !editDeletePopupRefs.current[id].contains(event.target)
+        ) {
+          setEditOrDeletePopUp((prev) => ({
+            ...prev,
+            [id]: false,
+          }));
+        }
+      });
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const getSingleCategory = async () => {
     try {
@@ -56,12 +89,12 @@ export default function Categories() {
 
       // console.log(response.data.data);
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
   const handleEditCategory = async () => {
-    console.log(id);
+    // console.log(id);
     try {
       await axios({
         method: "PATCH",
@@ -75,45 +108,38 @@ export default function Categories() {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      // console.log(response);
+      toast.success("Category updated");
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
   const handleDeleteCategory = async () => {
     try {
-      // console.log(id);
-      const response = await axios({
-        method: selectedCategories?.length === 0 ? "PATCH" : "DELETE",
-        url:
-          selectedCategories?.length === 0
-            ? `${BASE_URI}/category/${id}`
-            : `${BASE_URI}/category`,
-        data:
-          selectedCategories?.length === 0
-            ? { is_active: 0 }
-            : { ids: selectedCategories },
+      await axios({
+        method: "DELETE",
+        url: `${BASE_URI}/category`,
+        // data: { ids: [id] },
+        data: { is_active: isActive === 0 ? 1 : 0 },
 
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      // fetchDepartments();
-      refetch();
       setDeletePopUp(false);
       setEditOrDeletePopUp(false);
       setSelectedCategories([]);
-      console.log(response);
+      toast.success("Category deleted");
     } catch (err) {
       console.log(err);
+      toast.error(err?.response?.data?.message);
     }
   };
 
   const handleCreateCategory = async () => {
     // console.log(newAppData);
     try {
-      const response = await axios({
+      await axios({
         method: "POST",
         url: `${BASE_URI}/category`,
         data: newCategory,
@@ -126,9 +152,9 @@ export default function Categories() {
       setNewCategory({
         type: "",
       });
-      console.log(response);
+      toast.success("Category created successfully");
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
@@ -139,7 +165,8 @@ export default function Categories() {
     }));
   };
 
-  const handleDelete = () => {
+  const handleDelete = (activeStatus) => {
+    setIsActive(activeStatus);
     setDeletePopUp(!deletePopUp);
   };
   const handleCloseDelete = () => {
@@ -174,6 +201,13 @@ export default function Categories() {
   const toggleAddCategory = () => {
     setIsAddCategory(!isAddCategory);
   };
+  const handleSortOrderChange = (event) => {
+    setSortOrder(event.target.value);
+  };
+
+  const handleSortCriteriaChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
 
   return (
     <div className="wrapper-div-departments">
@@ -183,11 +217,12 @@ export default function Categories() {
           handleClose={handleCloseDelete}
           handleClick={handleDeleteCategory}
           btn1="Cancel"
-          btn2="Delete"
+          btn2={isActive === 0 ? "Enable" : "Disable"}
         >
           <div className="py-3">
             <h6 className="text-center mb-2">
-              Do you really want to remove the categories that you have chosen?
+              Do you really want to enable/diable the categories that you have
+              chosen?
             </h6>
             <h6 className="text-center">There is no turning back.</h6>
           </div>
@@ -261,6 +296,7 @@ export default function Categories() {
 
         <div className="d-flex gap-4 mt-3 mt-md-0">
           <div
+            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -273,11 +309,11 @@ export default function Categories() {
             >
               <div className="px-3 py-2">
                 <select
-                  //   value={sortCriteria}
-                  //   onChange={handleSortCriteriaChange}
+                  value={sortCriteria}
+                  onChange={handleSortCriteriaChange}
                   className="py-1 rounded"
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     --Select--
                   </option>
                   <option value="category_name">Category Name</option>
@@ -289,8 +325,8 @@ export default function Categories() {
                   <input
                     type="radio"
                     value="asc"
-                    // checked={sortOrder === "asc"}
-                    // onChange={handleSortOrderChange}
+                    checked={sortOrder === "asc"}
+                    onChange={handleSortOrderChange}
                   />
                   Ascending <IoIosArrowRoundUp />
                 </label>
@@ -298,100 +334,84 @@ export default function Categories() {
                   <input
                     type="radio"
                     value="desc"
-                    // checked={sortOrder === "desc"}
-                    // onChange={handleSortOrderChange}
+                    checked={sortOrder === "desc"}
+                    onChange={handleSortOrderChange}
                   />
                   Descending <IoIosArrowRoundDown />
                 </label>
-              </div>
-              <div className="d-flex gap-4 align-items-center px-3 py-2">
-                <button
-                  className=" border px-3 text-center py-1 rounded fw-light shadow cursor-pointer fs-5 bg-transparent"
-                  //   onClick={() => setIsFilter(false)}
-                >
-                  Reset
-                </button>
-                <button
-                  className=" border  text-center px-3 py-1 rounded bg-gray text-white shadow cursor-pointer fs-5"
-                  //   onClick={() => setIsFilter(true)}
-                >
-                  Apply
-                </button>
               </div>
             </div>
           )}
         </div>
       </div>
 
+
       {isLoading ? (
         <ShimmerTable row={5} col={5} />
       ) : (
-        <div style={{ overflowX: "auto" }}>
-          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
-            <div className="top-div-bottom-departments py-3">
-              <div className="left-top-div-bottom-departments">
-                <h5
-                  //   onClick={handleSelectAll}
-                  className="cursor-pointer"
-                >
-                  Select All
-                </h5>
-              </div>
-              <div className="right-top-div-bottom-departments">
-                <h5>{selectedCategories.length} Departments Selected</h5>
-                <h6>
-                  <RiDeleteBin6Line
-                    className="fs-3"
-                    // onClick={handleDelete}
-                  />
-                </h6>
-              </div>
+        
+      <div style={{ overflowX: "auto" }}>
+        <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+          <div className="top-div-bottom-departments py-3">
+            <div className="left-top-div-bottom-departments">
+              <h5
+                //   onClick={handleSelectAll}
+                className="cursor-pointer text-decoration-none"
+              >
+                Categories List
+              </h5>
             </div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="py-3">Category Name</th>
-                  <th className="py-3">Change Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categoryData?.map((category) => {
-                  return (
-                    <tr key={category.id}>
-                      <td className="py-3 text-center text-capitalize">
-                        {category.type}
-                      </td>
-                      <td className="text-center position-relative py-3">
-                        <RxDotsHorizontal
-                          className="fs-4 cursor-pointer"
-                          onClick={() => {
-                            toggleEditOrDeletePopUp(category.id);
-                            setId(category.id);
-                          }}
-                        />
-                        {editOrDeletePopUp[category.id] && (
-                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                            <h6
-                              className="py-3 px-5 border-bottom cursor-pointer"
-                              onClick={handleEdit}
-                            >
-                              Edit
-                            </h6>
-                            <h6
-                              className="py-3 px-5 text-red cursor-pointer"
-                              onClick={handleDelete}
-                            >
-                              Delete
-                            </h6>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
           </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th className="py-3 text-center">Category Name</th>
+                <th className="py-3 text-center">Change Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categoryData?.map((category) => {
+                return (
+                  <tr key={category.id}>
+                    <td className="py-3 text-center text-capitalize">
+                      {category.type}
+                    </td>
+                    <td
+                      ref={(el) =>
+                        (editDeletePopupRefs.current[category.id] = el)
+                      }
+                      className="text-center position-relative py-3"
+                    >
+                      <RxDotsHorizontal
+                        className="fs-4 cursor-pointer"
+                        onClick={() => {
+                          toggleEditOrDeletePopUp(category.id);
+                          setId(category.id);
+                        }}
+                      />
+                      {editOrDeletePopUp[category.id] && (
+                        <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                          <h6
+                            className="py-3 px-5 border-bottom cursor-pointer"
+                            onClick={handleEdit}
+                          >
+                            Edit
+                          </h6>
+                          <h6
+                            className="py-3 px-5 text-red cursor-pointer"
+                            onClick={() => handleDelete(category.is_active)}
+                          >
+                            {category.is_active === 0 ? "Enable" : "Disable"}
+                          </h6>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
         </div>
       )}
     </div>

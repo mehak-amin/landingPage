@@ -46,8 +46,8 @@ const BarChartComponent = ({ barData }) => {
   if (barData?.length === 0) {
     return (
       <div
-        className="text-center h-100 d-flex justify-content-center align-items-center px-4 mb-4"
-        style={{ border: "4px dashed #efecec" }}
+        className="text-center d-flex justify-content-center align-items-center px-4 mb-5"
+        style={{ border: "4px dashed #efecec", height: "20rem" }}
       >
         <div>
           <h4>No, Bar Data found</h4>
@@ -64,7 +64,7 @@ const BarChartComponent = ({ barData }) => {
       <BarChart
         width={
           chartData &&
-          (chartData.length <= 2
+          (chartData.length <= 5
             ? chartData.length * 60
             : chartData.length * 28)
         }
