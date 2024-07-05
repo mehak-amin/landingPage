@@ -274,7 +274,7 @@ function Sidebar({ isSideBarOpen, role }) {
                         toggleSettings();
                         toggleDropdown();
                       }}
-                      className={`nav-link menu-items ${
+                      className={`nav-link menu-items cursor-pointer ${
                         activeElement === item.link ? "active" : ""
                       }`}
                     >

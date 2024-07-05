@@ -7,6 +7,7 @@ import { faEnvelope, faEye } from "@fortawesome/free-solid-svg-icons";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URI from "../../../config";
+import toast, { Toaster } from "react-hot-toast";
 
 axios.defaults.withCredentials = true;
 function LoginPage({ role, setRole, user, setUser }) {
@@ -60,8 +61,14 @@ function LoginPage({ role, setRole, user, setUser }) {
 
         const token = response.data.token;
         localStorage.setItem("token", token);
+        toast.success("Login Successful", {
+          position: "top-right",
+        });
       })
       .catch((err) => {
+        toast.error("Login Failed", {
+          position: "top-right",
+        });
         // console.log(err);
         if (err?.response?.data?.message === "Invalid Credentials") {
           setMessage("Incorrect Password");
@@ -207,6 +214,7 @@ function LoginPage({ role, setRole, user, setUser }) {
           </form>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

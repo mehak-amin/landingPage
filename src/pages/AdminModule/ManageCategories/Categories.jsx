@@ -8,6 +8,7 @@ import { useState } from "react";
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
 import { RxDotsHorizontal } from "react-icons/rx";
+import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 
 export default function Categories() {
@@ -19,6 +20,7 @@ export default function Categories() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
   const [id, setId] = useState(false);
+
   const [singleCategoryData, setSingleCategoryData] = useState({
     type: "",
   });
@@ -321,73 +323,77 @@ export default function Categories() {
         </div>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
-          <div className="top-div-bottom-departments py-3">
-            <div className="left-top-div-bottom-departments">
-              <h5
-                //   onClick={handleSelectAll}
-                className="cursor-pointer"
-              >
-                Select All
-              </h5>
+      {isLoading ? (
+        <ShimmerTable row={5} col={5} />
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+            <div className="top-div-bottom-departments py-3">
+              <div className="left-top-div-bottom-departments">
+                <h5
+                  //   onClick={handleSelectAll}
+                  className="cursor-pointer"
+                >
+                  Select All
+                </h5>
+              </div>
+              <div className="right-top-div-bottom-departments">
+                <h5>{selectedCategories.length} Departments Selected</h5>
+                <h6>
+                  <RiDeleteBin6Line
+                    className="fs-3"
+                    // onClick={handleDelete}
+                  />
+                </h6>
+              </div>
             </div>
-            <div className="right-top-div-bottom-departments">
-              <h5>{selectedCategories.length} Departments Selected</h5>
-              <h6>
-                <RiDeleteBin6Line
-                  className="fs-3"
-                  // onClick={handleDelete}
-                />
-              </h6>
-            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="py-3">Category Name</th>
+                  <th className="py-3">Change Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categoryData?.map((category) => {
+                  return (
+                    <tr key={category.id}>
+                      <td className="py-3 text-center text-capitalize">
+                        {category.type}
+                      </td>
+                      <td className="text-center position-relative py-3">
+                        <RxDotsHorizontal
+                          className="fs-4 cursor-pointer"
+                          onClick={() => {
+                            toggleEditOrDeletePopUp(category.id);
+                            setId(category.id);
+                          }}
+                        />
+                        {editOrDeletePopUp[category.id] && (
+                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                            <h6
+                              className="py-3 px-5 border-bottom cursor-pointer"
+                              onClick={handleEdit}
+                            >
+                              Edit
+                            </h6>
+                            <h6
+                              className="py-3 px-5 text-red cursor-pointer"
+                              onClick={handleDelete}
+                            >
+                              Delete
+                            </h6>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="py-3">Category Name</th>
-                <th className="py-3">Change Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categoryData?.map((category) => {
-                return (
-                  <tr key={category.id}>
-                    <td className="py-3 text-center text-capitalize">
-                      {category.type}
-                    </td>
-                    <td className="text-center position-relative py-3">
-                      <RxDotsHorizontal
-                        className="fs-4 cursor-pointer"
-                        onClick={() => {
-                          toggleEditOrDeletePopUp(category.id);
-                          setId(category.id);
-                        }}
-                      />
-                      {editOrDeletePopUp[category.id] && (
-                        <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleEdit}
-                          >
-                            Edit
-                          </h6>
-                          <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={handleDelete}
-                          >
-                            Delete
-                          </h6>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }

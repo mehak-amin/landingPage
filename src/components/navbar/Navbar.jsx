@@ -13,6 +13,7 @@ import { useState } from "react";
 import axios from "axios";
 import BASE_URI from "../../../config";
 import { useNavigate, Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
   const [profilePopup, setProfilePopup] = useState(false);
@@ -42,7 +43,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           // setUser("");
           // setRole("");
 
-          alert("Logged out successfully");
+          toast.success("Logout Successful", {
+            position: "top-right",
+          });
 
           setTimeout(() => {
             navigate("/");
@@ -50,7 +53,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
         }
       })
       .catch((err) => {
-        console.error("Logout failed:", err);
+        toast.error("Logout Failed", {
+          position: "top-right",
+        });
       });
   };
   const renderPopover = () => (
@@ -144,6 +149,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           </div>
         </OverlayTrigger>
       </div>
+      <Toaster />
       <MessageBox
         showMessageBox={showMessageBox}
         toggleMessageBox={toggleMessageBox}

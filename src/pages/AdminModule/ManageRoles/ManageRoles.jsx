@@ -9,6 +9,8 @@ import SearchInput from "../../../components/SearchInput";
 import SortButton from "../../../components/Button/SortButton";
 import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
 import { Modal, Button, Form } from "react-bootstrap";
+import { ShimmerTable } from "react-shimmer-effects";
+import toast, { Toaster } from "react-hot-toast";
 
 function ManageRoles() {
   const [roles, setRoles] = useState([]); //roles container
@@ -144,6 +146,7 @@ function ManageRoles() {
       }));
 
       setRoles(fetchedRoles);
+
       // setErrorMessage("");//check
     } catch (error) {
       // setError(true);
@@ -172,6 +175,7 @@ function ManageRoles() {
 
       setRoleName(response.data.data.roles[0].role);
       console.log(response.data.data.roles[0].role);
+      setStatus(response.data.data.roles[0].is_active);
       setEditModal(true);
     } catch (err) {
       console.log(err);
@@ -196,6 +200,7 @@ function ManageRoles() {
         url: `${BASE_URI}/roles/${id}`,
         data: {
           role: roleName,
+          is_active: status,
         },
         headers: {
           Authorization: "Bearer " + token,
@@ -206,10 +211,14 @@ function ManageRoles() {
       // console.log(roleName);
       fetchRoles();
 
-      // refetch();
       setEditModal(false);
-      // console.log(response);
+      toast.success("Roles updated successfully!", {
+        position: "top-right",
+      });
     } catch (err) {
+      toast.error("Failed to update role", {
+        position: "top-right",
+      });
       console.log(err);
     }
   };
@@ -251,9 +260,16 @@ function ManageRoles() {
           },
         }
       );
+      fetchRoles();
       console.log(response);
       console.log("Role deleting response:", response.data);
+      toast.success("Roles deleted successfully!", {
+        position: "top-right",
+      });
     } catch (err) {
+      toast.error("Failed deleting role", {
+        position: "top-right",
+      });
       console.error("Error deleting role:", err);
     }
   };
@@ -279,7 +295,7 @@ function ManageRoles() {
           );
         })
       );
-
+      fetchRoles();
       // After successful deletion, update state or fetch roles again
       // For example, refetch roles after deletion
       // fetchRoles();
@@ -424,117 +440,129 @@ function ManageRoles() {
         </div>
 
         {/*---------------------main UI -----------------------*/}
-        <div
-          className="d-flex justify-content-between align-items-center mb-2 p-2"
-          style={{ backgroundColor: "#d3d3d3" }}
-        >
+        {loading ? (
+          <ShimmerTable row={5} col={5} />
+        ) : (
           <div>
-            <a
-              href="#"
-              className="text-white fw-medium underline-clickable"
-              onClick={handleSelectAll}
+            <div
+              className="d-flex justify-content-between align-items-center mb-2 p-2"
+              style={{ backgroundColor: "#d3d3d3" }}
             >
-              Select all
-            </a>
-          </div>
-          <div className="selected-delete-holder d-flex align-items-center gap-3">
-            <span className="text-white fw-medium">
-              {selectedRoles.length} Roles Selected
-            </span>
-            <button
-              className="btn-transparent p-2"
-              onClick={handleDeleteSelectedRoles}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        </div>
-        {/* ------------------------table------------------------- */}
-        <div className=" table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th className="text-start pl-2">Role Name</th>
-                <th className="text-center">Created</th>
-                <th className="text-center">Status</th>
-                <th className="text-center">Edit / Delete</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    Loading...
-                  </td>
-                </tr>
-              ) : errorMessage ? (
-                <tr>
-                  <td colSpan="4">{errorMessage}</td>
-                </tr>
-              ) : (
-                roles.map((role) => (
-                  <tr key={role.id}>
-                    <td className="text-start ">
-                      <input
-                        type="checkbox"
-                        checked={selectedRoles.includes(role.id)}
-                        onChange={() => handleCheckboxChange(role.id)}
-                      />
-                      <span className="ml-2">{role.role}</span>
-                    </td>
-                    <td className="text-center">{role.created_at}</td>
-                    <td
-                      className={
-                        role.is_active === 1
-                          ? "text-success text-center text-decoration-underline"
-                          : "text-danger text-center text-decoration-underline"
-                      }
-                    >
-                      {role.is_active === 1 ? "Active" : "Inactive"}
-                    </td>
-
-                    <td
-                      className="text-center position-relative"
-                      onClick={() => {
-                        toggleEditOrDeletePopUp(role.id);
-                        setId(role.id);
-                      }}
-                    >
-                      <FaEllipsisH />
-                      {editOrDeletePopUp[role.id] && (
-                        <div
-                          className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white"
-                          ref={popupRefs}
-                        >
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleShowEdit}
-                          >
-                            Edit
-                          </h6>
-                          <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={() => handleDeleteRoles(role.id)}
-                          >
-                            Delete
-                          </h6>
-                        </div>
-                      )}
-                    </td>
+              <div>
+                <a
+                  href="#"
+                  className="text-white fw-medium underline-clickable"
+                  onClick={handleSelectAll}
+                >
+                  Select all
+                </a>
+              </div>
+              <div className="selected-delete-holder d-flex align-items-center gap-3">
+                <span className="text-white fw-medium">
+                  {selectedRoles.length} Roles Selected
+                </span>
+                <button
+                  className="btn-transparent p-2"
+                  onClick={handleDeleteSelectedRoles}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            </div>
+            {/* ------------------------table------------------------- */}
+            <div className=" table-responsive">
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th className="text-start pl-2">Role Name</th>
+                    <th className="text-center">Created</th>
+                    <th className="text-center">Status</th>
+                    <th className="text-center">Edit / Delete</th>
                   </tr>
-                ))
+                </thead>
+
+                <tbody>
+                  {
+                    // loading ? (
+                    //   <tr>
+                    //     <td colSpan="4" className="text-center">
+                    //       Loading...
+                    //     </td>
+                    //   </tr>
+                    // ) :
+                    errorMessage ? (
+                      <tr>
+                        <td colSpan="4">{errorMessage}</td>
+                      </tr>
+                    ) : (
+                      roles.map((role) => (
+                        <tr key={role.id}>
+                          <td className="text-start ">
+                            <input
+                              type="checkbox"
+                              checked={selectedRoles.includes(role.id)}
+                              onChange={() => handleCheckboxChange(role.id)}
+                            />
+                            <span className="ml-2">{role.role}</span>
+                          </td>
+                          <td className="text-center">{role.created_at}</td>
+                          <td
+                            className={
+                              role.is_active === 1
+                                ? "text-success text-center text-decoration-underline"
+                                : "text-danger text-center text-decoration-underline"
+                            }
+                          >
+                            {role.is_active === 1 ? "Active" : "Inactive"}
+                          </td>
+
+                          <td
+                            className="text-center position-relative"
+                            onClick={() => {
+                              toggleEditOrDeletePopUp(role.id);
+                              setId(role.id);
+                            }}
+                          >
+                            <FaEllipsisH />
+                            {editOrDeletePopUp[role.id] && (
+                              <div
+                                className="position-absolute top-50 right-10 translate-middle-x  z-3 border bg-white"
+                                ref={popupRefs}
+                              >
+                                <h6
+                                  className="py-3 px-5 border-bottom cursor-pointer"
+                                  onClick={handleShowEdit}
+                                >
+                                  Edit
+                                </h6>
+                                <h6
+                                  className="py-3 px-5 text-red cursor-pointer"
+                                  onClick={() => handleDeleteRoles(role.id)}
+                                >
+                                  Delete
+                                </h6>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )
+                  }
+                </tbody>
+                {/* )} */}
+              </table>
+              <Toaster position="top-right" />
+              {showCreateModal && (
+                <CreateRoles
+                  handleShowCreate={handleShowCreate}
+                  handleCloseCreate={handleCloseCreate}
+                  fetchRoles={fetchRoles}
+                  showToast={toast}
+                />
               )}
-            </tbody>
-            {/* )} */}
-          </table>
-          {showCreateModal && (
-            <CreateRoles
-              handleShowCreate={handleShowCreate}
-              handleCloseCreate={handleCloseCreate}
-            />
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

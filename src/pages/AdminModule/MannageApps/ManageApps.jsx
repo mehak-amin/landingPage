@@ -7,7 +7,7 @@ import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
-
+import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 import ModalComponent from "../../../components/Modal/ModalComponent";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -431,38 +431,41 @@ const ManageApps = () => {
         </div>
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
-          <div className="top-div-bottom-departments py-3">
-            <div className="text-white px-3 px-sm-5">
-              <h5 className="cursor-pointer">Applications List</h5>
+      {isLoading ? (
+        <ShimmerTable row={5} col={5} />
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+            <div className="top-div-bottom-departments py-3">
+              <div className="text-white px-3 px-sm-5">
+                <h5 className="cursor-pointer">Applications List</h5>
+              </div>
             </div>
-          </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="text-start px-3 ps-5 py-3">App name</th>
-                <th className="py-3 text-center">Category</th>
-                <th className="py-3 text-center">Type</th>
-                <th className="py-3 text-center">Change Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appList?.map((item) => {
-                const categoryColor = getCategoryColor(item?.category);
-                return (
-                  <tr key={item?.id}>
-                    <td className="py-3 ps-5 w-25">
-                      <div className="d-flex align-items-center gap-2">
-                        {/* <input
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="text-start px-3 ps-5 py-3">App name</th>
+                  <th className="py-3 text-center">Category</th>
+                  <th className="py-3 text-center">Type</th>
+                  <th className="py-3 text-center">Change Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appList?.map((item) => {
+                  const categoryColor = getCategoryColor(item?.category);
+                  return (
+                    <tr key={item?.id}>
+                      <td className="py-3 ps-5 w-25">
+                        <div className="d-flex align-items-center gap-2">
+                          {/* <input
                           type="checkbox"
                           className="border-0"
                           style={{ width: "1rem", height: "1rem" }}
                           checked={selectedApps.includes(item.id)}
                           onChange={() => handleCheckboxChange(item.id)}
                         />{" "} */}
-                        <p className="mb-0">{item?.application_name}</p>
-                        {/* <img
+                          <p className="mb-0">{item?.application_name}</p>
+                          {/* <img
                           src={item?.url}
                           alt=""
                           style={{
@@ -471,57 +474,58 @@ const ManageApps = () => {
                             objectFit: "cover",
                           }}
                         /> */}
-                      </div>
-                    </td>
-                    <td className="text-center text-capitalize py-3">
-                      <p
-                        className="mb-0"
-                        style={{ color: categoryColor, fontWeight: "500" }}
+                        </div>
+                      </td>
+                      <td className="text-center text-capitalize py-3">
+                        <p
+                          className="mb-0"
+                          style={{ color: categoryColor, fontWeight: "500" }}
+                        >
+                          {item?.category}
+                        </p>
+                      </td>
+                      <td className="text-center text-capitalize py-3">
+                        {item?.type}
+                      </td>
+                      <td
+                        className="text-center position-relative py-3"
+                        // onClick={() => {
+                        //   toggleEditOrDeletePopUp(item.id);
+                        //   setId(item.id);
+                        // }}
                       >
-                        {item?.category}
-                      </p>
-                    </td>
-                    <td className="text-center text-capitalize py-3">
-                      {item?.type}
-                    </td>
-                    <td
-                      className="text-center position-relative py-3"
-                      // onClick={() => {
-                      //   toggleEditOrDeletePopUp(item.id);
-                      //   setId(item.id);
-                      // }}
-                    >
-                      <RxDotsHorizontal
-                        className="fs-4 cursor-pointer"
-                        onClick={() => {
-                          toggleEditOrDeletePopUp(item.id);
-                          setId(item.id);
-                        }}
-                      />
-                      {editOrDeletePopUp[item.id] && (
-                        <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleEdit}
-                          >
-                            Edit
-                          </h6>
-                          {/* <h6
+                        <RxDotsHorizontal
+                          className="fs-4 cursor-pointer"
+                          onClick={() => {
+                            toggleEditOrDeletePopUp(item.id);
+                            setId(item.id);
+                          }}
+                        />
+                        {editOrDeletePopUp[item.id] && (
+                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                            <h6
+                              className="py-3 px-5 border-bottom cursor-pointer"
+                              onClick={handleEdit}
+                            >
+                              Edit
+                            </h6>
+                            {/* <h6
                             className="py-3 px-5 text-red cursor-pointer"
                             onClick={handleDelete}
                           >
                             Delete
                           </h6> */}
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
