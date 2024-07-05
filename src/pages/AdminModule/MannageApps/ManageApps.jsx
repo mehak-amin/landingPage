@@ -420,17 +420,15 @@ const ManageApps = () => {
       </div>
 
 
-      {isLoading ? (
+     {isLoading ? (
         <ShimmerTable row={5} col={5} />
-
-      {appList?.length === 0 ? (
+      ) : appList?.length === 0 ? (
         <div
           className="bg-white flex align-items-center justify-content-center"
           style={{ height: "20rem" }}
         >
           <h4 className="text-secondary">No Application found</h4>
         </div>
-
       ) : (
         <div style={{ overflowX: "auto" }}>
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
@@ -456,22 +454,22 @@ const ManageApps = () => {
                       <td className="py-3 ps-5 w-25">
                         <div className="d-flex align-items-center gap-2">
                           {/* <input
-                          type="checkbox"
-                          className="border-0"
-                          style={{ width: "1rem", height: "1rem" }}
-                          checked={selectedApps.includes(item.id)}
-                          onChange={() => handleCheckboxChange(item.id)}
-                        />{" "} */}
+                        type="checkbox"
+                        className="border-0"
+                        style={{ width: "1rem", height: "1rem" }}
+                        checked={selectedApps.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />{" "} */}
                           <p className="mb-0">{item?.application_name}</p>
                           {/* <img
-                          src={item?.url}
-                          alt=""
-                          style={{
-                            height: "1.2rem",
-                            width: "1.2rem",
-                            objectFit: "cover",
-                          }}
-                        /> */}
+                        src={item?.url}
+                        alt=""
+                        style={{
+                          height: "1.2rem",
+                          width: "1.2rem",
+                          objectFit: "cover",
+                        }}
+                      /> */}
                         </div>
                       </td>
                       <td className="text-center text-capitalize py-3">
@@ -487,10 +485,7 @@ const ManageApps = () => {
                       </td>
                       <td
                         className="text-center position-relative py-3"
-
-
                         ref={(el) => (editPopupRefs.current[item.id] = el)}
-
                       >
                         <RxDotsHorizontal
                           className="fs-4 cursor-pointer"
@@ -500,7 +495,7 @@ const ManageApps = () => {
                           }}
                         />
                         {editOrDeletePopUp[item.id] && (
-                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                          <div className="position-absolute top-75 start-50 translate-middle-x z-3 border bg-white">
                             <h6
                               className="py-3 px-5 border-bottom cursor-pointer"
                               onClick={handleEdit}
@@ -508,11 +503,11 @@ const ManageApps = () => {
                               Edit
                             </h6>
                             {/* <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={handleDelete}
-                          >
-                            Delete
-                          </h6> */}
+                          className="py-3 px-5 text-red cursor-pointer"
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </h6> */}
                           </div>
                         )}
                       </td>
@@ -523,7 +518,7 @@ const ManageApps = () => {
             </table>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };
