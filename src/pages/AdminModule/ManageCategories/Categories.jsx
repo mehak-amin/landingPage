@@ -210,7 +210,7 @@ export default function Categories() {
   };
 
   return (
-    <div className="wrapper-div-departments">
+   <div className="wrapper-div-departments">
       {deletePopUp && (
         <ModalComponent
           heading="Delete App"
@@ -221,14 +221,13 @@ export default function Categories() {
         >
           <div className="py-3">
             <h6 className="text-center mb-2">
-              Do you really want to enable/diable the categories that you have
+              Do you really want to enable/disable the categories that you have
               chosen?
             </h6>
             <h6 className="text-center">There is no turning back.</h6>
           </div>
         </ModalComponent>
       )}
-
       {isEdited && (
         <ModalComponent
           heading="Edit App"
@@ -253,7 +252,6 @@ export default function Categories() {
           </div>
         </ModalComponent>
       )}
-
       {isAddCategory && (
         <ModalComponent
           heading="Add Category"
@@ -286,14 +284,12 @@ export default function Categories() {
         btnName="Add Category"
         handleClick={toggleAddCategory}
       />
-
-      <div className="d-md-flex gap-6  px-md-5 px-3 py-4 position-relative">
+      <div className="d-md-flex gap-6 px-md-5 px-3 py-4 position-relative">
         <SearchInput
           placeholder="Search Departments...!"
           value={search}
           setValue={setSearch}
         />
-
         <div className="d-flex gap-4 mt-3 mt-md-0">
           <div
             ref={sortPopupRef}
@@ -319,7 +315,6 @@ export default function Categories() {
                   <option value="category_name">Category Name</option>
                 </select>
               </div>
-
               <div className="d-flex flex-direction-column">
                 <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
                   <input
@@ -330,7 +325,7 @@ export default function Categories() {
                   />
                   Ascending <IoIosArrowRoundUp />
                 </label>
-                <label className="d-flex align-items-center gap-3 px-4 py-2 ">
+                <label className="d-flex align-items-center gap-3 px-4 py-2">
                   <input
                     type="radio"
                     value="desc"
@@ -344,74 +339,68 @@ export default function Categories() {
           )}
         </div>
       </div>
-
-
       {isLoading ? (
         <ShimmerTable row={5} col={5} />
       ) : (
-        
-      <div style={{ overflowX: "auto" }}>
-        <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
-          <div className="top-div-bottom-departments py-3">
-            <div className="left-top-div-bottom-departments">
-              <h5
-                //   onClick={handleSelectAll}
-                className="cursor-pointer text-decoration-none"
-              >
-                Categories List
-              </h5>
+        <div style={{ overflowX: "auto" }}>
+          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+            <div className="top-div-bottom-departments py-3">
+              <div className="left-top-div-bottom-departments">
+                <h5 className="cursor-pointer text-decoration-none">
+                  Categories List
+                </h5>
+              </div>
             </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="py-3 text-center">Category Name</th>
+                  <th className="py-3 text-center">Change Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categoryData?.map((category) => {
+                  return (
+                    <tr key={category.id}>
+                      <td className="py-3 text-center text-capitalize">
+                        {category.type}
+                      </td>
+                      <td
+                        ref={(el) =>
+                          (editDeletePopupRefs.current[category.id] = el)
+                        }
+                        className="text-center position-relative py-3"
+                      >
+                        <RxDotsHorizontal
+                          className="fs-4 cursor-pointer"
+                          onClick={() => {
+                            toggleEditOrDeletePopUp(category.id);
+                            setId(category.id);
+                          }}
+                        />
+                        {editOrDeletePopUp[category.id] && (
+                          <div className="position-absolute top-75 start-50 translate-middle-x z-3 border bg-white">
+                            <h6
+                              className="py-3 px-5 border-bottom cursor-pointer"
+                              onClick={handleEdit}
+                            >
+                              Edit
+                            </h6>
+                            <h6
+                              className="py-3 px-5 text-red cursor-pointer"
+                              onClick={() => handleDelete(category.is_active)}
+                            >
+                              {category.is_active === 0 ? "Enable" : "Disable"}
+                            </h6>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="py-3 text-center">Category Name</th>
-                <th className="py-3 text-center">Change Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categoryData?.map((category) => {
-                return (
-                  <tr key={category.id}>
-                    <td className="py-3 text-center text-capitalize">
-                      {category.type}
-                    </td>
-                    <td
-                      ref={(el) =>
-                        (editDeletePopupRefs.current[category.id] = el)
-                      }
-                      className="text-center position-relative py-3"
-                    >
-                      <RxDotsHorizontal
-                        className="fs-4 cursor-pointer"
-                        onClick={() => {
-                          toggleEditOrDeletePopUp(category.id);
-                          setId(category.id);
-                        }}
-                      />
-                      {editOrDeletePopUp[category.id] && (
-                        <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                          <h6
-                            className="py-3 px-5 border-bottom cursor-pointer"
-                            onClick={handleEdit}
-                          >
-                            Edit
-                          </h6>
-                          <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={() => handleDelete(category.is_active)}
-                          >
-                            {category.is_active === 0 ? "Enable" : "Disable"}
-                          </h6>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
         </div>
       )}
     </div>
