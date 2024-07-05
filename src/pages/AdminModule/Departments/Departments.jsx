@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./Departments.css";
 
 import axios from "axios";
@@ -15,6 +15,7 @@ import ModalComponent from "../../../components/Modal/ModalComponent";
 import { ShimmerTable } from "react-shimmer-effects";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 const Departments = () => {
   const [createDeparment, setcreateDeparment] = useState(false);
   const [departmentData, setDepartmentData] = useState("");
@@ -28,7 +29,11 @@ const Departments = () => {
   const [sortCriteria, setSortCriteria] = useState("");
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(false);
+  const [isActive, setIsActive] = useState(0);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
+  const sortPopupRef = useRef(null);
+  const editDeletePopupRefs = useRef({});
+
   const token = localStorage.getItem("token");
   let url = `${BASE_URI}/departments?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
 
@@ -39,7 +44,8 @@ const Departments = () => {
   };
 
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
-  const departmentsData = data?.data || [];
+  const departmentsData = useMemo(() => data?.data || [], [data]);
+  // console.log(error ? error.response.data.message : "");
 
   const getSingleDepartment = async () => {
     try {
@@ -54,17 +60,45 @@ const Departments = () => {
       setDepartmentData(response.data.data[0].department_name);
       console.log(response.data.data[0].department_name);
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (activeStatus) => {
+    setIsActive(activeStatus);
     setDeletePopUp(!deletePopUp);
   };
   const handleEdit = () => {
     getSingleDepartment();
     setIsEdited(!isEdited);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sortPopupRef.current &&
+        !sortPopupRef.current.contains(event.target)
+      ) {
+        setIsSort(false);
+      }
+      Object.keys(editDeletePopupRefs.current).forEach((id) => {
+        if (
+          editDeletePopupRefs.current[id] &&
+          !editDeletePopupRefs.current[id].contains(event.target)
+        ) {
+          setEditOrDeletePopUp((prev) => ({
+            ...prev,
+            [id]: false,
+          }));
+        }
+      });
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const toggleEditOrDeletePopUp = (id) => {
     setEditOrDeletePopUp((prevEditOrDeletePopUp) => ({
@@ -75,11 +109,12 @@ const Departments = () => {
 
   const togglecreateDeparment = () => {
     setcreateDeparment(!createDeparment);
+    setDeptName("");
   };
 
   const handleCreateDepartment = async () => {
     try {
-      const response = await axios({
+      await axios({
         method: "POST",
         url: `${BASE_URI}/departments`,
         data: {
@@ -91,17 +126,16 @@ const Departments = () => {
       });
       setcreateDeparment(false);
       refetch();
-
-      console.log(response);
+      toast.success("Department Created Successfully");
+      setDeptName("");
     } catch (err) {
-      console.log(err);
+      toast.error(err.response.data.message);
     }
   };
 
   const handleDeleteDepartment = async () => {
     try {
-      console.log(id);
-      const response = await axios({
+      await axios({
         method: selectedDepartments?.length === 0 ? "PATCH" : "DELETE",
         url:
           selectedDepartments?.length === 0
@@ -109,25 +143,27 @@ const Departments = () => {
             : `${BASE_URI}/departments`,
         data:
           selectedDepartments?.length === 0
-            ? { is_active: 0 }
+            ? { is_active: isActive === 0 ? 1 : 0 }
             : { ids: selectedDepartments },
 
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      // fetchDepartments();
+
       refetch();
       setDeletePopUp(false);
       setEditOrDeletePopUp(false);
       setSelectedDepartments([]);
-      console.log(response);
+      selectedDepartments.length === 0
+        ? toast.success(
+            isActive === 0 ? "Department Enabled" : "Department Disabled"
+          )
+        : toast.success("Selected departments deleted successfully!");
     } catch (err) {
       console.log(err);
     }
   };
-
-  // UPDATING DATA ON BACKEND WITH (PATCH)
 
   const handleEditDepartment = async () => {
     try {
@@ -145,7 +181,6 @@ const Departments = () => {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      // console.log(response);
     } catch (err) {
       console.log(err);
     }
@@ -188,22 +223,20 @@ const Departments = () => {
     );
   };
 
-  // console.log(error);
-
   return (
     <div className="wrapper-div-departments container-xxl px-0">
-      {/* <--------- DELETE POPUP STRUCTURE -----------> */}
       {deletePopUp && (
         <ModalComponent
           heading="Delete Department"
           handleClose={handleCloseDelete}
           handleClick={handleDeleteDepartment}
           btn1="Cancel"
-          btn2="Delete"
+          btn2={isActive === 0 ? "Enable" : "Disable"}
         >
           <div className="py-3">
             <h6 className="text-center mb-2">
-              Do you really want to remove the projects that you have chosen?
+              Do you really want to enable/disable the projects that you have
+              chosen?
             </h6>
             <h6 className="text-center">There is no turning back.</h6>
           </div>
@@ -249,6 +282,7 @@ const Departments = () => {
 
         <div className="d-flex gap-4 mt-3 mt-md-0">
           <div
+            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -326,7 +360,7 @@ const Departments = () => {
         <ShimmerTable row={5} col={5} />
       ) : (
         <div style={{ overflowX: "auto" }}>
-          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+          <div className="px-md-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
                 <h5 onClick={handleSelectAll} className="cursor-pointer">
@@ -341,75 +375,97 @@ const Departments = () => {
               </div>
             </div>
 
-            <div>
-              <table className="table table-borderless">
-                <thead>
-                  <tr>
-                    <th className="border-0 text-start py-2 ps-5">
-                      Department Name
-                    </th>
-                    <th className="border-0 py-2 text-center">Created</th>
-                    <th className="border-0 py-2 text-center">Members</th>
-                    <th className="border-0 py-2 text-center">Edit/Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {departmentsData &&
-                    departmentsData?.map((department, departmentIndex) => (
-                      <tr key={departmentIndex}>
-                        <td className="py-3 ps-5 text-capitalize">
-                          <input
-                            type="checkbox"
-                            className="d-inline border-0 me-2"
-                            style={{ width: "1rem", height: "1rem" }}
-                            checked={selectedDepartments.includes(
-                              department.id
-                            )}
-                            onChange={() => handleCheckboxChange(department.id)}
-                          />{" "}
-                          {department?.department_name}
-                        </td>
-                        <td className="text-center py-3">
-                          {formatDateToIST(department?.created_at)}
-                        </td>
-                        <td className="text-center py-3">
-                          <Link
-                            to={`departmentMembers/${department.id}`}
-                            className="link-dark text-decoration-none"
+            {error ? (
+              <div
+                className="bg-white flex align-items-center justify-content-center"
+                style={{ height: "20rem" }}
+              >
+                <h4 className="text-secondary">
+                  {error?.response?.data?.message}
+                </h4>
+              </div>
+            ) : (
+              <div>
+                <table className="table table-borderless">
+                  <thead>
+                    <tr>
+                      <th className="border-0 text-start py-2 ps-5">
+                        Department Name
+                      </th>
+                      <th className="border-0 py-2 text-center">Created</th>
+                      <th className="border-0 py-2 text-center">Members</th>
+                      <th className="border-0 py-2 text-center">Edit/Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {departmentsData &&
+                      departmentsData?.map((department, departmentIndex) => (
+                        <tr key={departmentIndex}>
+                          <td className="py-3 ps-5 text-capitalize">
+                            <input
+                              type="checkbox"
+                              className="d-inline border-0 me-2"
+                              style={{ width: "1rem", height: "1rem" }}
+                              checked={selectedDepartments.includes(
+                                department.id
+                              )}
+                              onChange={() =>
+                                handleCheckboxChange(department.id)
+                              }
+                            />{" "}
+                            {department?.department_name}
+                          </td>
+                          <td className="text-center py-3 px-0">
+                            {formatDateToIST(department?.created_at)}
+                          </td>
+                          <td className="text-center py-3 px-0">
+                            <Link
+                              to={`departmentMembers/${department.id}`}
+                              className="text-secondary fw-bold"
+                            >
+                              {department?.member_count}
+                            </Link>
+                          </td>
+                          <td
+                            ref={(el) =>
+                              (editDeletePopupRefs.current[department.id] = el)
+                            }
+                            className="text-center position-relative py-3 px-0"
                           >
-                            {department?.member_count}
-                          </Link>
-                        </td>
-                        <td className="text-center position-relative py-3">
-                          <RxDotsHorizontal
-                            className="fs-4 cursor-pointer"
-                            onClick={() => {
-                              toggleEditOrDeletePopUp(department.id);
-                              setId(department.id);
-                            }}
-                          />
-                          {editOrDeletePopUp[department.id] && (
-                            <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
-                              <h6
-                                className="py-3 px-5 border-bottom cursor-pointer"
-                                onClick={handleEdit}
-                              >
-                                Edit
-                              </h6>
-                              <h6
-                                className="py-3 px-5 text-red cursor-pointer"
-                                onClick={handleDelete}
-                              >
-                                Delete
-                              </h6>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+                            <RxDotsHorizontal
+                              className="fs-4 cursor-pointer"
+                              onClick={() => {
+                                toggleEditOrDeletePopUp(department.id);
+                                setId(department.id);
+                              }}
+                            />
+                            {editOrDeletePopUp[department.id] && (
+                              <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                                <h6
+                                  className="py-3 px-5 border-bottom cursor-pointer"
+                                  onClick={handleEdit}
+                                >
+                                  Edit
+                                </h6>
+                                <h6
+                                  className="py-3 px-5 text-red cursor-pointer"
+                                  onClick={() =>
+                                    handleDelete(department.is_active)
+                                  }
+                                >
+                                  {department.is_active === 0
+                                    ? "Enable"
+                                    : "Disable"}
+                                </h6>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}

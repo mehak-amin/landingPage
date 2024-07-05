@@ -28,6 +28,8 @@ import { useState } from "react";
 
 import ManageRoles from "./pages/AdminModule/ManageRoles/ManageRoles";
 import Settings from "./pages/AdminModule/Settings/Settings";
+import NotFound from "./pages/NotFound";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [role, setRole] = useState(() => {
@@ -41,66 +43,69 @@ function App() {
   });
 
   return (
-    <Routes>
-      <Route path="/signUp" element={<SignInPage />} />
-      <Route
-        path="/"
-        element={
-          <LoginPage
-            role={role}
-            setRole={setRole}
-            user={user}
-            setUser={setUser}
-          />
-        }
-      />
-
-      <Route path="/forgetPassword" element={<ForgetPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-
-      <Route path="/" element={<Layout role={role} user={user} />}>
-        <Route path="admin" element={<Admin />}>
-          <Route path="profile" element={<AdminProfile />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-
-          <Route path="manageApps" element={<ManageApps />} />
-
-          <Route path="teammates" element={<Teamates />} />
-          <Route path="manageCategories" element={<Categories />} />
-          <Route path="screenCaptures" element={<ScreenCaptures />} />
-          <Route
-            path="teammates/teammateDetails/:id"
-            element={<TeammateDetails />}
-          />
-
-          <Route path="workplanner" element={<WorkPlanner />} />
-
-          <Route path="settings" element={<Settings />}>
-            <Route path="departments" element={<Departments />} />
-            <Route
-              path="departments/departmentMembers/:id"
-              element={<DepartmentMembers />}
+    <>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/signUp" element={<SignInPage />} />
+        <Route
+          path="/"
+          element={
+            <LoginPage
+              role={role}
+              setRole={setRole}
+              user={user}
+              setUser={setUser}
             />
-            <Route
-              path="departments/departmentMembers/:id/editMember/:id"
-              element={<EditMember />}
-            />
+          }
+        />
+
+        <Route path="/forgetPassword" element={<ForgetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route path="/" element={<Layout role={role} user={user} />}>
+          <Route path="admin" element={<Admin />}>
+            <Route path="profile" element={<AdminProfile />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+
             <Route path="manageApps" element={<ManageApps />} />
-            <Route path="manageroles" element={<ManageRoles />} />
+
+            <Route path="teammates" element={<Teamates />} />
+            <Route path="manageCategories" element={<Categories />} />
+            <Route path="screenCaptures" element={<ScreenCaptures />} />
+            <Route
+              path="teammates/teammateDetails/:id"
+              element={<TeammateDetails />}
+            />
+
+            <Route path="workplanner" element={<WorkPlanner />} />
+
+            <Route path="settings" element={<Settings />}>
+              <Route path="departments" element={<Departments />} />
+              <Route
+                path="departments/departmentMembers/:id"
+                element={<DepartmentMembers />}
+              />
+              <Route
+                path="departments/departmentMembers/:id/editMember/:id"
+                element={<EditMember />}
+              />
+              <Route path="manageApps" element={<ManageApps />} />
+              <Route path="manageroles" element={<ManageRoles />} />
+            </Route>
+          </Route>
+          <Route path="users" element={<User />}>
+            <Route path="profile" element={<UserProfile />} />
+            <Route path="myScreen" element={<MyScreen />} />
+            <Route path="projects" element={<Ventures />} />
+
+            <Route path="newTask" element={<NewTask />} />
+
+            <Route path="projects/newTask" element={<NewTask />} />
           </Route>
         </Route>
-        <Route path="users" element={<User />}>
-          <Route path="profile" element={<UserProfile />} />
-          <Route path="myScreen" element={<MyScreen />} />
-          <Route path="projects" element={<Ventures />} />
-
-          <Route path="newTask" element={<NewTask />} />
-
-          <Route path="projects/newTask" element={<NewTask />} />
-        </Route>
-      </Route>
-      {/* </Route> */}
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

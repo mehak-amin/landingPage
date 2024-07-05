@@ -49,7 +49,7 @@ export default function Header({
 
   return (
     <div className="flex-885px justify-content-between px-md-5 px-3 py-4 bg-white">
-      <h5 className="mb-885px custom-shadow d-inline-flex px-3 py-2 rounded">
+      <h5 className="mb-885px custom-shadow d-inline-flex px-3 py-2 rounded text-capitalize">
         {heading}
       </h5>
 
