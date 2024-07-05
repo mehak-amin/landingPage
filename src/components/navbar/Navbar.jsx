@@ -12,7 +12,8 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import BASE_URI from "../../../config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
   const [profilePopup, setProfilePopup] = useState(false);
@@ -43,7 +44,9 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           // setUser("");
           // setRole("");
 
-          alert("Logged out successfully");
+          toast.success("Logout Successful", {
+            position: "top-right",
+          });
 
           setTimeout(() => {
             navigate("/");
@@ -51,26 +54,35 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
         }
       })
       .catch((err) => {
-        console.error("Logout failed:", err);
+        toast.error("Logout Failed", {
+          position: "top-right",
+        });
       });
   };
   const renderPopover = () => (
     <Popover id="popover-basic">
       <Popover.Body className="p-0">
-        <ul className="list-unstyled cursor-pointer fs-5">
-          <li className="py-2 px-3 border-bottom">Proflile</li>
+        <ul className="list-unstyled cursor-pointer fs-5 mb-0">
+          <li className="py-2 px-3 border-bottom">
+            <Link
+              to="admin/profile"
+              className="text-decoration-none text-black"
+            >
+              Profile
+            </Link>
+          </li>
           <li className="py-2 px-3 border-bottom">Report a Bug</li>
-          <li className="py-2 px-3 " onClick={logout}>
+          <li className="py-1 px-3 " onClick={logout}>
             Logout
           </li>
         </ul>
       </Popover.Body>
     </Popover>
   );
+
   const handleProfilePopup = () => {
     // console.log("profile");
     setProfilePopup(!profilePopup);
-
   };
 
   return (
@@ -116,9 +128,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           placement="bottom"
           overlay={renderPopover()}
         >
-
           <div className="profilePicture" onClick={handleProfilePopup}>
-
             {user?.picture === "" ? (
               <FontAwesomeIcon
                 icon={faUser}
@@ -139,20 +149,8 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             )}
           </div>
         </OverlayTrigger>
-
-       {profilePopup && (
-
-          <div className="position-absolute top-50 start-50 translate-middle-x  z-3 border bg-white">
-            <h6 className="py-3 px-5 border-bottom cursor-pointer">Profile</h6>
-            <h6 className="py-3 px-5 border-bottom cursor-pointer">
-              Report a Bug
-            </h6>
-            <h6 className="py-3 px-5 border-bottom cursor-pointer">Logout</h6>
-          </div>
-
-        )}
-
       </div>
+      <Toaster />
       <MessageBox
         showMessageBox={showMessageBox}
         toggleMessageBox={toggleMessageBox}

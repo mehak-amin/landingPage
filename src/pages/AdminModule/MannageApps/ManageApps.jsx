@@ -7,7 +7,7 @@ import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
-
+import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 import ModalComponent from "../../../components/Modal/ModalComponent";
 import { RxDotsHorizontal } from "react-icons/rx";
@@ -419,6 +419,10 @@ const ManageApps = () => {
         </div>
       </div>
 
+
+      {isLoading ? (
+        <ShimmerTable row={5} col={5} />
+
       {appList?.length === 0 ? (
         <div
           className="bg-white flex align-items-center justify-content-center"
@@ -426,6 +430,7 @@ const ManageApps = () => {
         >
           <h4 className="text-secondary">No Application found</h4>
         </div>
+
       ) : (
         <div style={{ overflowX: "auto" }}>
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
@@ -482,7 +487,10 @@ const ManageApps = () => {
                       </td>
                       <td
                         className="text-center position-relative py-3"
+
+
                         ref={(el) => (editPopupRefs.current[item.id] = el)}
+
                       >
                         <RxDotsHorizontal
                           className="fs-4 cursor-pointer"
@@ -515,7 +523,7 @@ const ManageApps = () => {
             </table>
           </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };

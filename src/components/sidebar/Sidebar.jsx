@@ -21,27 +21,36 @@ import {
   faLink,
   faAngleDown,
   faAngleUp,
+  faBuilding,
+  faFolderOpen,
+  faServer,
+  faUserCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { DropdownItem } from "reactstrap";
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
-
 function Sidebar({ isSideBarOpen, role }) {
   // const [openDropdowns, setOpenDropdowns] = useState({});
-
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeElement, setActiveElement] = useState("admin/dashboard");
+  const [activeSubElement, setActiveSubElement] = useState(null);
 
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
     setDropdownOpen(false); // Close the dropdown when settings are toggled
   };
-
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+  const handleActiveElement = (link) => {
+    setActiveElement(link);
+    setActiveSubElement(null);
+  };
+  const handleSubActiveElement = (subLink) => {
+    setActiveSubElement(subLink);
+  };
 
-  // console.log(role);
-
+ 
   const adminOptions = [
     {
       heading: "Main menu",
@@ -80,22 +89,22 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
-              icon: faPeopleGroup,
+              icon: faBuilding,
               text: "Departments",
               link: "admin/settings/departments",
             },
             {
-              icon: faPeopleGroup,
+              icon: faServer,
               text: "Manage Apps",
               link: "admin/settings/manageApps",
             },
-            // {
-            //   text: "Manage Categories",
-            //   link: "admin/settings/managecategories",
-            // },
-
             {
-              icon: faPeopleGroup,
+              icon: faFolderOpen,
+              text: "Manage Categories",
+              link: "admin/settings/manageCategories",
+            },
+            {
+              icon: faUserCog,
               text: "Manage Rolls",
               link: "admin/settings/manageroles",
             },
@@ -106,7 +115,6 @@ function Sidebar({ isSideBarOpen, role }) {
       isMiddle: false,
     },
   ];
-
   const managerOptions = [
     {
       heading: "Main menu",
@@ -157,7 +165,6 @@ function Sidebar({ isSideBarOpen, role }) {
             //   text: "Manage Categories",
             //   link: "admin/settings/managecategories",
             // },
-
             {
               icon: faPeopleGroup,
               text: "Manage Rolls",
@@ -170,7 +177,6 @@ function Sidebar({ isSideBarOpen, role }) {
       isMiddle: false,
     },
   ];
-
   const userOptions = [
     {
       heading: "Main menu",
@@ -203,24 +209,28 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
-              icon: faPeopleGroup,
+              // icon: faPeopleGroup,
               text: "Departments",
               link: "admin/settings/departments",
             },
             {
-              icon: faPeopleGroup,
+              // icon: faPeopleGroup,
               text: "Manage Apps",
               link: "admin/settings/manageapps",
             },
-            // {
-            //   text: "Manage Categories",
-            //   link: "admin/settings/managecategories",
-            // },
-
             {
-              icon: faPeopleGroup,
+              text: "Manage Categories",
+              link: "admin/settings/manageCategories",
+            },
+            {
+              // icon: faPeopleGroup,
               text: "Manage Rolls",
               link: "admin/settings/manageroles",
+            },
+            {
+              // icon: faPeopleGroup,
+              text: "Profile",
+              link: "admin/settings/profile",
             },
           ],
         },
@@ -237,7 +247,6 @@ function Sidebar({ isSideBarOpen, role }) {
   } else {
     sidebarOptions = userOptions;
   }
-
   return (
     <div className="sidebar">
       <div className="brand">
@@ -260,26 +269,27 @@ function Sidebar({ isSideBarOpen, role }) {
                 <div key={itemIndex} className=" ">
                   {item.text === "Settings" ? (
                     <div
-                      className={`nav-link menu-items ${
-                        location.pathname === item.link ? "active" : ""
-                      }`}
                       onClick={() => {
+                        handleActiveElement(item.link);
                         toggleSettings();
                         toggleDropdown();
                       }}
+                      className={`nav-link menu-items cursor-pointer ${
+                        activeElement === item.link ? "active" : ""
+                      }`}
                     >
                       <span className="icon-holder">
                         <FontAwesomeIcon
                           icon={item.icon}
                           style={{
-                            display: "inline-flex",
-                            justifyContent: "flex-start",
+                            // display: "inline-flex",
+                            // justifyContent: "flex-start",
                             width: "55px",
                           }}
+                          className="custom-icon"
                         />
                       </span>
-                      <span>{item.text} </span>
-
+                      <span className="sidebar-text">{item.text} </span>
                       <span className="ml-2">
                         <FontAwesomeIcon icon={faAngleDown} />
                       </span>
@@ -287,8 +297,13 @@ function Sidebar({ isSideBarOpen, role }) {
                   ) : (
                     <Link
                       to={item.link}
+                      onClick={() => {
+                        handleActiveElement(item.link);
+                        setDropdownOpen(false);
+                        setSettingsOpen(false);
+                      }}
                       className={`nav-link menu-items d-flex align-items-center justify-content-start ${
-                        location.pathname === item.link ? "active" : ""
+                        activeElement === item.link ? "active" : ""
                       }`}
                     >
                       <span className="icon-holder">
@@ -297,11 +312,9 @@ function Sidebar({ isSideBarOpen, role }) {
                           className="custom-icon  "
                         />
                       </span>
-
-                      <span className=" ">{item.text}</span>
+                      <span className="sidebar-text">{item.text}</span>
                     </Link>
                   )}
-
                   {item.dropdownItems &&
                     item.text === "Settings" &&
                     settingsOpen && (
@@ -310,8 +323,11 @@ function Sidebar({ isSideBarOpen, role }) {
                           <div key={subIdx}>
                             <Link
                               to={dropdownItem.link}
+                              onClick={() => {
+                                handleSubActiveElement(dropdownItem.link);
+                              }}
                               className={`nav-link menu-items ${
-                                location.pathname === dropdownItem.link
+                                activeSubElement === dropdownItem.link
                                   ? "active"
                                   : ""
                               }`}
@@ -322,8 +338,9 @@ function Sidebar({ isSideBarOpen, role }) {
                                   className="custom-icon"
                                 />
                               </span>
-
-                              {dropdownItem.text}
+                              <span className="sidebar-text">
+                                {dropdownItem.text}
+                              </span>
                             </Link>
                           </div>
                         ))}
@@ -338,5 +355,4 @@ function Sidebar({ isSideBarOpen, role }) {
     </div>
   );
 }
-
 export default Sidebar;

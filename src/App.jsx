@@ -31,6 +31,8 @@ import Settings from "./pages/AdminModule/Settings/Settings";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "react-hot-toast";
 
+import ScheduleTable from "./components/practice2/ScheduleTable";
+
 function App() {
   const [role, setRole] = useState(() => {
     return localStorage.getItem("role") || "";
@@ -59,6 +61,8 @@ function App() {
           }
         />
 
+
+
         <Route path="/forgetPassword" element={<ForgetPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
@@ -77,9 +81,12 @@ function App() {
               element={<TeammateDetails />}
             />
 
-            <Route path="workplanner" element={<WorkPlanner />} />
+
+         
 
             <Route path="settings" element={<Settings />}>
+              <Route path="manageCategories" element={<Categories />} />
+                 <Route path="workplanner" element={<WorkPlanner />} />
               <Route path="departments" element={<Departments />} />
               <Route
                 path="departments/departmentMembers/:id"

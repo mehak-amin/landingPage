@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import BASE_URI from "../../../../config";
 import useFetch from "../../../hooks/useFetch";
 import { RxDotsHorizontal } from "react-icons/rx";
+import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -23,6 +24,7 @@ export default function Categories() {
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
   const [isActive, setIsActive] = useState(0);
   const [id, setId] = useState(false);
+
   const [singleCategoryData, setSingleCategoryData] = useState({
     type: "",
   });
@@ -343,6 +345,11 @@ export default function Categories() {
         </div>
       </div>
 
+
+      {isLoading ? (
+        <ShimmerTable row={5} col={5} />
+      ) : (
+        
       <div style={{ overflowX: "auto" }}>
         <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
           <div className="top-div-bottom-departments py-3">
@@ -404,8 +411,9 @@ export default function Categories() {
               })}
             </tbody>
           </table>
+
         </div>
-      </div>
+      )}
     </div>
   );
 }
