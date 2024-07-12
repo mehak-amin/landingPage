@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image1 from "../../../assets/istockphoto-488558342-1024x1024.jpg";
 import Image2 from "../../../assets/istockphoto-841971598-1024x1024.jpg";
 import Image3 from "../../../assets/istockphoto-1180407386-1024x1024.jpg";
@@ -6,10 +6,7 @@ import Image4 from "../../../assets/istockphoto-1195544410-1024x1024.jpg";
 import Image5 from "../../../assets/istockphoto-1437816897-1024x1024.jpg";
 import Image6 from "../../../assets/istockphoto-1476170969-1024x1024.jpg";
 import "./CalendarDay.css";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faUser } from "@fortawesome/free-solid-svg-icons";
 
-//time in heading
 const times = [
   "10:00", //0
   "10:30", //1

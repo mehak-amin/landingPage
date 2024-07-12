@@ -26,7 +26,7 @@ export default function Screenshots({ data }) {
         </div>
       </div>
       {snaps?.length > 0 ? (
-        <div className="d-flex gap-5 flex-wrap p-5">
+        <div className="d-flex gap-4 flex-wrap p-5">
           {snaps?.map((item) => {
             return (
               <div key={item.id} className="position-relative">
@@ -60,7 +60,6 @@ export default function Screenshots({ data }) {
             <h5 className="text-center fw-light text-secondary">
               No, data found!
             </h5>
-            {/* <p>No, tracking for this date please select another date.</p> */}
           </div>
         </div>
       )}

@@ -105,7 +105,9 @@ const ManageApps = () => {
         type_id: response.data.data.logs.type,
       });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -123,9 +125,13 @@ const ManageApps = () => {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      toast.success("App updated successfully");
+      toast.success("App updated successfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -147,9 +153,13 @@ const ManageApps = () => {
         type: "",
         url: "",
       });
-      toast.success("App created Sucesfully");
+      toast.success("App created Sucesfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -216,7 +226,7 @@ const ManageApps = () => {
   };
 
   return (
-    <div className="wrapper-div-manageapps container-xxl p-0">
+    <div className="wrapper-div-manageapps container-xxxl p-0">
       {isEdited && (
         <ModalComponent
           heading="Edit App"
@@ -367,9 +377,8 @@ const ManageApps = () => {
           setValue={setSearch}
         />
 
-        <div className="d-flex gap-4 mt-3 mt-md-0">
+        <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
-            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -419,20 +428,19 @@ const ManageApps = () => {
         </div>
       </div>
 
-
       {isLoading ? (
-        <ShimmerTable row={5} col={5} />
-
-      {appList?.length === 0 ? (
+        <div className="px-sm-5 px-3">
+          <ShimmerTable row={6} col={5} />
+        </div>
+      ) : appList?.length === 0 ? (
         <div
           className="bg-white flex align-items-center justify-content-center"
           style={{ height: "20rem" }}
         >
           <h4 className="text-secondary">No Application found</h4>
         </div>
-
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="text-white px-3 px-sm-5">
@@ -456,22 +464,22 @@ const ManageApps = () => {
                       <td className="py-3 ps-5 w-25">
                         <div className="d-flex align-items-center gap-2">
                           {/* <input
-                          type="checkbox"
-                          className="border-0"
-                          style={{ width: "1rem", height: "1rem" }}
-                          checked={selectedApps.includes(item.id)}
-                          onChange={() => handleCheckboxChange(item.id)}
-                        />{" "} */}
+                        type="checkbox"
+                        className="border-0"
+                        style={{ width: "1rem", height: "1rem" }}
+                        checked={selectedApps.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />{" "} */}
                           <p className="mb-0">{item?.application_name}</p>
                           {/* <img
-                          src={item?.url}
-                          alt=""
-                          style={{
-                            height: "1.2rem",
-                            width: "1.2rem",
-                            objectFit: "cover",
-                          }}
-                        /> */}
+                        src={item?.url}
+                        alt=""
+                        style={{
+                          height: "1.2rem",
+                          width: "1.2rem",
+                          objectFit: "cover",
+                        }}
+                      /> */}
                         </div>
                       </td>
                       <td className="text-center text-capitalize py-3">
@@ -487,10 +495,7 @@ const ManageApps = () => {
                       </td>
                       <td
                         className="text-center position-relative py-3"
-
-
                         ref={(el) => (editPopupRefs.current[item.id] = el)}
-
                       >
                         <RxDotsHorizontal
                           className="fs-4 cursor-pointer"
@@ -500,7 +505,7 @@ const ManageApps = () => {
                           }}
                         />
                         {editOrDeletePopUp[item.id] && (
-                          <div className="position-absolute top-75 start-50 translate-middle-x  z-3 border bg-white">
+                          <div className="position-absolute top-75 start-50 translate-middle-x z-3 border bg-white">
                             <h6
                               className="py-3 px-5 border-bottom cursor-pointer"
                               onClick={handleEdit}
@@ -508,11 +513,11 @@ const ManageApps = () => {
                               Edit
                             </h6>
                             {/* <h6
-                            className="py-3 px-5 text-red cursor-pointer"
-                            onClick={handleDelete}
-                          >
-                            Delete
-                          </h6> */}
+                          className="py-3 px-5 text-red cursor-pointer"
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </h6> */}
                           </div>
                         )}
                       </td>
@@ -523,7 +528,7 @@ const ManageApps = () => {
             </table>
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };

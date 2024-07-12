@@ -1,0 +1,51 @@
+@keyframes typing {
+  from {
+    width: 0;
+    /* border-top: 0.15em solid white; */
+  }
+  to {
+    width: 100%;
+    /* border-top: 0.15em solid white; */
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: white;
+  }
+}
+
+.write-animation {
+  display: inline-block;
+  overflow: hidden;
+  /* border-top: 0.15em solid white; */
+  white-space: nowrap;
+  animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
+  width: 100%;
+}
+
+.delay-animation {
+  animation-delay: 4s;
+}
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 1s ease-out forwards;
+}
+
+.hidden {
+  opacity: 0;
+}

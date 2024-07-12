@@ -10,6 +10,8 @@ import ModalComponent from "../../../components/Modal/ModalComponent";
 import NoData from "../../../components/NoData";
 import { convertDate } from "../../../utils/formattingDate";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { ShimmerCategoryList } from "react-shimmer-effects";
 
 export default function ScreenCaptures() {
   const [date, setDate] = useState(new Date());
@@ -52,11 +54,12 @@ export default function ScreenCaptures() {
 
   useEffect(() => {
     const handleResize = () => {
-      const containerWidth = document.getElementById(
-        "department-container"
-      ).offsetWidth;
-      const itemsWidth = departments.length * 120;
-      setShowDropdown(itemsWidth > containerWidth);
+      const container = document.getElementById("department-container");
+      if (container) {
+        const containerWidth = container.offsetWidth;
+        const itemsWidth = departments.length * 120;
+        setShowDropdown(itemsWidth > containerWidth);
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -86,7 +89,7 @@ export default function ScreenCaptures() {
 
   const handleDeleteScreenshots = async () => {
     try {
-      const response = await axios({
+      await axios({
         method: "DELETE",
         url: `${BASE_URI}/snapshots/snap`,
         data: { ids: selectedScreenshots },
@@ -96,9 +99,13 @@ export default function ScreenCaptures() {
       });
       refetch();
       setIsDelete(false);
-      console.log(response.data);
+      toast.success("Screenshots deleted successfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      console.log(err);
+      toast.error(err.response.data.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -161,7 +168,7 @@ export default function ScreenCaptures() {
   };
 
   return (
-    <div className="container-xxl p-0">
+    <div className="container-xxxl p-0">
       {isDelete && (
         <ModalComponent
           heading="Delete Screenshots"
@@ -185,41 +192,48 @@ export default function ScreenCaptures() {
         selectedStartDate={date}
         setSelectedStartDate={setDate}
       />
-      <div className="bg-lightGray1">
-        <div
-          id="department-container"
-          className="px-sm-5 p-2 border-lightgreen custom-shadow"
-        >
-          <ul className="list-unstyled d-flex gap-3 mb-0">
-            {departments
-              .slice(0, showDropdown ? 1 : departments.length)
-              .map((dept) => (
-                <li
-                  key={dept.id}
-                  className={`p-2 rounded cursor-pointer ${
-                    activeDepartment === dept.id ? "bg-darkGray text-white" : ""
-                  }`}
-                  onClick={() => handleDepartmentChange(dept.id)}
-                >
-                  {dept.department_name}
-                </li>
-              ))}
-            {showDropdown && (
-              <div className="">
-                <select
-                  className="form-select h-100"
-                  onChange={(e) => handleDepartmentChange(e.target.value)}
-                  value={activeDepartment}
-                >
-                  {departments.slice(1).map((dept) => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.department_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-            {/* {!showDropdown && (
+      {isLoading ? (
+        <div className="px-sm-5 p-2">
+          <ShimmerCategoryList title items={6} categoryStyle="STYLE_SEVEN" />
+        </div>
+      ) : (
+        <div className="bg-lightGray1">
+          <div
+            id="department-container"
+            className="px-sm-5 p-2 border-lightgreen custom-shadow"
+          >
+            <ul className="list-unstyled d-flex gap-3 mb-0">
+              {departments
+                .slice(0, showDropdown ? 1 : departments.length)
+                .map((dept) => (
+                  <li
+                    key={dept.id}
+                    className={`p-2 rounded cursor-pointer ${
+                      activeDepartment === dept.id
+                        ? "bg-darkGray text-white"
+                        : ""
+                    }`}
+                    onClick={() => handleDepartmentChange(dept.id)}
+                  >
+                    {dept.department_name}
+                  </li>
+                ))}
+              {showDropdown && (
+                <div className="">
+                  <select
+                    className="form-select h-100"
+                    onChange={(e) => handleDepartmentChange(e.target.value)}
+                    value={activeDepartment}
+                  >
+                    {departments.slice(1).map((dept) => (
+                      <option key={dept.id} value={dept.id}>
+                        {dept.department_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {/* {!showDropdown && (
               <div className="d-none d-md-flex">
                 {departments.slice(1).map((dept) => (
                   <li
@@ -236,142 +250,149 @@ export default function ScreenCaptures() {
                 ))}
               </div>
             )} */}
-          </ul>
-        </div>
-
-        {screenCaptures?.length === 0 ? (
-          <div className="py-5 px-3 px-sm-5 rounded-2">
-            <NoData />
-          </div>
-        ) : (
-          <div className="py-5 px-3 px-sm-5 rounded-2">
-            <div className="px-sm-5 p-3 bg-graySecondary d-flex align-items-center justify-content-between rounded-top">
-              <div className="bg-white px-3 py-2 rounded-1 shadow fw-bolder">
-                <span className="d-custom-inline">Screenshots Selected</span>{" "}
-                {selectedScreenshots.length}
-              </div>
-              <div className="d-flex gap-3 align-items-center">
-                <button
-                  className="px-3 py-2 border-0 rounded-1 fw-bolder"
-                  onClick={() => setSelectAll((prevState) => !prevState)}
-                >
-                  {selectAll ? "Deselect all" : "Select all"}
-                </button>
-                <RiDeleteBin6Line
-                  className="fs-2 cursor-pointer"
-                  onClick={() => setIsDelete(true)}
-                />
-              </div>
-            </div>
-            <ul className="bg-white p-0 list-unstyled">
-              {screenCaptures?.map((capture) => {
-                const isVisible = visibleScreenshots[capture.user.id];
-                const selectedCount = countSelectedScreenshotsForUser(
-                  capture.user.id
-                );
-                return (
-                  <li key={capture.user.id} className="py-3 border-bottom px-3">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <div className="d-flex align-items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedUsers[capture.user.id] || false}
-                          onChange={() =>
-                            handleUserCheckboxChange(capture.user.id)
-                          }
-                          style={{ width: "1.2rem", height: "1.2rem" }}
-                        />
-                        {capture.user.picture === "" ? (
-                          <FaRegUserCircle className="fs-1 text-secondary" />
-                        ) : (
-                          <img
-                            src={capture.user.picture}
-                            alt="User"
-                            className="rounded-circle"
-                            style={{
-                              width: "2.5rem",
-                              height: "2.5rem",
-                              objectFit: "cover",
-                            }}
-                          />
-                        )}
-
-                        <div>
-                          <h5 className="text-capitalize fw-light">
-                            {capture.user.fullname === ""
-                              ? "no name"
-                              : capture.user.fullname}
-                          </h5>
-                          <p className="text-secondary mb-0">
-                            {selectedCount}/{capture.screenshots.length}
-                          </p>
-                        </div>
-                      </div>
-                      {isVisible ? (
-                        <BsArrowUpCircle
-                          className="fs-3 text-secondary cursor-pointer"
-                          onClick={() => toggleScreenshots(capture.user.id)}
-                        />
-                      ) : (
-                        <BsArrowDownCircle
-                          className="fs-3 text-secondary cursor-pointer"
-                          onClick={() => toggleScreenshots(capture.user.id)}
-                        />
-                      )}
-                    </div>
-                    <div
-                      className={`screenshot-container ${
-                        isVisible ? "show" : ""
-                      }`}
-                    >
-                      {isVisible && (
-                        <div className="scrollable-container">
-                          <div className="d-flex gap-3 py-3">
-                            {capture.screenshots.length === 0 ? (
-                              <p className="text-center">
-                                No Screenshot found...!
-                              </p>
-                            ) : (
-                              capture.screenshots.map((img) => (
-                                <div key={img.id} className="position-relative">
-                                  <input
-                                    type="checkbox"
-                                    className="position-absolute top-0 end-0 translate-middle-x bg-white z-2"
-                                    checked={selectedScreenshots.includes(
-                                      img.id
-                                    )}
-                                    onChange={() =>
-                                      handleScreenshotCheckboxChange(img.id)
-                                    }
-                                    style={{
-                                      width: "1.3rem",
-                                      height: "1.3rem",
-                                      cursor: "pointer",
-                                    }}
-                                  />
-                                  <img
-                                    src={img.screenshot_url}
-                                    alt=""
-                                    style={{
-                                      width: "15rem",
-                                      height: "15rem",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                </div>
-                              ))
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
             </ul>
           </div>
-        )}
-      </div>
+
+          {screenCaptures?.length === 0 ? (
+            <div className="py-5 px-3 px-sm-5 rounded-2">
+              <NoData />
+            </div>
+          ) : (
+            <div className="py-5 px-3 px-sm-5 rounded-2">
+              <div className="px-sm-5 p-3 bg-graySecondary d-flex align-items-center justify-content-between rounded-top">
+                <div className="bg-white px-3 py-2 rounded-1 shadow fw-bolder">
+                  <span className="d-custom-inline">Screenshots Selected</span>{" "}
+                  {selectedScreenshots.length}
+                </div>
+                <div className="d-flex gap-3 align-items-center">
+                  <button
+                    className="px-3 py-2 border-0 rounded-1 fw-bolder"
+                    onClick={() => setSelectAll((prevState) => !prevState)}
+                  >
+                    {selectAll ? "Deselect all" : "Select all"}
+                  </button>
+                  <RiDeleteBin6Line
+                    className="fs-2 cursor-pointer"
+                    onClick={() => setIsDelete(true)}
+                  />
+                </div>
+              </div>
+              <ul className="bg-white p-0 list-unstyled">
+                {screenCaptures?.map((capture) => {
+                  const isVisible = visibleScreenshots[capture.user.id];
+                  const selectedCount = countSelectedScreenshotsForUser(
+                    capture.user.id
+                  );
+                  return (
+                    <li
+                      key={capture.user.id}
+                      className="py-3 border-bottom px-3"
+                    >
+                      <div className="d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedUsers[capture.user.id] || false}
+                            onChange={() =>
+                              handleUserCheckboxChange(capture.user.id)
+                            }
+                            style={{ width: "1.2rem", height: "1.2rem" }}
+                          />
+                          {capture.user.picture === "" ? (
+                            <FaRegUserCircle className="fs-1 text-secondary" />
+                          ) : (
+                            <img
+                              src={capture.user.picture}
+                              alt="User"
+                              className="rounded-circle"
+                              style={{
+                                width: "2.5rem",
+                                height: "2.5rem",
+                                objectFit: "cover",
+                              }}
+                            />
+                          )}
+
+                          <div>
+                            <h5 className="text-capitalize fw-light">
+                              {capture.user.fullname === ""
+                                ? "no name"
+                                : capture.user.fullname}
+                            </h5>
+                            <p className="text-secondary mb-0">
+                              {selectedCount}/{capture.screenshots.length}
+                            </p>
+                          </div>
+                        </div>
+                        {isVisible ? (
+                          <BsArrowUpCircle
+                            className="fs-3 text-secondary cursor-pointer"
+                            onClick={() => toggleScreenshots(capture.user.id)}
+                          />
+                        ) : (
+                          <BsArrowDownCircle
+                            className="fs-3 text-secondary cursor-pointer"
+                            onClick={() => toggleScreenshots(capture.user.id)}
+                          />
+                        )}
+                      </div>
+                      <div
+                        className={`screenshot-container ${
+                          isVisible ? "show" : ""
+                        }`}
+                      >
+                        {isVisible && (
+                          <div className="scrollable-container">
+                            <div className="d-flex gap-3 py-3">
+                              {capture.screenshots.length === 0 ? (
+                                <p className="text-center">
+                                  No Screenshot found...!
+                                </p>
+                              ) : (
+                                capture.screenshots.map((img) => (
+                                  <div
+                                    key={img.id}
+                                    className="position-relative"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      className="position-absolute top-0 end-0 translate-middle-x bg-white z-2"
+                                      checked={selectedScreenshots.includes(
+                                        img.id
+                                      )}
+                                      onChange={() =>
+                                        handleScreenshotCheckboxChange(img.id)
+                                      }
+                                      style={{
+                                        width: "1.3rem",
+                                        height: "1.3rem",
+                                        cursor: "pointer",
+                                      }}
+                                    />
+                                    <img
+                                      src={img.screenshot_url}
+                                      alt=""
+                                      style={{
+                                        width: "15rem",
+                                        height: "15rem",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

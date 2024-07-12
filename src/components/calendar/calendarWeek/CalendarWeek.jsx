@@ -1,4 +1,3 @@
-import React from "react";
 import "./CalendarWeek.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -118,7 +117,6 @@ function CalendarWeek() {
   ];
   return (
     <>
-      {/* <div className="px-2 py-2 bg-body"> */}
       <div className="day-calandar d-flex py-2 bg-body">
         <div className=" width-20">
           <div className="px-4 py-3 fw-bold">Employees</div>
@@ -147,7 +145,6 @@ function CalendarWeek() {
         </div>
         <div className=" calendar">
           <div className="calendar-slider">
-            {/* <div className="calendar-content"> */}
             <ul className="d-flex align-items-center list-unstyled gap-5 m-0 px-4 py-1 fw-bold">
               <li className="text-center">
                 Monday <br />
@@ -210,7 +207,7 @@ function CalendarWeek() {
           </div>
         </div>
       </div>
-      <table class="table">
+      <table className="table">
         <thead>
           <tr>
             <th scope="col " className="px-4 py-3 fw-bold">

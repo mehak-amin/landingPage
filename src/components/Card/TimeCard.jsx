@@ -59,15 +59,10 @@ export default function TimeCard({ title, data }) {
           <div style={{ width: "100%", height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                // width={300}
-                // height={200}
-                // data={formattedData}
                 data={formattedData?.length === 1 ? dummyData : formattedData}
                 margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                {/* <XAxis dataKey="index" /> */}
-                {/* <YAxis /> */}
                 <Tooltip />
                 <Line
                   type="monotone"

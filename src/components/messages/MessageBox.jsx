@@ -1,4 +1,3 @@
-import React from "react";
 import "./Messagebox.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTimes } from "@fortawesome/free-solid-svg-icons";

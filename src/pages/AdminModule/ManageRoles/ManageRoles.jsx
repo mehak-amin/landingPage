@@ -10,7 +10,7 @@ import SortButton from "../../../components/Button/SortButton";
 import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
 import { Modal, Button, Form } from "react-bootstrap";
 import { ShimmerTable } from "react-shimmer-effects";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function ManageRoles() {
   const [roles, setRoles] = useState([]); //roles container
@@ -58,7 +58,6 @@ function ManageRoles() {
   //format date
   const formatDate = (apiDate) => {
     const date = new Date(apiDate);
-    console.log(date.toLocaleString()); //sabreena
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const months = [
       "Jan",
@@ -130,12 +129,12 @@ function ManageRoles() {
           Authorization: "Bearer " + token,
         },
       });
-      console.log(response);
-      console.log(response.data.data.roles);
+      // console.log(response);
+      // console.log(response.data.data.roles);
       response.data.data.roles.forEach((role) => {
-        console.log(role.role); // Logs each role name (e.g., "admin", "Manager", "user")
+        // console.log(role.role); // Logs each role name (e.g., "admin", "Manager", "user")
         setRoleName(role.role); //user
-        console.log(roleName); //user
+        // console.log(roleName); //user
       });
       // setError(false);
       setErrorMessage("");
@@ -151,7 +150,7 @@ function ManageRoles() {
     } catch (error) {
       // setError(true);
       setErrorMessage("No data found");
-      console.error("Error fetching roles:", error);
+      // console.error("Error fetching roles:", error);
     } finally {
       setLoading(false);
     }
@@ -174,11 +173,11 @@ function ManageRoles() {
       });
 
       setRoleName(response.data.data.roles[0].role);
-      console.log(response.data.data.roles[0].role);
+      // console.log(response.data.data.roles[0].role);
       setStatus(response.data.data.roles[0].is_active);
       setEditModal(true);
     } catch (err) {
-      console.log(err);
+      toast.error(err?.message);
     }
   };
 
@@ -245,9 +244,8 @@ function ManageRoles() {
 
   //------------------delete in editDelete-------------------------
   const handleDeleteRoles = async (id) => {
-    console.log("deleting");
     try {
-      const response = await axios.patch(
+      axios.patch(
         `${BASE_URI}/roles/${id}`,
         {
           // role: roleName,
@@ -261,8 +259,6 @@ function ManageRoles() {
         }
       );
       fetchRoles();
-      console.log(response);
-      console.log("Role deleting response:", response.data);
       toast.success("Roles deleted successfully!", {
         position: "top-right",
       });
@@ -270,15 +266,11 @@ function ManageRoles() {
       toast.error("Failed deleting role", {
         position: "top-right",
       });
-      console.error("Error deleting role:", err);
     }
   };
 
-  //----------------------delete selected🗑️------------------------
   const handleDeleteSelectedRoles = async () => {
-    console.log("delete all");
     try {
-      // Map through selectedRoles and send requests to set status to inactive
       await Promise.all(
         selectedRoles.map(async (roleId) => {
           await axios.patch(
@@ -296,19 +288,14 @@ function ManageRoles() {
         })
       );
       fetchRoles();
-      // After successful deletion, update state or fetch roles again
-      // For example, refetch roles after deletion
-      // fetchRoles();
-
-      // Clear the selectedRoles state after deletion
       setSelectedRoles([]);
     } catch (err) {
-      console.error("Error deleting selected roles:", err);
+      toast.error(err?.message);
     }
   };
 
   return (
-    <div className="manageRolesWrapper container mt-5 px-0">
+    <div className="manageRolesWrapper mt-5 container-xxxl px-0">
       <Header
         heading="Manage Roles"
         isDate={false}
@@ -441,7 +428,7 @@ function ManageRoles() {
 
         {/*---------------------main UI -----------------------*/}
         {loading ? (
-          <ShimmerTable row={5} col={5} />
+          <ShimmerTable row={6} col={5} />
         ) : (
           <div>
             <div
@@ -454,7 +441,7 @@ function ManageRoles() {
                   className="text-white fw-medium underline-clickable"
                   onClick={handleSelectAll}
                 >
-                  Select all
+                  {selectedRoles.length === 0 ? "Select all" : "Dselect all"}
                 </a>
               </div>
               <div className="selected-delete-holder d-flex align-items-center gap-3">
@@ -551,13 +538,13 @@ function ManageRoles() {
                 </tbody>
                 {/* )} */}
               </table>
-              <Toaster position="top-right" />
+              {/* <Toaster position="top-right" /> */}
               {showCreateModal && (
                 <CreateRoles
                   handleShowCreate={handleShowCreate}
                   handleCloseCreate={handleCloseCreate}
                   fetchRoles={fetchRoles}
-                  showToast={toast}
+                  // showToast={toast}
                 />
               )}
             </div>

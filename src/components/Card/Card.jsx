@@ -3,8 +3,6 @@ import { Card } from "react-bootstrap";
 import {
   LineChart,
   Line,
-  XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
@@ -46,8 +44,6 @@ export default function CustomCard({ title, data }) {
                 margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                {/* <XAxis dataKey="day" /> */}
-                {/* <YAxis dataKey="time" /> */}
                 <Tooltip />
                 <Line
                   type="monotone"

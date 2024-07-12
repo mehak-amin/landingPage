@@ -33,8 +33,6 @@ const BarChartComponent = ({ barData }) => {
     [aggregatedSlotDataResult]
   );
 
-  // console.log(chartData);
-
   const formatXAxis = useCallback((tickItem) => {
     const minutes = parseInt(tickItem.replace("min", ""), 10);
     if (minutes % 60 === 0) {

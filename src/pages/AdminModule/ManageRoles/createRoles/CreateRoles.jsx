@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import "./CreateRoles.css";
 import axios from "axios";
 import BASE_URI from "../../../../../config";
+import toast from "react-hot-toast";
 
 // import "react-hot-toast/dist/index.css";
 
-function CreateRoles({
-  handleShowCreate,
-  handleCloseCreate,
-  fetchRoles,
-  showToast,
-}) {
+function CreateRoles({ handleShowCreate, handleCloseCreate, fetchRoles }) {
   const [roleName, setRoleName] = useState("");
 
   const [status, setStatus] = useState("1");
@@ -34,15 +30,19 @@ function CreateRoles({
         }
       );
       fetchRoles();
-      console.log("Displaying success toast");
-      showToast.success("Role created successfully!");
-      console.log("Role creation response:", response.data);
+      // console.log("Displaying success toast");
+      toast.success("Role created successfully!", {
+        position: "top-right",
+      });
+      // console.log("Role creation response:", response.data);
 
       handleCloseCreate();
     } catch (error) {
-      console.log("Displaying error toast");
-      showToast.error("Error creating role");
-      console.error("Role creation error:", error);
+      // console.log("Displaying error toast");
+      toast.error("Error creating role", {
+        position: "top-right",
+      });
+      // console.error("Role creation error:", error);
     }
   };
 

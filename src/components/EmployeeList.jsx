@@ -71,7 +71,7 @@ const EmployeeList = ({ heading, data }) => {
                 </h6>
                 <div className="d-flex gap-1">
                   <p className="mb-0">{getMetric(employee)}</p>
-                  <p className="mb-0">{getData(employee)}</p>
+                  <p className="mb-0 d-none d-sm-block">{getData(employee)}</p>
                 </div>
               </div>
             </div>
