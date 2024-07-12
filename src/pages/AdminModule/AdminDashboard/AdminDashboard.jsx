@@ -57,7 +57,7 @@ export default function AdminDashboard() {
   }, [flattenedArray]);
 
   // const snaps = showAllSnaps ? snaps : allSnaps?.slice(0, 8);
-  if (error && !data) {
+  if (error) {
     <div className="container-xxl px-0">
       <Suspense fallback={<div>Loading...</div>}>
         <Header
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
     </div>;
   }
   return (
-    <div className="container-xxl px-0">
+    <div className="container-xxxl px-0">
       <Suspense fallback={<div>Loading...</div>}>
         <Header
           heading="Dashboard"
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
             >
               <div className="d-lg-flex  gap-5 py-4 justify-content-center custom-wrap-420">
                 <p>Productivity Bar</p>
-                <ul className="d-flex  list-unstyled gap-4">
+                <ul className="d-flex list-unstyled gap-4 flex-wrap">
                   <li className="text-green">Productive</li>
                   <li className="text-red">Unproductive</li>
                   <li className="text-blue">Neutral</li>

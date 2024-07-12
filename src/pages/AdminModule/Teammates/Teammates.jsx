@@ -5,7 +5,7 @@ import Header from "../../../components/Header";
 import SearchInput from "../../../components/SearchInput";
 import FilterButton from "../../../components/Button/FilterButton";
 import SortButton from "../../../components/Button/SortButton";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import BASE_URI from "../../../../config";
 import { IoIosArrowRoundUp, IoIosArrowRoundDown } from "react-icons/io";
@@ -23,6 +23,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 const Teamates = () => {
   const [activeTab, setActiveTab] = useState("employees");
   const [isFilter, setIsFilter] = useState(false);
+  const [applyFilter, setApplyFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
@@ -41,9 +42,8 @@ const Teamates = () => {
     role: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const filterButtonRef = useRef(null);
+
   const filterPopupRef = useRef(null);
-  const sortButtonRef = useRef(null);
   const sortPopupRef = useRef(null);
 
   const itemsPerPage = 4;
@@ -57,7 +57,7 @@ const Teamates = () => {
     url += `&sort_by=${sortCriteria}&sort_direction=${sortOrder}`;
   }
 
-  if (selectedItems.length > 0) {
+  if (selectedItems.length > 0 && applyFilter) {
     url += `&department[0]=${selectedItems}`;
   }
 
@@ -70,10 +70,9 @@ const Teamates = () => {
     },
   };
 
-  const { data, isLoading, error } = useFetch(url, fetchOptions);
+  const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
 
-  const teamsData = data || {};
-  // console.log(data);
+  const teamsData = useMemo(() => data || {}, [data]);
 
   const {
     absentCount,
@@ -84,29 +83,24 @@ const Teamates = () => {
     workingCount,
   } = teamsData;
 
-  // const handleClickOutside = (event) => {
-  //   if (
-  //     filterPopupRef.current &&
-  //     !filterPopupRef.current.contains(event.target) &&
-  //     !filterButtonRef.current.contains(event.target) &&
-  //     sortPopupRef.current &&
-  //     !sortPopupRef.current.contains(event.target) &&
-  //     !sortButtonRef.current.contains(event.target)
-  //   ) {
-  //     setIsFilter(true);
-  //     setIsSort(true);
-  //   } else {
-  //     setIsFilter(false);
-  //     setIsSort(false);
-  //   }
-  // };
+  const handleClickOutside = (event) => {
+    if (
+      filterPopupRef.current &&
+      !filterPopupRef.current.contains(event.target)
+    ) {
+      setIsFilter(false);
+    }
+    if (sortPopupRef.current && !sortPopupRef.current.contains(event.target)) {
+      setIsSort(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     axios
@@ -116,13 +110,14 @@ const Teamates = () => {
         },
       })
       .then((res) => {
-        // console.log(res.data);
         setDepartments(
           res.data.data.filter((department) => department.is_active === 1)
         );
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.response.data.message, {
+          position: "top-right",
+        });
       });
   }, []);
 
@@ -134,11 +129,12 @@ const Teamates = () => {
         },
       })
       .then((res) => {
-        // console.log(res.data.data.roles);
         setRoles(res.data.data.roles.filter((role) => role.is_active === 1));
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.response.data.message, {
+          position: "top-right",
+        });
       });
   }, []);
 
@@ -182,24 +178,28 @@ const Teamates = () => {
           setAddTeamMember(false);
         }
         setFormData({ fullname: "", email: "", department_id: "", role: "" });
-        toast.success("New Team Member added successfully");
+        refetch();
+        toast.success("New Team Member added successfully", {
+          position: "top-right",
+        });
       })
       .catch((err) => {
-        toast.error(err.message);
+        toast.error(err.response.data.message, {
+          position: "top-right",
+        });
         setLoading(false);
       });
   };
 
   const handleCheckboxChange = (departmentId) => {
-    console.log(departmentId);
     if (selectedItems.includes(departmentId)) {
       setSelectedItems(selectedItems.filter((id) => id !== departmentId));
     } else {
       setSelectedItems([...selectedItems, departmentId]);
     }
+    setApplyFilter(false);
   };
 
-  // Function to handle "select all" checkbox change
   const handleSelectAllChange = () => {
     if (selectAll) {
       setSelectedItems([]);
@@ -207,14 +207,17 @@ const Teamates = () => {
       setSelectedItems(departments.map((department) => department.id));
     }
     setSelectAll(!selectAll);
+    setApplyFilter(false);
   };
 
   const handleSetDepartments = () => {
+    setApplyFilter(true);
     setIsFilter(false);
   };
 
   const handleReset = () => {
     setSelectAll(false);
+    setApplyFilter(false);
     setSelectedItems([]);
   };
 
@@ -265,7 +268,6 @@ const Teamates = () => {
       [name]: value,
     });
   };
-  // console.log(formData);
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -366,7 +368,7 @@ const Teamates = () => {
   };
 
   return (
-    <div className="container-xxl px-0">
+    <div className="container-xxxl px-0">
       <Header
         heading="Team Members"
         isDate={true}
@@ -386,128 +388,130 @@ const Teamates = () => {
           />
 
           <div className="d-flex gap-4 mt-3 mt-md-0">
-            <div
-              ref={filterButtonRef}
-              className="border-0 bg-white rounded py-2 py-md-0"
-              onClick={() => setIsFilter(!isFilter)}
-            >
-              <FilterButton />
-            </div>
-
-            {isFilter && (
+            <div ref={filterPopupRef}>
               <div
-                className="z-3 position-absolute bg-white custom-shadow"
-                style={{ top: "115%", left: "-43%" }}
-                ref={filterPopupRef}
+                className="border-0 bg-white rounded py-2 py-md-0 h-100"
+                onClick={() => setIsFilter(!isFilter)}
               >
-                <div className="py-2 px-4 fs-5 fw-light flex align-items-center gap-5">
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={handleSelectAllChange}
-                    style={{ width: "1rem", height: "1rem" }}
-                  />
-                  <label htmlFor="">Select all</label>
-                </div>
+                <FilterButton />
+              </div>
 
-                <div className="py-3 px-4 border-top">
-                  <SearchInput placeholder="Search" />
-                </div>
+              {isFilter && (
+                <div
+                  className="z-3 position-absolute bg-white custom-shadow positioning-points"
+                  style={{
+                    width: "18rem",
+                  }}
+                >
+                  <div className="py-2 px-4 fs-5 fw-light flex align-items-center gap-5">
+                    <input
+                      type="checkbox"
+                      checked={selectAll}
+                      onChange={handleSelectAllChange}
+                      style={{ width: "1rem", height: "1rem" }}
+                    />
+                    <label htmlFor="">Select all</label>
+                  </div>
 
-                <ul className="list-unstyled fs-5 fw-light">
-                  {departments.map((department) => {
-                    return (
-                      <li
-                        className="py-2 px-4 border-top border-bottom flex align-items-center gap-5"
-                        key={department.id}
+                  <div className="py-3 px-4 border-top">
+                    <SearchInput placeholder="Search" />
+                  </div>
+
+                  <ul className="list-unstyled fs-5 fw-light">
+                    {departments.map((department) => {
+                      return (
+                        <li
+                          className="py-2 px-4 border-top border-bottom flex align-items-center gap-5"
+                          key={department.id}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedItems.includes(department.id)}
+                            onChange={() => handleCheckboxChange(department.id)}
+                            style={{ width: "1rem", height: "1rem" }}
+                          />
+                          <label htmlFor="">{department.department_name}</label>
+                        </li>
+                      );
+                    })}
+
+                    <li className="pt-3 px-4 border-top d-flex align-items-center justify-content-between">
+                      <button
+                        className=" border px-3 text-center py-1 rounded fw-light shadow cursor-pointer fs-5 bg-transparent"
+                        onClick={handleReset}
                       >
-                        <input
-                          type="checkbox"
-                          checked={selectedItems.includes(department.id)}
-                          onChange={() => handleCheckboxChange(department.id)}
-                          style={{ width: "1rem", height: "1rem" }}
-                        />
-                        <label htmlFor="">{department.department_name}</label>
-                      </li>
-                    );
-                  })}
-
-                  <li className="pt-3 px-4 border-top d-flex align-items-center justify-content-between">
-                    <button
-                      className=" border px-3 text-center py-1 rounded fw-light shadow cursor-pointer fs-5 bg-transparent"
-                      onClick={handleReset}
-                    >
-                      Reset
-                    </button>
-                    <button
-                      className=" border  text-center px-3 py-1 rounded bg-gray text-white shadow cursor-pointer fs-5"
-                      onClick={handleSetDepartments}
-                    >
-                      Apply
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
-
-            <div
-              ref={sortButtonRef}
-              className="border-0 bg-white rounded"
-              onClick={() => setIsSort(!isSort)}
-            >
-              <SortButton />
+                        Reset
+                      </button>
+                      <button
+                        className=" border  text-center px-3 py-1 rounded bg-gray text-white shadow cursor-pointer fs-5"
+                        onClick={handleSetDepartments}
+                      >
+                        Apply
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
 
-            {isSort && (
+            <div ref={sortPopupRef}>
               <div
-                ref={sortPopupRef}
-                className="z-3 position-absolute bg-white custom-shadow"
-                style={{ top: "115%", left: "-40%" }}
+                className="border-0 bg-white rounded h-100"
+                onClick={() => setIsSort(!isSort)}
               >
-                <div className="px-3 py-2">
-                  <select
-                    value={sortCriteria}
-                    onChange={handleSortCriteriaChange}
-                    className="py-1 rounded"
-                  >
-                    <option value="" disabled>
-                      --Select--
-                    </option>
-                    <option value="name">Name</option>
-                    <option value="status">Status</option>
-                    <option value="productiveTime">Productive Time</option>
-                    <option value="offlineTime">Offline Time</option>
-                    <option value="deskTime">DeskTime</option>
-                    <option value="arrivedAt">Arrived at</option>
-                    <option value="leftAt">Left at</option>
-                    <option value="timeAtWork">At work</option>
-                    <option value="activeApp">Active app</option>
-                    <option value="activeProject">Active project</option>
-                  </select>
-                </div>
-
-                <div className="d-flex flex-direction-column">
-                  <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
-                    <input
-                      type="radio"
-                      value="asc"
-                      checked={sortOrder === "asc"}
-                      onChange={handleSortOrderChange}
-                    />
-                    Ascending <IoIosArrowRoundUp />
-                  </label>
-                  <label className="d-flex align-items-center gap-3 px-4 py-2 ">
-                    <input
-                      type="radio"
-                      value="desc"
-                      checked={sortOrder === "desc"}
-                      onChange={handleSortOrderChange}
-                    />
-                    Descending <IoIosArrowRoundDown />
-                  </label>
-                </div>
+                <SortButton />
               </div>
-            )}
+
+              {isSort && (
+                <div
+                  className="z-3 position-absolute bg-white custom-shadow"
+                  style={{ top: "115%", left: "-40%" }}
+                >
+                  <div className="px-3 py-2">
+                    <select
+                      value={sortCriteria}
+                      onChange={handleSortCriteriaChange}
+                      className="py-1 rounded"
+                    >
+                      <option value="" disabled>
+                        --Select--
+                      </option>
+                      <option value="name">Name</option>
+                      <option value="status">Status</option>
+                      <option value="productiveTime">Productive Time</option>
+                      <option value="offlineTime">Offline Time</option>
+                      <option value="deskTime">DeskTime</option>
+                      <option value="arrivedAt">Arrived at</option>
+                      <option value="leftAt">Left at</option>
+                      <option value="timeAtWork">At work</option>
+                      <option value="activeApp">Active app</option>
+                      <option value="activeProject">Active project</option>
+                    </select>
+                  </div>
+
+                  <div className="d-flex flex-direction-column">
+                    <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
+                      <input
+                        type="radio"
+                        value="asc"
+                        checked={sortOrder === "asc"}
+                        onChange={handleSortOrderChange}
+                      />
+                      Ascending <IoIosArrowRoundUp />
+                    </label>
+                    <label className="d-flex align-items-center gap-3 px-4 py-2 ">
+                      <input
+                        type="radio"
+                        value="desc"
+                        checked={sortOrder === "desc"}
+                        onChange={handleSortOrderChange}
+                      />
+                      Descending <IoIosArrowRoundDown />
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -571,121 +575,129 @@ const Teamates = () => {
                 </div>
               </div>
               {/* </div> */}
-
-              <div>
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th className="text-center py-3 bg-lightGray1">Name</th>
-                      {getCurrentItems()?.map((item, index) => (
-                        <th
-                          key={index}
-                          className="text-center py-3 fw-normal hover-effect border"
-                        >
-                          <Link
-                            to={`teammateDetails/${item.user.user_id}`}
-                            className="text-black text-decoration-none"
+              {outstream?.length === 0 ? (
+                <div
+                  className="d-flex align-items-center justify-content-center bg-white border-top"
+                  style={{ height: "20rem" }}
+                >
+                  <h4>No team member found!</h4>
+                </div>
+              ) : (
+                <div>
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th className="text-center py-3 bg-lightGray1">Name</th>
+                        {getCurrentItems()?.map((item, index) => (
+                          <th
+                            key={index}
+                            className="text-center py-3 fw-normal hover-effect border"
                           >
-                            {item.user.picture === "" ? (
-                              <FaUserCircle className="fs-1 me-4" />
-                            ) : (
-                              <img
-                                src={item.user.picture}
-                                alt=""
-                                className="rounded-circle me-4 border"
-                                style={{
-                                  width: "2.7rem",
-                                  height: "2.7rem",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            )}
-                            {item.user.name}
-                          </Link>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sideHeadings.map((heading, headingIndex) => (
-                      <tr key={headingIndex}>
-                        <td
-                          className={`text-center py-3 fw-bold ${
-                            headingIndex % 2 !== 0
-                              ? "bg-lightGray1"
-                              : "bg-white"
-                          }`}
-                        >
-                          {heading}
-                        </td>
-                        {getCurrentItems()?.map((item, itemIndex) => (
-                          <td
-                            key={itemIndex}
-                            className="text-center py-3 border"
-                          >
-                            {headingIndex === 0
-                              ? item.user.department_name
-                              : headingIndex === 1
-                              ? item.modeledData
-                                ? item.modeledData?.arrivedAt
-                                : "-"
-                              : headingIndex === 2
-                              ? item.modeledData
-                                ? item.modeledData?.leftAt
-                                : "-"
-                              : headingIndex === 3
-                              ? item.modeledData
-                                ? secondsToHoursMinutes(
-                                    item.modeledData?.productiveTime
-                                  )
-                                : "-"
-                              : headingIndex === 4
-                              ? item.modeledData
-                                ? item.modeledData?.offlineTime === "-"
-                                  ? "-"
-                                  : secondsToHoursMinutes(
-                                      item.modeledData?.offlineTime
-                                    )
-                                : "-"
-                              : headingIndex === 5
-                              ? item.modeledData
-                                ? item.modeledData?.activeApp
-                                : "-"
-                              : headingIndex === 7
-                              ? item.modeledData
-                                ? secondsToHoursMinutes(
-                                    item.modeledData?.deskTime
-                                  )
-                                : "-"
-                              : "-"}
-                          </td>
+                            <Link
+                              to={`teammateDetails/${item.user.user_id}`}
+                              className="text-black text-decoration-none"
+                            >
+                              {item.user.picture === "" ? (
+                                <FaUserCircle className="fs-1 me-4" />
+                              ) : (
+                                <img
+                                  src={item.user.picture}
+                                  alt=""
+                                  className="rounded-circle me-4 border"
+                                  style={{
+                                    width: "2.7rem",
+                                    height: "2.7rem",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              )}
+                              {item.user.name}
+                            </Link>
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="pagination-controls d-flex justify-content-md-end mt-3">
-                  <div className="d-flex gap-1 px-4 py-3">
-                    <button
-                      className="rounded border border-secondary"
-                      onClick={handlePrevious}
-                      disabled={currentPage === 1}
-                    >
-                      <IoIosArrowRoundBack className="fs-3" />
-                      <span className="d-md-inline d-none">Previous</span>
-                    </button>
-                    {renderPaginationButtons()}
-                    <button
-                      className="rounded border border-secondary"
-                      onClick={handleNext}
-                      disabled={currentPage === totalPages}
-                    >
-                      <span className="d-md-inline d-none">Next</span>
-                      <IoIosArrowRoundForward className="fs-3" />
-                    </button>
+                    </thead>
+                    <tbody>
+                      {sideHeadings.map((heading, headingIndex) => (
+                        <tr key={headingIndex}>
+                          <td
+                            className={`text-center py-3 fw-bold ${
+                              headingIndex % 2 !== 0
+                                ? "bg-lightGray1"
+                                : "bg-white"
+                            }`}
+                          >
+                            {heading}
+                          </td>
+                          {getCurrentItems()?.map((item, itemIndex) => (
+                            <td
+                              key={itemIndex}
+                              className="text-center py-3 border"
+                            >
+                              {headingIndex === 0
+                                ? item.user.department_name
+                                : headingIndex === 1
+                                ? item.modeledData
+                                  ? item.modeledData?.arrivedAt
+                                  : "-"
+                                : headingIndex === 2
+                                ? item.modeledData
+                                  ? item.modeledData?.leftAt
+                                  : "-"
+                                : headingIndex === 3
+                                ? item.modeledData
+                                  ? secondsToHoursMinutes(
+                                      item.modeledData?.productiveTime
+                                    )
+                                  : "-"
+                                : headingIndex === 4
+                                ? item.modeledData
+                                  ? item.modeledData?.offlineTime === "-"
+                                    ? "-"
+                                    : secondsToHoursMinutes(
+                                        item.modeledData?.offlineTime
+                                      )
+                                  : "-"
+                                : headingIndex === 5
+                                ? item.modeledData
+                                  ? item.modeledData?.activeApp
+                                  : "-"
+                                : headingIndex === 7
+                                ? item.modeledData
+                                  ? secondsToHoursMinutes(
+                                      item.modeledData?.deskTime
+                                    )
+                                  : "-"
+                                : "-"}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="pagination-controls d-flex justify-content-md-end mt-3">
+                    <div className="d-flex gap-1 px-4 py-3">
+                      <button
+                        className="rounded border border-secondary"
+                        onClick={handlePrevious}
+                        disabled={currentPage === 1}
+                      >
+                        <IoIosArrowRoundBack className="fs-3" />
+                        <span className="d-md-inline d-none">Previous</span>
+                      </button>
+                      {renderPaginationButtons()}
+                      <button
+                        className="rounded border border-secondary"
+                        onClick={handleNext}
+                        disabled={currentPage === totalPages}
+                      >
+                        <span className="d-md-inline d-none">Next</span>
+                        <IoIosArrowRoundForward className="fs-3" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}

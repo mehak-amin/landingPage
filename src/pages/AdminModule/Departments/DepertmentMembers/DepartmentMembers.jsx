@@ -98,12 +98,15 @@ export default function DepartmentMembers() {
           "Content-Type": "application/json",
         },
       });
-      toast.success("Member added successfully");
+      toast.success("Member added successfully", {
+        position: "top-right",
+      });
       setAddMember(false);
       refetch();
     } catch (err) {
-      console.log(err);
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -118,13 +121,17 @@ export default function DepartmentMembers() {
           Authorization: "Bearer " + token,
         },
       });
-
+      toast.success("Member removed successfully", {
+        position: "top-right",
+      });
       refetch();
       setDeletePopUp(false);
       setEditOrDeletePopUp(false);
       setSelectedMembers([]);
     } catch (err) {
-      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -172,26 +179,27 @@ export default function DepartmentMembers() {
     );
   };
 
-  const handleAddMemberCheckboxChange = (userId) => {
-    setSelectedAddMembers((prevSelected) =>
-      prevSelected.includes(userId)
-        ? prevSelected.filter((id) => id !== userId)
-        : [...prevSelected, userId]
-    );
+  const handleAddMemberSelectAll = () => {
+    if (addMemberselectAll) {
+      setSelectedAddMembers([]);
+    } else {
+      setSelectedAddMembers(newMembersData.map((member) => member.id));
+    }
+    setAddMemberSelectAll(!addMemberselectAll);
   };
 
-  const handleAddMemberSelectAll = () => {
-    setAddMemberSelectAll(!addMemberselectAll);
-    if (!addMemberselectAll) {
-      const allMemberIds = newMembersData.map((member) => member.user_id);
-      setSelectedAddMembers(allMemberIds);
+  const handleAddMemberCheckboxChange = (id) => {
+    if (selectedAddMembers.includes(id)) {
+      setSelectedAddMembers(
+        selectedAddMembers.filter((memberId) => memberId !== id)
+      );
     } else {
-      setSelectedAddMembers([]);
+      setSelectedAddMembers([...selectedAddMembers, id]);
     }
   };
 
   return (
-    <div className="wrapper-div-departments container-xxl px-0">
+    <div className="wrapper-div-departments container-xxxl px-0">
       {deletePopUp && (
         <ModalComponent
           heading="Delete Department"
@@ -224,9 +232,8 @@ export default function DepartmentMembers() {
           setValue={setSearch}
         />
 
-        <div className="d-flex gap-4 mt-3 mt-md-0">
+        <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
-            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -322,9 +329,11 @@ export default function DepartmentMembers() {
         </ModalComponent>
       )}
       {isLoading ? (
-        <ShimmerTable row={5} col={5} />
+        <div className="px-sm-5 px-3">
+          <ShimmerTable row={6} col={5} />
+        </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
@@ -418,7 +427,7 @@ export default function DepartmentMembers() {
               >
                 <div>
                   <h4 className="text-secondary text-center">
-                    {error?.response?.data?.message}
+                    {error?.response?.data?.message || "Something went wrong"}
                   </h4>
                 </div>
               </div>

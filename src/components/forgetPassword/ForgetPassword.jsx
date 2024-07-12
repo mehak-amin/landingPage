@@ -10,7 +10,7 @@ import BASE_URI from "../../../config";
 
 function ForgetPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [message, setMessage] = useState("");
   const [user, setUser] = useState("");

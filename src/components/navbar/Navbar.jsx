@@ -1,29 +1,34 @@
 import "./Navbar.css";
 import MessageBox from "../messages/MessageBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faBell,
-  faMessage,
-  faSearch,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import BASE_URI from "../../../config";
 import { useNavigate, Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { FaUserCircle } from "react-icons/fa";
+import { AiOutlineMessage } from "react-icons/ai";
+import { GoBell } from "react-icons/go";
+import { FiSearch } from "react-icons/fi";
 
-function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
+function Navbar({
+  toggleSidebar,
+  toggleMessageBox,
+  showMessageBox,
+  toggleProfilePopup,
+  isProfilePopupOpen,
+  profilePopupRef,
+}) {
   const [profilePopup, setProfilePopup] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const logout = (e) => {
     e.preventDefault();
-    // console.log("logout");
-    console.log(token);
+
     axios
       .post(
         `${BASE_URI}/users/logout`,
@@ -35,21 +40,17 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
         }
       )
       .then((response) => {
-        if (response.status === 200) {
+        if (response) {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           localStorage.removeItem("role");
           localStorage.removeItem("rememberMe");
-          // setToken("");
-          // setUser("");
-          // setRole("");
-
-          toast.success("Logout Successful", {
-            position: "top-right",
-          });
 
           setTimeout(() => {
             navigate("/");
+            toast.success("Logout Successful", {
+              position: "top-right",
+            });
           }, 2000);
         }
       })
@@ -72,7 +73,7 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             </Link>
           </li>
           <li className="py-2 px-3 border-bottom">Report a Bug</li>
-          <li className="py-1 px-3 " onClick={logout}>
+          <li className="py-2 px-3 " onClick={logout}>
             Logout
           </li>
         </ul>
@@ -81,7 +82,6 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
   );
 
   const handleProfilePopup = () => {
-    // console.log("profile");
     setProfilePopup(!profilePopup);
   };
 
@@ -100,19 +100,18 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
           />
         </div>
         <div className="searchIcon">
-          <FontAwesomeIcon icon={faSearch} size="sm" className="navbar-icons" />
+          <FiSearch className="fs-5" />
         </div>
       </div>
       <div className="msgIcon-bellIcon">
-        <div className="bellIcon">
-          <FontAwesomeIcon icon={faBell} size="sm" className="navbar-icons" />
+        <div className="bellIcon p-2 pt-1 rounded-2 border bg-gray">
+          <GoBell className="fs-5 text-white" />
         </div>
-        <div className="msgIcon" onClick={toggleMessageBox}>
-          <FontAwesomeIcon
-            icon={faMessage}
-            size="sm"
-            className="navbar-icons"
-          />
+        <div
+          className="msgIcon p-2 pt-1 rounded-2 border bg-gray"
+          onClick={toggleMessageBox}
+        >
+          <AiOutlineMessage className="fs-5 text-white" />
         </div>
       </div>
       <div className="profile">
@@ -121,36 +120,35 @@ function Navbar({ toggleSidebar, toggleMessageBox, showMessageBox, user }) {
             Hi, {user?.fullname?.split(" ")[0]}
           </h6>
 
-          <p className="m-0 fw-light">Raybit Tech</p>
+          <p className="m-0 fw-light">{user?.company_name?.split(" ")[0]}</p>
         </div>
-        <OverlayTrigger
-          trigger={["click", "focus"]}
-          placement="bottom"
-          overlay={renderPopover()}
-        >
-          <div className="profilePicture" onClick={handleProfilePopup}>
-            {user?.picture === "" ? (
-              <FontAwesomeIcon
-                icon={faUser}
-                size="sm"
-                className="navbar-icons"
-              />
-            ) : (
-              <img
-                src={user?.picture}
-                alt="img"
-                className="rounded-circle"
-                style={{
-                  width: "2.5rem",
-                  height: "2.5rem",
-                  objectFit: "cover",
-                }}
-              />
-            )}
-          </div>
-        </OverlayTrigger>
+
+        <div ref={profilePopupRef} onClick={toggleProfilePopup}>
+          <OverlayTrigger
+            trigger={["click", "focus"]}
+            placement="bottom"
+            overlay={renderPopover()}
+            show={isProfilePopupOpen}
+          >
+            <div className="profilePicture" onClick={handleProfilePopup}>
+              {user?.picture === "" || user?.picture === null ? (
+                <FaUserCircle className="fs-1 text-secondary" />
+              ) : (
+                <img
+                  src={user?.picture}
+                  alt="img"
+                  className="rounded-circle border"
+                  style={{
+                    width: "2.5rem",
+                    height: "2.5rem",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </div>
+          </OverlayTrigger>
+        </div>
       </div>
-      <Toaster />
       <MessageBox
         showMessageBox={showMessageBox}
         toggleMessageBox={toggleMessageBox}

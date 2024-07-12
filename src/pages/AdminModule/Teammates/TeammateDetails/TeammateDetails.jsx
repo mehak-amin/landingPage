@@ -61,7 +61,7 @@ export default function TeammateDetails() {
   };
 
   return (
-    <div className="container-xxl px-0">
+    <div className="container-xxxl px-0">
       <Header
         heading={name}
         isMonthFilter={true}
@@ -106,10 +106,17 @@ export default function TeammateDetails() {
                 <Suspense fallback={<ShimmerThumbnail height={250} rounded />}>
                   <ShimmerThumbnail height={250} rounded />
                 </Suspense>
-              ) : (
+              ) : userUsage ? (
                 <Suspense fallback={<ShimmerThumbnail height={250} rounded />}>
                   <BarChartComponent barData={userUsage?.barData} />
                 </Suspense>
+              ) : (
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ height: "18rem" }}
+                >
+                  <h4 className="text-secondary">No data found!</h4>
+                </div>
               )}
             </div>
             <div className="d-md-flex gap-3">

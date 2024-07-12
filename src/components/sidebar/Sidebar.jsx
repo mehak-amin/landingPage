@@ -28,13 +28,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { DropdownItem } from "reactstrap";
 // import { faFileExcel } from "@fortawesome/free-solid-svg-icons/faFileExcel";
-function Sidebar({ isSideBarOpen, role }) {
+function Sidebar({ isSideBarOpen }) {
   // const [openDropdowns, setOpenDropdowns] = useState({});
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeElement, setActiveElement] = useState("admin/dashboard");
   const [activeSubElement, setActiveSubElement] = useState(null);
 
+  const location = useLocation();
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
     setDropdownOpen(false); // Close the dropdown when settings are toggled
@@ -50,18 +51,22 @@ function Sidebar({ isSideBarOpen, role }) {
     setActiveSubElement(subLink);
   };
 
- 
+  const role = localStorage.getItem("role");
   const adminOptions = [
     {
       heading: "Main menu",
-      items: [{ icon: faHome, text: "Dashboard", link: "admin/dashboard" }],
+      items: [{ icon: faHome, text: "Dashboard", link: "/admin/dashboard" }],
       isMiddle: false,
     },
     {
       heading: "Data Administration",
       items: [
-        { icon: faUsers, text: "Teammates", link: "admin/teammates" },
-        { icon: faBriefcase, text: "Work Planners", link: "admin/workplanner" },
+        { icon: faUsers, text: "Teammates", link: "/admin/teammates" },
+        {
+          icon: faBriefcase,
+          text: "Work Planners",
+          link: "/admin/workplanner",
+        },
         // { icon: faComputer, text: "Ventures", link: "users/ventures" },
         {
           icon: faCalendar,
@@ -71,7 +76,7 @@ function Sidebar({ isSideBarOpen, role }) {
         {
           icon: faCamera,
           text: "Screen Captures",
-          link: "admin/screenCaptures",
+          link: "/admin/screenCaptures",
         },
         { icon: faPeopleGroup, text: "Fellow Workers", link: "/fellowworkers" },
         { icon: faSquarePollVertical, text: "Reports", link: "/reports" },
@@ -91,22 +96,22 @@ function Sidebar({ isSideBarOpen, role }) {
             {
               icon: faBuilding,
               text: "Departments",
-              link: "admin/settings/departments",
+              link: "/admin/settings/departments",
             },
             {
               icon: faServer,
               text: "Manage Apps",
-              link: "admin/settings/manageApps",
+              link: "/admin/settings/manageApps",
             },
             {
               icon: faFolderOpen,
               text: "Manage Categories",
-              link: "admin/settings/manageCategories",
+              link: "/admin/settings/manageCategories",
             },
             {
               icon: faUserCog,
               text: "Manage Rolls",
-              link: "admin/settings/manageroles",
+              link: "/admin/settings/manageroles",
             },
           ],
         },
@@ -180,7 +185,7 @@ function Sidebar({ isSideBarOpen, role }) {
   const userOptions = [
     {
       heading: "Main menu",
-      items: [{ icon: faUser, text: "My Screen", link: "/dashboard" }],
+      items: [{ icon: faUser, text: "My Screen", link: "/users/myScreen" }],
       isMiddle: false,
     },
     {
@@ -209,28 +214,9 @@ function Sidebar({ isSideBarOpen, role }) {
           isDropdown: true,
           dropdownItems: [
             {
-              // icon: faPeopleGroup,
-              text: "Departments",
-              link: "admin/settings/departments",
-            },
-            {
-              // icon: faPeopleGroup,
-              text: "Manage Apps",
-              link: "admin/settings/manageapps",
-            },
-            {
-              text: "Manage Categories",
-              link: "admin/settings/manageCategories",
-            },
-            {
-              // icon: faPeopleGroup,
-              text: "Manage Rolls",
-              link: "admin/settings/manageroles",
-            },
-            {
-              // icon: faPeopleGroup,
+              icon: faPeopleGroup,
               text: "Profile",
-              link: "admin/settings/profile",
+              link: "/users/settings/profile",
             },
           ],
         },
@@ -303,7 +289,8 @@ function Sidebar({ isSideBarOpen, role }) {
                         setSettingsOpen(false);
                       }}
                       className={`nav-link menu-items d-flex align-items-center justify-content-start ${
-                        activeElement === item.link ? "active" : ""
+                        location.pathname === item.link ? "active" : ""
+                        // activeElement === item.link ? "active" : ""
                       }`}
                     >
                       <span className="icon-holder">

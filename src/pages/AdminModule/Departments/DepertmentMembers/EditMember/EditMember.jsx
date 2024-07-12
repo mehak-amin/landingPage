@@ -19,7 +19,6 @@ const EditMember = () => {
     profile: {
       fullname: "",
       phone_Number: "",
-      picture: "",
       department_id: "",
     },
     users: {
@@ -79,7 +78,7 @@ const EditMember = () => {
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
 
   const user = useMemo(() => data?.user[0] || {}, [data]);
-  console.log(user);
+
   const { data: rolesData } = useFetch(rolesURL, fetchOptions);
   const activeRoles = useMemo(
     () => rolesData?.data.roles.filter((item) => item.is_active === 1) || [],
@@ -98,7 +97,6 @@ const EditMember = () => {
         profile: {
           fullname: user.fullname,
           phone_Number: user.phone_Number,
-          picture: user.picture,
           department_id: user.department_id,
         },
         users: {
@@ -158,14 +156,18 @@ const EditMember = () => {
         },
       })
       .then(() => {
-        toast.success("Updated sucessfully!");
+        toast.success("Updated sucessfully!", {
+          position: "top-right",
+        });
         refetch();
         navigate(
           `/admin/settings/departments/departmentMembers/${user.department_id}`
         );
       })
       .catch((err) => {
-        console.log(err);
+        toast.error(err.message, {
+          position: "top-right",
+        });
       });
   };
 
@@ -228,36 +230,36 @@ const EditMember = () => {
     }));
   };
 
-  if (!isLoading) {
-    if (JSON.stringify(user) === "{}") {
-      return (
-        <div className="wrapper-div-departments container-xxl px-0">
-          <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
-            <div className="mb-4 mb-md-0">
-              <h5 className="mb-0 custom-shadow d-inline px-3 py-2 rounded text-capitalize">
-                {user?.fullname || "noName"}
-              </h5>
-            </div>
-            <div className="d-md-flex gap-3 align-items-center">
-              <ButtonActive
-                heading="Save Changes"
-                handleClick={handleSaveChanges}
-              />
-              <ButtonInactive heading="Reset Settings" />
-            </div>
-          </div>
-          <NoData />
-        </div>
-      );
-    }
-  }
+  // if (!isLoading) {
+  //   if (JSON.stringify(user) === "{}") {
+  //     return (
+  //       <div className="wrapper-div-departments container-xxl px-0">
+  //         <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
+  //           <div className="mb-4 mb-md-0">
+  //             <h5 className="mb-0 custom-shadow d-inline px-3 py-2 rounded text-capitalize">
+  //               {user?.fullname || "Noname"}
+  //             </h5>
+  //           </div>
+  //           <div className="d-md-flex gap-3 align-items-center">
+  //             <ButtonActive
+  //               heading="Save Changes"
+  //               handleClick={handleSaveChanges}
+  //             />
+  //             <ButtonInactive heading="Reset Settings" />
+  //           </div>
+  //         </div>
+  //         <NoData />
+  //       </div>
+  //     );
+  //   }
+  // }
 
   return (
-    <div className="container-xxl p-0">
+    <div className="container-xxxl p-0">
       <div className="d-md-flex justify-content-between px-md-5 px-3 py-4 bg-white">
         <div className="mb-4 mb-md-0">
           <h5 className="mb-0 custom-shadow d-inline px-3 py-2 rounded text-capitalize">
-            {user?.fullname || "noName"}
+            {user?.fullname || "Noname"}
           </h5>
         </div>
         <div className="d-md-flex gap-3 align-items-center">
@@ -272,7 +274,7 @@ const EditMember = () => {
         </div>
       </div>
       {isLoading ? (
-        <ShimmerFeaturedGallery row={2} col={1} card frameHeight={600} />
+        <ShimmerFeaturedGallery row={2} col={2} card frameHeight={600} />
       ) : (
         <div className="bg-lightGray1 p-sm-5 p-3">
           <div className="d-custom-flex align-item-center gap-5 mb-5">
@@ -381,14 +383,6 @@ const EditMember = () => {
                         : ""}
                     </span>
                   </p>
-                  {/* <p className="mb-0">
-                  Last Updated on:{" "}
-                  <span>
-                    {formData.updated_at
-                      ? formatDateToIST(formData.updated_at, "dateMonthYear")
-                      : "N/A"}
-                  </span>
-                </p> */}
                 </div>
               </div>
             </div>
@@ -544,7 +538,7 @@ const EditMember = () => {
                 <input
                   type="checkbox"
                   name="settings.screen_capture_enabled"
-                  checked={formData.settings.screen_capture_enabled}
+                  checked={formData.settings.screen_capture_enabled || 0}
                   onChange={handleChange}
                   className="text-gray"
                   style={{ width: "1.3rem", height: "1.3rem" }}
@@ -749,30 +743,6 @@ const EditMember = () => {
                   ))}
                 </select>
               </div>
-              {/* <div className="w-45">
-              <label htmlFor="offline_time" className="d-block">
-                Offline Time
-              </label>
-              <input
-                type="text"
-                name="offline_time"
-                value={formData.offline_time}
-                onChange={handleChange}
-                className="rounded-2 border py-2 px-3 w-100"
-              />
-            </div>
-            <div className="w-45">
-              <label htmlFor="default_app_productivity" className="d-block">
-                Default Application Productivity
-              </label>
-              <input
-                type="text"
-                name="default_app_productivity"
-                value={formData.default_app_productivity}
-                onChange={handleChange}
-                className="rounded-2 border py-2 px-3 w-100"
-              />
-            </div> */}
             </div>
           </div>
         </div>

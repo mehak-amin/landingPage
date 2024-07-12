@@ -45,7 +45,6 @@ const Departments = () => {
 
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
   const departmentsData = useMemo(() => data?.data || [], [data]);
-  // console.log(error ? error.response.data.message : "");
 
   const getSingleDepartment = async () => {
     try {
@@ -58,7 +57,6 @@ const Departments = () => {
         },
       });
       setDepartmentData(response.data.data[0].department_name);
-      console.log(response.data.data[0].department_name);
     } catch (err) {
       toast.error(err.message);
     }
@@ -126,10 +124,14 @@ const Departments = () => {
       });
       setcreateDeparment(false);
       refetch();
-      toast.success("Department Created Successfully");
+      toast.success("Department Created Successfully", {
+        position: "top-right",
+      });
       setDeptName("");
     } catch (err) {
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -157,11 +159,16 @@ const Departments = () => {
       setSelectedDepartments([]);
       selectedDepartments.length === 0
         ? toast.success(
-            isActive === 0 ? "Department Enabled" : "Department Disabled"
+            isActive === 0 ? "Department Enabled" : "Department Disabled",
+            {
+              position: "top-right",
+            }
           )
-        : toast.success("Selected departments deleted successfully!");
+        : toast.success("Selected departments deleted successfully!", {
+            position: "top-right",
+          });
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
   };
 
@@ -178,11 +185,16 @@ const Departments = () => {
           "Content-Type": "application/json",
         },
       });
+      toast.success("Department Updated", {
+        position: "top-right",
+      });
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
     } catch (err) {
-      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -224,7 +236,7 @@ const Departments = () => {
   };
 
   return (
-    <div className="wrapper-div-departments container-xxl px-0">
+    <div className="wrapper-div-departments container-xxxl px-0">
       {deletePopUp && (
         <ModalComponent
           heading="Delete Department"
@@ -280,9 +292,8 @@ const Departments = () => {
           setValue={setSearch}
         />
 
-        <div className="d-flex gap-4 mt-3 mt-md-0">
+        <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
-            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -357,9 +368,11 @@ const Departments = () => {
         </ModalComponent>
       )}
       {isLoading ? (
-        <ShimmerTable row={5} col={5} />
+        <div className="px-sm-5 px-3">
+          <ShimmerTable row={6} col={5} />
+        </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
           <div className="px-md-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
@@ -381,7 +394,7 @@ const Departments = () => {
                 style={{ height: "20rem" }}
               >
                 <h4 className="text-secondary">
-                  {error?.response?.data?.message}
+                  {error?.response?.data?.message || "Something went wrong"}
                 </h4>
               </div>
             ) : (

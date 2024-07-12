@@ -3,7 +3,7 @@ import { ResponsiveContainer, AreaChart, Area } from "recharts";
 export default function ChartCard({ title, data, color }) {
   return (
     <div className="container border rounded custom-shadow px-0 mb-3 mb-md-0">
-      <h5 className="p-sm-4 p-2">{title}</h5>
+      <h5 className="p-sm-4 p-3">{title}</h5>
       <div style={{ width: "100%", height: 230 }}>
         <ResponsiveContainer>
           {data?.length > 0 ? (
@@ -21,7 +21,6 @@ export default function ChartCard({ title, data, color }) {
                 <h5 className="text-center fw-light text-secondary">
                   No, data found!
                 </h5>
-                {/* <p>No, tracking for this date please select another date.</p> */}
               </div>
             </div>
           )}

@@ -29,3 +29,14 @@ h6 {
   width: 6px !important;
   height: 3px;
 }
+.positioning-points {
+  top: 115%;
+  left: -55%;
+}
+
+@media screen and ((max-width: 768px)) {
+  .positioning-points {
+    top: 115%;
+    left: 0%;
+  }
+}

@@ -3,11 +3,11 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { ShimmerTable } from "react-shimmer-effects";
 import convertSecondsToTime from "../utils/formattingTime";
-
+import { FcElectronics } from "react-icons/fc";
 export default function AppList({ heading, data = "", backgound, loading }) {
   const [showAll, setShowAll] = useState(false);
   const location = useLocation();
-  // console.log(location);
+
   const renderPopover = (otherTabs) => {
     const tabs = Object.entries(otherTabs);
     const visibleTabs = showAll ? tabs : tabs.slice(0, 4);
@@ -35,7 +35,6 @@ export default function AppList({ heading, data = "", backgound, loading }) {
   };
 
   const getColorClass = (heading) => {
-    // console.log(heading);
     switch (heading) {
       case "Productive Apps":
         return "text-green";
@@ -72,19 +71,22 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       className="col mb-4 d-flex align-items-center gap-2 px-5"
                       key={index}
                     >
-                      <img
-                        src={app.logo}
-                        alt={`${appName} logo`}
-                        style={{
-                          width: "1.5rem",
-                          height: "1.5rem",
-                          objectFit: "cover",
-                        }}
-                      />
+                      {!app.logo ? (
+                        <FcElectronics className="fs-2" />
+                      ) : (
+                        <img
+                          src={app.logo}
+                          alt={`${appName} logo`}
+                          style={{
+                            width: "1.5rem",
+                            height: "1.5rem",
+                            objectFit: "cover",
+                          }}
+                        />
+                      )}
                       <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
                         {convertSecondsToTime(appTime)}
-                        {/* {(appTime / 60).toFixed(0)}m */}
                       </p>
                     </div>
                   );
@@ -95,10 +97,6 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                     <h5 className="text-center fw-light text-secondary">
                       No, data found!
                     </h5>
-
-                    {/* <p>
-                    No, tracking for this date please select another date.
-                  </p> */}
                   </div>
                 </div>
               )

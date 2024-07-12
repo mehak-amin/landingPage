@@ -39,7 +39,7 @@ function ResetPassword() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    console.log("reset password");
+
     // if (password !== confirmPassword) {
     //   setError("Passwords do not match.");
     //   return;
@@ -64,8 +64,7 @@ function ResetPassword() {
           },
         }
       );
-      console.log(response);
-      console.log(response.data.message === "Password updated successfuly");
+
       if (response.data.message === "Password updated successfuly") {
         setMessage("Your password has been successfully reset.");
         setTimeout(() => {

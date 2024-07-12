@@ -13,16 +13,15 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function Categories() {
-  const [deletePopUp, setDeletePopUp] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [isAddCategory, setIsAddCategory] = useState(false);
   const [search, setSearch] = useState("");
   const [isSort, setIsSort] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
-  const [isActive, setIsActive] = useState(0);
+
   const [id, setId] = useState(false);
 
   const [singleCategoryData, setSingleCategoryData] = useState({
@@ -86,10 +85,10 @@ export default function Categories() {
       setSingleCategoryData({
         type: response.data.data.type,
       });
-
-      // console.log(response.data.data);
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -108,33 +107,40 @@ export default function Categories() {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      toast.success("Category updated");
-    } catch (err) {
-      toast.error(err?.message);
-    }
-  };
-
-  const handleDeleteCategory = async () => {
-    try {
-      await axios({
-        method: "DELETE",
-        url: `${BASE_URI}/category`,
-        // data: { ids: [id] },
-        data: { is_active: isActive === 0 ? 1 : 0 },
-
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+      toast.success("Category updated", {
+        position: "top-right",
       });
-      setDeletePopUp(false);
-      setEditOrDeletePopUp(false);
-      setSelectedCategories([]);
-      toast.success("Category deleted");
     } catch (err) {
-      console.log(err);
-      toast.error(err?.response?.data?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
+
+  // const handleDeleteCategory = async () => {
+  //   try {
+  //     await axios({
+  //       method: "DELETE",
+  //       url: `${BASE_URI}/category`,
+  //       // data: { ids: [id] },
+  //       data: { is_active: isActive === 0 ? 1 : 0 },
+
+  //       headers: {
+  //         Authorization: "Bearer " + token,
+  //       },
+  //     });
+  //     setDeletePopUp(false);
+  //     setEditOrDeletePopUp(false);
+  //     setSelectedCategories([]);
+  //     toast.success("Category deleted", {
+  //       position: "top-right",
+  //     });
+  //   } catch (err) {
+  //     toast.error(err?.response?.data?.message, {
+  //       position: "top-right",
+  //     });
+  //   }
+  // };
 
   const handleCreateCategory = async () => {
     // console.log(newAppData);
@@ -152,9 +158,13 @@ export default function Categories() {
       setNewCategory({
         type: "",
       });
-      toast.success("Category created successfully");
+      toast.success("Category created successfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -165,14 +175,10 @@ export default function Categories() {
     }));
   };
 
-  const handleDelete = (activeStatus) => {
-    setIsActive(activeStatus);
-    setDeletePopUp(!deletePopUp);
-  };
-  const handleCloseDelete = () => {
-    setEditOrDeletePopUp(false);
-    setDeletePopUp(false);
-  };
+  // const handleCloseDelete = () => {
+  //   setEditOrDeletePopUp(false);
+  //   setDeletePopUp(false);
+  // };
   const handleEdit = () => {
     getSingleCategory();
     setIsEdited(!isEdited);
@@ -210,8 +216,8 @@ export default function Categories() {
   };
 
   return (
-   <div className="wrapper-div-departments">
-      {deletePopUp && (
+    <div className="wrapper-div-departments container-xxxl p-0">
+      {/* {deletePopUp && (
         <ModalComponent
           heading="Delete App"
           handleClose={handleCloseDelete}
@@ -227,7 +233,8 @@ export default function Categories() {
             <h6 className="text-center">There is no turning back.</h6>
           </div>
         </ModalComponent>
-      )}
+      )} */}
+
       {isEdited && (
         <ModalComponent
           heading="Edit App"
@@ -252,6 +259,7 @@ export default function Categories() {
           </div>
         </ModalComponent>
       )}
+
       {isAddCategory && (
         <ModalComponent
           heading="Add Category"
@@ -284,15 +292,16 @@ export default function Categories() {
         btnName="Add Category"
         handleClick={toggleAddCategory}
       />
+
       <div className="d-md-flex gap-6 px-md-5 px-3 py-4 position-relative">
         <SearchInput
           placeholder="Search Departments...!"
           value={search}
           setValue={setSearch}
         />
-        <div className="d-flex gap-4 mt-3 mt-md-0">
+
+        <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
-            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -315,6 +324,7 @@ export default function Categories() {
                   <option value="category_name">Category Name</option>
                 </select>
               </div>
+
               <div className="d-flex flex-direction-column">
                 <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
                   <input
@@ -339,10 +349,13 @@ export default function Categories() {
           )}
         </div>
       </div>
+
       {isLoading ? (
-        <ShimmerTable row={5} col={5} />
+        <div className="px-sm-5 px-3">
+          <ShimmerTable row={6} col={5} />
+        </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
@@ -351,55 +364,62 @@ export default function Categories() {
                 </h5>
               </div>
             </div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="py-3 text-center">Category Name</th>
-                  <th className="py-3 text-center">Change Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categoryData?.map((category) => {
-                  return (
-                    <tr key={category.id}>
-                      <td className="py-3 text-center text-capitalize">
-                        {category.type}
-                      </td>
-                      <td
-                        ref={(el) =>
-                          (editDeletePopupRefs.current[category.id] = el)
-                        }
-                        className="text-center position-relative py-3"
-                      >
-                        <RxDotsHorizontal
-                          className="fs-4 cursor-pointer"
-                          onClick={() => {
-                            toggleEditOrDeletePopUp(category.id);
-                            setId(category.id);
-                          }}
-                        />
-                        {editOrDeletePopUp[category.id] && (
-                          <div className="position-absolute top-75 start-50 translate-middle-x z-3 border bg-white">
-                            <h6
-                              className="py-3 px-5 border-bottom cursor-pointer"
-                              onClick={handleEdit}
-                            >
-                              Edit
-                            </h6>
-                            <h6
-                              className="py-3 px-5 text-red cursor-pointer"
-                              onClick={() => handleDelete(category.is_active)}
-                            >
-                              {category.is_active === 0 ? "Enable" : "Disable"}
-                            </h6>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            {error ? (
+              <div
+                className="bg-white flex justify-content-center align-items-center"
+                style={{ height: "23.5rem" }}
+              >
+                <div>
+                  <h4 className="text-secondary text-center">
+                    {error?.response?.data?.message || "Something went wrong"}
+                  </h4>
+                </div>
+              </div>
+            ) : (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th className="py-3 text-center">Category Name</th>
+                    <th className="py-3 text-center">Change Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoryData?.map((category) => {
+                    return (
+                      <tr key={category.id}>
+                        <td className="py-3 text-center text-capitalize">
+                          {category.type}
+                        </td>
+                        <td
+                          ref={(el) =>
+                            (editDeletePopupRefs.current[category.id] = el)
+                          }
+                          className="text-center position-relative py-3"
+                        >
+                          <RxDotsHorizontal
+                            className="fs-4 cursor-pointer"
+                            onClick={() => {
+                              toggleEditOrDeletePopUp(category.id);
+                              setId(category.id);
+                            }}
+                          />
+                          {editOrDeletePopUp[category.id] && (
+                            <div className="position-absolute top-75 start-50 translate-middle-x z-3 border bg-white">
+                              <h6
+                                className="py-3 px-5 border-bottom cursor-pointer"
+                                onClick={handleEdit}
+                              >
+                                Edit
+                              </h6>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       )}

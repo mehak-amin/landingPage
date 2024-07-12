@@ -2,8 +2,6 @@ import { Card } from "react-bootstrap";
 import {
   LineChart,
   Line,
-  XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
@@ -37,14 +35,10 @@ export default function PercentageCard({ title, data }) {
           <div style={{ width: "100%", height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                // width={300}
-                // height={200}
                 data={newData?.length === 1 ? dummyData : newData}
                 margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                {/* <XAxis dataKey="day" /> */}
-                {/* <YAxis /> */}
                 <Tooltip />
                 <Line
                   type="monotone"

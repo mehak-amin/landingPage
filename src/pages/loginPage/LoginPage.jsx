@@ -8,8 +8,9 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URI from "../../../config";
 import PulseLoader from "react-spinners/PulseLoader";
-import toast from "react-hot-toast";
-function LoginPage({ role, setRole, user, setUser }) {
+import toast, { Toaster } from "react-hot-toast";
+
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailFocused, setIsEmailFocused] = useState(false);
@@ -17,25 +18,22 @@ function LoginPage({ role, setRole, user, setUser }) {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("role", role);
-  }, [user, role]);
+
   useEffect(() => {
     const storedRememberMe = localStorage.getItem("rememberMe") === "true";
     if (storedRememberMe) {
       setRememberMe(true);
     }
   }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     axios
       .post(`${BASE_URI}/users/login`, { email, password })
       .then((response) => {
-        console.log(response.data);
-        setUser(response.data.Data);
-        setRole(response.data.Data.role);
+        localStorage.setItem("user", JSON.stringify(response.data.Data));
+        localStorage.setItem("role", response.data.Data.role);
         const token = response.data.token;
         localStorage.setItem("token", token);
         if (rememberMe) {
@@ -43,7 +41,9 @@ function LoginPage({ role, setRole, user, setUser }) {
         } else {
           localStorage.removeItem("rememberMe");
         }
-        toast.success("Login successful!");
+        toast.success("Login successful!", {
+          position: "top-right",
+        });
         if (response.data.Data.role === "admin") {
           navigate("/admin/dashboard");
         } else if (response.data.Data.role === "user") {
@@ -51,10 +51,19 @@ function LoginPage({ role, setRole, user, setUser }) {
         }
       })
       .catch((err) => {
-        toast.error(err.response.data.message);
         setLoading(false);
+        const errorMessage =
+          err.response && err.response.data && err.response.data.message
+            ? err.response.data.message
+            : "An error occurred. Please try again.";
+        toast.error(errorMessage, {
+          position: "top-right",
+        });
       });
   };
+
+  const role = localStorage.getItem("role");
+
   if (localStorage.getItem("rememberMe") && role) {
     if (role === "admin") {
       return <Navigate to="/admin/dashboard" />;
@@ -62,8 +71,10 @@ function LoginPage({ role, setRole, user, setUser }) {
       return <Navigate to="/users/myScreen" />;
     }
   }
+
   return (
-    <div className="login">
+    <div className="login container-xxxl p-0">
+      <Toaster />
       <div className="image-section-login">
         <div className="image-holder">
           <img src={signInImg} alt="" className="image-fluid" />
@@ -90,6 +101,7 @@ function LoginPage({ role, setRole, user, setUser }) {
                   type="email"
                   id="email"
                   placeholder="enter Email..."
+                  required
                   value={email}
                   onFocus={() => setIsEmailFocused(true)}
                   onBlur={() => setIsEmailFocused(false)}
@@ -113,6 +125,7 @@ function LoginPage({ role, setRole, user, setUser }) {
                   type="password"
                   id="password"
                   placeholder="enter Password..."
+                  required
                   value={password}
                   onFocus={() => setIsPasswordFocused(true)}
                   onBlur={() => setIsPasswordFocused(false)}
@@ -126,6 +139,7 @@ function LoginPage({ role, setRole, user, setUser }) {
                   <input
                     type="checkbox"
                     className="m-0"
+                    style={{ width: "1.1rem", height: "1.1rem" }}
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
@@ -154,13 +168,13 @@ function LoginPage({ role, setRole, user, setUser }) {
                 Google
               </div>
             </div>
-            <div className="signUp-link-holder d-flex justify-content-center align-items-center">
+            {/* <div className="signUp-link-holder d-flex justify-content-center align-items-center">
               <span className="signUp-link">
                 <Link to="/" className="link">
                   Don&apos;t have an account? Click here!
                 </Link>
               </span>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>

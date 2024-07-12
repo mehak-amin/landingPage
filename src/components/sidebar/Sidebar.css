@@ -1,8 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  font-family: "Kumbh Sans", sans-serif;
-}
 .sidebar {
   overflow-y: hidden;
 }
@@ -12,6 +7,7 @@
 }
 .brand-logo-holder {
   display: flex;
+  align-items: center;
   column-gap: 0.5rem;
 }
 
@@ -116,7 +112,7 @@
   display: none;
 } */
 @media (max-width: 460px) {
-  .selected-delete-holder{
-gap: 0 !important;
+  .selected-delete-holder {
+    gap: 0 !important;
   }
-.selected-delete-holder
+}

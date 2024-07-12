@@ -4,6 +4,7 @@ import { LuFilter } from "react-icons/lu";
 import { CiCalendar } from "react-icons/ci";
 import ButtonActive from "./Button/ButtonActive";
 import "react-datepicker/dist/react-datepicker.css";
+
 export default function Header({
   heading,
   isMonthFilter,
@@ -18,8 +19,6 @@ export default function Header({
   const [activeButton, setActiveButton] = useState("day");
   const [isOpen, setIsOpen] = useState(false);
 
-  // console.log(selectedStartDate);
-  // console.log(selectedEndDate);
   const toggleCalendar = useCallback(() => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   }, []);
@@ -28,20 +27,43 @@ export default function Header({
     (date) => {
       if (!date) return;
 
-      if (activeButton === "day") {
-        setSelectedStartDate(date);
-        {
-          setSelectedEndDate && setSelectedEndDate(date);
-        }
-      } else if (activeButton === "week" || activeButton === "month") {
-        const [start, end] = date;
+      let start = new Date(date);
+      let end = new Date(date);
+
+      if (activeButton === "week") {
+        end.setDate(start.getDate() + 6);
+      } else if (activeButton === "month") {
+        end.setDate(start.getDate() + 29);
+      }
+      if (activeButton === "week" || activeButton === "month") {
         setSelectedStartDate(start);
         setSelectedEndDate(end);
+      }
+      if (activeButton === "day") {
+        setSelectedStartDate(date);
       }
 
       setIsOpen(false);
     },
     [activeButton, setSelectedStartDate, setSelectedEndDate]
+  );
+
+  const handleButtonClick = useCallback(
+    (type) => {
+      setActiveButton(type);
+      let start = new Date();
+      let end = new Date(start);
+
+      if (type === "week") {
+        end.setDate(start.getDate() + 6);
+      } else if (type === "month") {
+        end.setDate(start.getDate() + 29);
+      }
+
+      setSelectedStartDate(start);
+      setSelectedEndDate(end);
+    },
+    [setSelectedStartDate, setSelectedEndDate]
   );
 
   const customDateFormat = "MMMM dd, yyyy";
@@ -57,7 +79,7 @@ export default function Header({
         <div className="d-md-flex gap-3 align-items-center">
           {isDate && (
             <div className="d-flex gap-3 align-items-center justify-content-lg-end justify-content-start mb-3 mb-md-0">
-              <div className="calendar-icon " onClick={toggleCalendar}>
+              <div className="calendar-icon" onClick={toggleCalendar}>
                 <CiCalendar className="fs-2 cursor-pointer" />
               </div>
 
@@ -78,9 +100,9 @@ export default function Header({
                   showWeekNumbers={showWeekNumbers}
                   open={isOpen}
                   onClickOutside={() => setIsOpen(false)}
-                  filterDate={(date) => date.getDay() != 0}
+                  filterDate={(date) => date.getDay() !== 0}
                   selectsRange={activeButton !== "day"}
-                  locale="en"
+                  placeholderText="Select a date range"
                   readOnly
                 />
               </div>
@@ -100,7 +122,7 @@ export default function Header({
                     ? "btn btn-secondary"
                     : "btn-disabled btn-outline-secondary"
                 }`}
-                onClick={() => setActiveButton("day")}
+                onClick={() => handleButtonClick("day")}
               >
                 Day
               </button>
@@ -111,7 +133,7 @@ export default function Header({
                     ? "btn btn-secondary"
                     : "btn-disabled btn-outline-secondary"
                 }`}
-                onClick={() => setActiveButton("week")}
+                onClick={() => handleButtonClick("week")}
               >
                 Week
               </button>
@@ -122,7 +144,7 @@ export default function Header({
                     ? "btn btn-secondary"
                     : "btn-disabled btn-outline-secondary"
                 }`}
-                onClick={() => setActiveButton("month")}
+                onClick={() => handleButtonClick("month")}
               >
                 Month
               </button>

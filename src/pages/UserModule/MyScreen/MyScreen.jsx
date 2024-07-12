@@ -80,9 +80,9 @@ function MyScreen() {
     ],
     []
   );
-  if (error && !data) {
+  if (!data) {
     return (
-      <div className=" container-xxl px-0 mt-1  w-100">
+      <div className=" container-xxxl px-0 mt-1  w-100">
         <Header
           heading="My Screen"
           isMonthFilter={true}
@@ -111,7 +111,9 @@ function MyScreen() {
 
       <div className="custom-bg-opacity px-md-5 px-3 pb-4">
         {isLoading ? (
-          <ShimmerSimpleGallery card imageHeight={300} />
+          <div className="py-3">
+            <ShimmerSimpleGallery card imageHeight={300} />
+          </div>
         ) : (
           <div className="py-4 px-0 container-fluid">
             <Row>

@@ -105,7 +105,9 @@ const ManageApps = () => {
         type_id: response.data.data.logs.type,
       });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -123,9 +125,13 @@ const ManageApps = () => {
       refetch();
       setIsEdited(false);
       setEditOrDeletePopUp(false);
-      toast.success("App updated successfully");
+      toast.success("App updated successfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -147,9 +153,13 @@ const ManageApps = () => {
         type: "",
         url: "",
       });
-      toast.success("App created Sucesfully");
+      toast.success("App created Sucesfully", {
+        position: "top-right",
+      });
     } catch (err) {
-      toast.error(err?.message);
+      toast.error(err?.message, {
+        position: "top-right",
+      });
     }
   };
 
@@ -216,7 +226,7 @@ const ManageApps = () => {
   };
 
   return (
-    <div className="wrapper-div-manageapps container-xxl p-0">
+    <div className="wrapper-div-manageapps container-xxxl p-0">
       {isEdited && (
         <ModalComponent
           heading="Edit App"
@@ -367,9 +377,8 @@ const ManageApps = () => {
           setValue={setSearch}
         />
 
-        <div className="d-flex gap-4 mt-3 mt-md-0">
+        <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
-            ref={sortPopupRef}
             className="border-0 bg-white rounded"
             onClick={() => setIsSort(!isSort)}
           >
@@ -419,9 +428,10 @@ const ManageApps = () => {
         </div>
       </div>
 
-
-     {isLoading ? (
-        <ShimmerTable row={5} col={5} />
+      {isLoading ? (
+        <div className="px-sm-5 px-3">
+          <ShimmerTable row={6} col={5} />
+        </div>
       ) : appList?.length === 0 ? (
         <div
           className="bg-white flex align-items-center justify-content-center"
@@ -430,7 +440,7 @@ const ManageApps = () => {
           <h4 className="text-secondary">No Application found</h4>
         </div>
       ) : (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="text-white px-3 px-sm-5">
