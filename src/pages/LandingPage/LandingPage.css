@@ -1,11 +1,49 @@
+.gradient-bg {
+  background: linear-gradient(to right, #777777, #333333);
+  /* clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); */
+}
+.gradient-bg-reverse {
+  background: linear-gradient(to right, #333333, #777777);
+}
+
+.custom-list {
+  counter-reset: list;
+  padding-left: 0;
+  list-style: none;
+}
+
+.custom-list li {
+  position: relative;
+  padding-left: 120px;
+  margin-bottom: 80px;
+}
+
+.custom-list li::before {
+  content: counter(list);
+  counter-increment: list;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 50px;
+  border: 1px solid #dee2e6;
+}
+
 @keyframes typing {
   from {
     width: 0;
-    /* border-top: 0.15em solid white; */
   }
   to {
     width: 100%;
-    /* border-top: 0.15em solid white; */
   }
 }
 
@@ -22,7 +60,6 @@
 .write-animation {
   display: inline-block;
   overflow: hidden;
-  /* border-top: 0.15em solid white; */
   white-space: nowrap;
   animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
   width: 100%;
@@ -31,6 +68,7 @@
 .delay-animation {
   animation-delay: 4s;
 }
+
 @keyframes slideUp {
   0% {
     transform: translateY(100%);
