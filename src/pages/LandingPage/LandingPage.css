@@ -38,6 +38,13 @@
   border: 1px solid #dee2e6;
 }
 
+.text-milky {
+  color: rgba(255, 255, 255, 0.735);
+}
+.border-milky {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.735);
+}
+
 @keyframes typing {
   from {
     width: 0;
