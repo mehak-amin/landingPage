@@ -1,5 +1,4 @@
 import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import SortButton from "../../../components/Button/SortButton";
 import SearchInput from "../../../components/SearchInput";
 import Header from "../../../components/Header";
@@ -117,31 +116,6 @@ export default function Categories() {
     }
   };
 
-  // const handleDeleteCategory = async () => {
-  //   try {
-  //     await axios({
-  //       method: "DELETE",
-  //       url: `${BASE_URI}/category`,
-  //       // data: { ids: [id] },
-  //       data: { is_active: isActive === 0 ? 1 : 0 },
-
-  //       headers: {
-  //         Authorization: "Bearer " + token,
-  //       },
-  //     });
-  //     setDeletePopUp(false);
-  //     setEditOrDeletePopUp(false);
-  //     setSelectedCategories([]);
-  //     toast.success("Category deleted", {
-  //       position: "top-right",
-  //     });
-  //   } catch (err) {
-  //     toast.error(err?.response?.data?.message, {
-  //       position: "top-right",
-  //     });
-  //   }
-  // };
-
   const handleCreateCategory = async () => {
     // console.log(newAppData);
     try {
@@ -175,10 +149,6 @@ export default function Categories() {
     }));
   };
 
-  // const handleCloseDelete = () => {
-  //   setEditOrDeletePopUp(false);
-  //   setDeletePopUp(false);
-  // };
   const handleEdit = () => {
     getSingleCategory();
     setIsEdited(!isEdited);
@@ -217,24 +187,6 @@ export default function Categories() {
 
   return (
     <div className="wrapper-div-departments container-xxxl p-0">
-      {/* {deletePopUp && (
-        <ModalComponent
-          heading="Delete App"
-          handleClose={handleCloseDelete}
-          handleClick={handleDeleteCategory}
-          btn1="Cancel"
-          btn2={isActive === 0 ? "Enable" : "Disable"}
-        >
-          <div className="py-3">
-            <h6 className="text-center mb-2">
-              Do you really want to enable/disable the categories that you have
-              chosen?
-            </h6>
-            <h6 className="text-center">There is no turning back.</h6>
-          </div>
-        </ModalComponent>
-      )} */}
-
       {isEdited && (
         <ModalComponent
           heading="Edit App"
