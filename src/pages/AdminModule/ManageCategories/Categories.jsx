@@ -230,7 +230,7 @@ export default function Categories() {
                 name="type"
                 value={newCategory.type}
                 className="px-3 py-2 rounded border w-100"
-                placeholder="Enter Application name...!"
+                placeholder="Enter Category name...!"
                 onChange={handleAddChange}
               />
             </div>
@@ -247,7 +247,7 @@ export default function Categories() {
 
       <div className="d-md-flex gap-6 px-md-5 px-3 py-4 position-relative">
         <SearchInput
-          placeholder="Search Departments...!"
+          placeholder="Search Categories...!"
           value={search}
           setValue={setSearch}
         />

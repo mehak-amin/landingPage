@@ -64,7 +64,7 @@ function CreateRoles({ handleShowCreate, handleCloseCreate, fetchRoles }) {
               <Form.Label>Role Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter Department Name...!"
+                placeholder="Enter Role...!"
                 value={roleName}
                 onChange={(e) => setRoleName(e.target.value)}
               />

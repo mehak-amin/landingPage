@@ -515,192 +515,194 @@ const Teamates = () => {
           </div>
         </div>
 
-        {isLoading ? (
-          <ShimmerTable row={5} col={5} />
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <div style={{ minWidth: "50rem" }}>
-              <div className="d-flex px-4 pt-4 gap-3 ms-2">
-                <div
-                  className={`d-flex gap-4 px-3 py-2  ${
-                    activeTab === "employees"
-                      ? "bg-gray text-white"
-                      : "bg-white"
-                  }`}
-                  onClick={() => setActiveTab("employees")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h5 className="mb-0 fw-normal">Employees</h5>
-                  <h5 className="mb-0 fw-normal">{employeesCount}</h5>
-                </div>
-                <div
-                  className={`d-flex gap-4 px-3 py-2  ${
-                    activeTab === "working" ? "bg-gray text-white" : "bg-white"
-                  }`}
-                  onClick={() => setActiveTab("working")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h5 className="mb-0 fw-normal">Working</h5>
-                  <h5 className="mb-0 fw-normal">{workingCount}</h5>
-                </div>
-                <div
-                  className={`d-flex gap-4 px-3 py-2 ${
-                    activeTab === "late" ? "bg-gray text-white" : "bg-white"
-                  }`}
-                  onClick={() => setActiveTab("late")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h5 className="mb-0 fw-normal">Late</h5>
-                  <h5 className="mb-0 fw-normal">{lateCount}</h5>
-                </div>
-                <div
-                  className={`d-flex gap-4 px-3 py-2  ${
-                    activeTab === "slacking" ? "bg-gray text-white" : "bg-white"
-                  }`}
-                  onClick={() => setActiveTab("slacking")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h5 className="mb-0 fw-normal">Slack</h5>
-                  <h5 className="mb-0 fw-normal">{slackingCount}</h5>
-                </div>
-                <div
-                  className={`d-flex gap-4 px-3 py-2  ${
-                    activeTab === "absent" ? "bg-gray text-white" : "bg-white"
-                  }`}
-                  onClick={() => setActiveTab("absent")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h5 className="mb-0 fw-normal">Absent</h5>
-                  <h5 className="mb-0 fw-normal">{absentCount}</h5>
-                </div>
+        <div style={{ overflowX: "auto" }}>
+          <div style={{ minWidth: "50rem" }}>
+            <div className="d-flex px-4 pt-4 gap-3 ms-2">
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "employees" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("employees")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Employees</h5>
+                <h5 className="mb-0 fw-normal">{employeesCount}</h5>
               </div>
-              {/* </div> */}
-              {outstream?.length === 0 ? (
-                <div
-                  className="d-flex align-items-center justify-content-center bg-white border-top"
-                  style={{ height: "20rem" }}
-                >
-                  <h4>No team member found!</h4>
-                </div>
-              ) : (
-                <div>
-                  <table className="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th className="text-center py-3 bg-lightGray1">Name</th>
-                        {getCurrentItems()?.map((item, index) => (
-                          <th
-                            key={index}
-                            className="text-center py-3 fw-normal hover-effect border"
-                          >
-                            <Link
-                              to={`teammateDetails/${item.user.user_id}`}
-                              className="text-black text-decoration-none"
-                            >
-                              {item.user.picture === "" ? (
-                                <FaUserCircle className="fs-1 me-4" />
-                              ) : (
-                                <img
-                                  src={item.user.picture}
-                                  alt=""
-                                  className="rounded-circle me-4 border"
-                                  style={{
-                                    width: "2.7rem",
-                                    height: "2.7rem",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              )}
-                              {item.user.name}
-                            </Link>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "working" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("working")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Working</h5>
+                <h5 className="mb-0 fw-normal">{workingCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2 ${
+                  activeTab === "late" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("late")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Late</h5>
+                <h5 className="mb-0 fw-normal">{lateCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "slacking" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("slacking")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Slack</h5>
+                <h5 className="mb-0 fw-normal">{slackingCount}</h5>
+              </div>
+              <div
+                className={`d-flex gap-4 px-3 py-2  ${
+                  activeTab === "absent" ? "bg-gray text-white" : "bg-white"
+                }`}
+                onClick={() => setActiveTab("absent")}
+                style={{ cursor: "pointer" }}
+              >
+                <h5 className="mb-0 fw-normal">Absent</h5>
+                <h5 className="mb-0 fw-normal">{absentCount}</h5>
+              </div>
+            </div>
+            {/* </div> */}
+            {isLoading ? (
+              <ShimmerTable row={5} col={5} />
+            ) : (
+              <div>
+                {outstream?.length === 0 ? (
+                  <div
+                    className="d-flex align-items-center justify-content-center bg-white border-top"
+                    style={{ height: "20rem" }}
+                  >
+                    <h4>No team member found!</h4>
+                  </div>
+                ) : (
+                  <div>
+                    <table className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th className="text-center py-3 bg-lightGray1">
+                            Name
                           </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sideHeadings.map((heading, headingIndex) => (
-                        <tr key={headingIndex}>
-                          <td
-                            className={`text-center py-3 fw-bold ${
-                              headingIndex % 2 !== 0
-                                ? "bg-lightGray1"
-                                : "bg-white"
-                            }`}
-                          >
-                            {heading}
-                          </td>
-                          {getCurrentItems()?.map((item, itemIndex) => (
-                            <td
-                              key={itemIndex}
-                              className="text-center py-3 border"
+                          {getCurrentItems()?.map((item, index) => (
+                            <th
+                              key={index}
+                              className="text-center py-3 fw-normal hover-effect border"
                             >
-                              {headingIndex === 0
-                                ? item.user.department_name
-                                : headingIndex === 1
-                                ? item.modeledData
-                                  ? item.modeledData?.arrivedAt
-                                  : "-"
-                                : headingIndex === 2
-                                ? item.modeledData
-                                  ? item.modeledData?.leftAt
-                                  : "-"
-                                : headingIndex === 3
-                                ? item.modeledData
-                                  ? secondsToHoursMinutes(
-                                      item.modeledData?.productiveTime
-                                    )
-                                  : "-"
-                                : headingIndex === 4
-                                ? item.modeledData
-                                  ? item.modeledData?.offlineTime === "-"
-                                    ? "-"
-                                    : secondsToHoursMinutes(
-                                        item.modeledData?.offlineTime
-                                      )
-                                  : "-"
-                                : headingIndex === 5
-                                ? item.modeledData
-                                  ? item.modeledData?.activeApp
-                                  : "-"
-                                : headingIndex === 7
-                                ? item.modeledData
-                                  ? secondsToHoursMinutes(
-                                      item.modeledData?.deskTime
-                                    )
-                                  : "-"
-                                : "-"}
-                            </td>
+                              <Link
+                                to={`teammateDetails/${item.user.user_id}`}
+                                className="text-black text-decoration-none"
+                              >
+                                {item.user.picture === "" ? (
+                                  <FaUserCircle className="fs-1 me-4" />
+                                ) : (
+                                  <img
+                                    src={item.user.picture}
+                                    alt=""
+                                    className="rounded-circle me-4 border"
+                                    style={{
+                                      width: "2.7rem",
+                                      height: "2.7rem",
+                                      objectFit: "cover",
+                                    }}
+                                  />
+                                )}
+                                {item.user.name}
+                              </Link>
+                            </th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="pagination-controls d-flex justify-content-md-end mt-3">
-                    <div className="d-flex gap-1 px-4 py-3">
-                      <button
-                        className="rounded border border-secondary"
-                        onClick={handlePrevious}
-                        disabled={currentPage === 1}
-                      >
-                        <IoIosArrowRoundBack className="fs-3" />
-                        <span className="d-md-inline d-none">Previous</span>
-                      </button>
-                      {renderPaginationButtons()}
-                      <button
-                        className="rounded border border-secondary"
-                        onClick={handleNext}
-                        disabled={currentPage === totalPages}
-                      >
-                        <span className="d-md-inline d-none">Next</span>
-                        <IoIosArrowRoundForward className="fs-3" />
-                      </button>
+                      </thead>
+                      <tbody>
+                        {sideHeadings.map((heading, headingIndex) => (
+                          <tr key={headingIndex}>
+                            <td
+                              className={`text-center py-3 fw-bold ${
+                                headingIndex % 2 !== 0
+                                  ? "bg-lightGray1"
+                                  : "bg-white"
+                              }`}
+                            >
+                              {heading}
+                            </td>
+                            {getCurrentItems()?.map((item, itemIndex) => (
+                              <td
+                                key={itemIndex}
+                                className="text-center py-3 border"
+                              >
+                                {headingIndex === 0
+                                  ? item.user.department_name
+                                  : headingIndex === 1
+                                  ? item.modeledData
+                                    ? item.modeledData?.arrivedAt
+                                    : "-"
+                                  : headingIndex === 2
+                                  ? item.modeledData
+                                    ? item.modeledData?.leftAt
+                                    : "-"
+                                  : headingIndex === 3
+                                  ? item.modeledData
+                                    ? secondsToHoursMinutes(
+                                        item.modeledData?.productiveTime
+                                      )
+                                    : "-"
+                                  : headingIndex === 4
+                                  ? item.modeledData
+                                    ? item.modeledData?.offlineTime === "-"
+                                      ? "-"
+                                      : secondsToHoursMinutes(
+                                          item.modeledData?.offlineTime
+                                        )
+                                    : "-"
+                                  : headingIndex === 5
+                                  ? item.modeledData
+                                    ? item.modeledData?.activeApp
+                                    : "-"
+                                  : headingIndex === 7
+                                  ? item.modeledData
+                                    ? secondsToHoursMinutes(
+                                        item.modeledData?.deskTime
+                                      )
+                                    : "-"
+                                  : "-"}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div className="pagination-controls d-flex justify-content-md-end mt-3">
+                      <div className="d-flex gap-1 px-4 py-3">
+                        <button
+                          className="rounded border border-secondary"
+                          onClick={handlePrevious}
+                          disabled={currentPage === 1}
+                        >
+                          <IoIosArrowRoundBack className="fs-3" />
+                          <span className="d-md-inline d-none">Previous</span>
+                        </button>
+                        {renderPaginationButtons()}
+                        <button
+                          className="rounded border border-secondary"
+                          onClick={handleNext}
+                          disabled={currentPage === totalPages}
+                        >
+                          <span className="d-md-inline d-none">Next</span>
+                          <IoIosArrowRoundForward className="fs-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {addTeamMember && (
