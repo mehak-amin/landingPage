@@ -69,6 +69,8 @@ function LoginPage() {
       return <Navigate to="/admin/dashboard" />;
     } else if (role === "user") {
       return <Navigate to="/users/myScreen" />;
+    } else {
+      return <Navigate to="*" />;
     }
   }
 
