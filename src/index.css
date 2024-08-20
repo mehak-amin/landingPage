@@ -109,6 +109,13 @@
   max-width: 1600px;
   margin: 0 auto;
 }
+.w-md-25 {
+  width: 55%;
+
+  @media (min-width: 1000px) {
+    width: 25%;
+  }
+}
 
 @media screen and (max-width: 421px) {
   .min-width-xs {

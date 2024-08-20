@@ -172,7 +172,7 @@ function Sidebar({ isSideBarOpen }) {
             // },
             {
               icon: faPeopleGroup,
-              text: "Manage Rolls",
+              text: "Manage Roles",
               link: "admin/settings/manageroles",
             },
           ],
