@@ -598,7 +598,7 @@ const Teamates = () => {
                                 to={`teammateDetails/${item.user.user_id}`}
                                 className="text-black text-decoration-none"
                               >
-                                {item.user.picture === "" ? (
+                                {!item.user.picture ? (
                                   <FaUserCircle className="fs-1 me-4" />
                                 ) : (
                                   <img
@@ -791,25 +791,27 @@ const Teamates = () => {
                 </select>
               </div>
             </div>
-            <div className="d-flex gap-6">
-              <button type="submit" className="btn">
+            <div className="d-flex justify-content-between gap-3 flex-wrap">
+              <button type="submit" className="btn w-md-25">
                 {loading ? (
                   <PulseLoader size={8} color="white" />
                 ) : (
                   "Add Team Members"
                 )}
               </button>
-              <div className="d-flex gap-4 align-items-center">
+              <div className="d-flex flex-wrap gap-3 align-items-center">
                 <p className="mb-0 ">
                   Import<span className="ms-2">from:</span>
                 </p>
-                <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
-                  <FaSlack /> <span>Slack</span>
-                </button>
-                <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
-                  <FcGoogle />
-                  <span>Workspace</span>
-                </button>
+                <div className="d-flex gap-3 flex-wrap">
+                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                    <FaSlack /> <span>Slack</span>
+                  </button>
+                  <button className="px-3 border rounded bg-transparent py-2 d-flex align-items-center gap-2">
+                    <FcGoogle />
+                    <span>Workspace</span>
+                  </button>
+                </div>
               </div>
             </div>
           </form>

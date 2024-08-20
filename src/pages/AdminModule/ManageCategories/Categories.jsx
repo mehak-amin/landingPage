@@ -230,7 +230,7 @@ export default function Categories() {
                 name="type"
                 value={newCategory.type}
                 className="px-3 py-2 rounded border w-100"
-                placeholder="Enter Category name...!"
+                placeholder="Enter Category Name...!"
                 onChange={handleAddChange}
               />
             </div>

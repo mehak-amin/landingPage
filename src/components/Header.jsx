@@ -35,13 +35,9 @@ export default function Header({
       } else if (activeButton === "month") {
         end.setDate(start.getDate() + 29);
       }
-      if (activeButton === "week" || activeButton === "month") {
-        setSelectedStartDate(start);
-        setSelectedEndDate(end);
-      }
-      if (activeButton === "day") {
-        setSelectedStartDate(date);
-      }
+
+      setSelectedStartDate(start);
+      setSelectedEndDate(activeButton === "day" ? start : end);
 
       setIsOpen(false);
     },
@@ -61,12 +57,12 @@ export default function Header({
       }
 
       setSelectedStartDate(start);
-      setSelectedEndDate(end);
+      setSelectedEndDate(type === "day" ? start : end);
     },
     [setSelectedStartDate, setSelectedEndDate]
   );
 
-  const customDateFormat = "MMMM dd, yyyy";
+  const customDateFormat = "MMM dd, yyyy";
   const showWeekNumbers = activeButton === "week";
 
   return (

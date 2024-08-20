@@ -18,7 +18,16 @@ const NotFound = () => {
               <p className="mb-5">
                 The page you are looking for was not found.
               </p>
-              <Link to="/" role="button">
+              <Link
+                to={
+                  localStorage.getItem("role") === "admin"
+                    ? "admin/dashboard"
+                    : localStorage.getItem("role") === "user"
+                    ? "user/myScreen"
+                    : "/"
+                }
+                role="button"
+              >
                 <button className="btn btn-secondary rounded-pill px-4 fs-6 m-0 w-auto">
                   {" "}
                   Back to Home

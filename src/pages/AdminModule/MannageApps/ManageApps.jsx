@@ -309,7 +309,7 @@ const ManageApps = () => {
                 name="application_name"
                 value={newAppData?.application_name}
                 className="px-3 py-2 rounded border w-100"
-                placeholder="Enter Application name...!"
+                placeholder="Enter Application Name...!"
                 onChange={handleAddChange}
               />
             </div>
@@ -353,7 +353,7 @@ const ManageApps = () => {
               <input
                 type="text"
                 name="url"
-                placeholder="Please provide url...!"
+                placeholder="Please Provide URL...!"
                 value={newAppData?.url}
                 className="px-3 py-2 rounded border w-100"
                 onChange={handleAddChange}
