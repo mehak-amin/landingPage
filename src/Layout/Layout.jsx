@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
+import "./Layout.css";
 export default function Layout({ role, user }) {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);

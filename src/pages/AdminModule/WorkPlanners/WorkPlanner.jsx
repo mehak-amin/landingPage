@@ -1,9 +1,7 @@
 import React from "react";
-// import TableComponent from "../../../TableComponent";
+
 import CalendarDay from "../../../components/calendar/calendarDay/CalendarDay";
-// import CalendarWeek from "../../../components/calendar/calendarWeek/CalendarWeek";
-// import Practice from "../../../components/practice/Practice";
-// import ScheduleTable from "../../../components/practice2/ScheduleTable";
+
 import { CiCalendar, CiFilter, CiUser } from "react-icons/ci";
 import "./WorkPlanner.css";
 

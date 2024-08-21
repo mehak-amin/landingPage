@@ -36,6 +36,11 @@
     padding: 0 1rem;
   }
 }
+@media (max-width: 768px) {
+  .main-content-holder {
+    padding-left: 1rem !important;
+  }
+}
 /* ------------------- */
 .calandar-text-size {
   font-size: 14px;

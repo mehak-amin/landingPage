@@ -1,0 +1,62 @@
+* {
+  padding: 0;
+  margin: 0;
+  /* overflow-x: hidden; */
+  position: relative;
+}
+.logged-in-page {
+  display: flex;
+  overflow: hidden;
+  height: 100vh;
+}
+.sidebar-holder {
+  width: 20%;
+  border-right: 1px solid #6d6d6d;
+  overflow-y: auto;
+}
+.sidebar-holder.openn {
+  left: -20%; /* Show sidebar by sliding it into view */
+  transform: translateX(0);
+  overflow-y: auto;
+}
+.navbar-home-holder {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 80%;
+}
+.navbar-home-holder-full {
+  width: 100%;
+  margin-left: 0;
+}
+.mb-6 {
+  margin-bottom: 4.8rem;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5d4d4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8b8a8a;
+}
+
+@media (max-width: 1079px) {
+  .sidebar-holder {
+    width: 10%;
+    min-width: 80px;
+  }
+  .navbar-home-holder {
+    width: 90%;
+  }
+  .navbar-home-holder-full {
+    width: 100%;
+    /* margin-left: 0; */
+  }
+}

@@ -362,9 +362,9 @@ function ManageRoles() {
           </Modal.Footer>
         </Modal>
       )}
-      <div className="main-content-holder px-5">
+      <div className="main-content-holder px-5 min-vh-100 mh-100">
         {/* -------------------------serch & sort------------------------ */}
-        <div className="d-md-flex gap-6  px-md-5 px-3 py-4 position-relative ">
+        <div className="d-md-flex gap-6  px-md-5 pr-3 py-4 position-relative ">
           {/* SEARCH ROLES */}
           <SearchInput
             placeholder="Search Roles...!"
@@ -457,8 +457,8 @@ function ManageRoles() {
               </div>
             </div>
             {/* ------------------------table------------------------- */}
-            <div className=" table-responsive">
-              <table className="table table-bordered">
+            <div className=" table-responsive min-vh-100 mh-100">
+              <table className="table table-bordered min-width-55rem">
                 <thead>
                   <tr>
                     <th className="text-start pl-2">Role Name</th>
