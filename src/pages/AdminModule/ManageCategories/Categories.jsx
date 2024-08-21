@@ -245,7 +245,7 @@ export default function Categories() {
         handleClick={toggleAddCategory}
       />
 
-      <div className="d-md-flex gap-6 px-md-5 px-3 py-4 position-relative">
+      <div className="d-md-flex gap-6 px-sm-5 px-3 py-4 position-relative">
         <SearchInput
           placeholder="Search Categories...!"
           value={search}
@@ -307,7 +307,7 @@ export default function Categories() {
           <ShimmerTable row={6} col={5} />
         </div>
       ) : (
-        <div style={{ overflowX: "auto" }} className="min-vh-100 mh-100">
+        <div style={{ overflowX: "hidden" }} className="min-vh-100 mh-100">
           <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">

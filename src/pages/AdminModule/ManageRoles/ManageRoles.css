@@ -43,7 +43,9 @@ table thead tr {
 .ml-2 {
   margin-left: 0.5rem;
 }
-
+.min-width-55rem {
+  min-width: 55rem;
+}
 .fa-trash,
 .fa-edit,
 .fa-ellipsis-h {
