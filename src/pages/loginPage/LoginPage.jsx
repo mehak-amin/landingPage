@@ -3,7 +3,11 @@ import signInImg from "../../assets/MacBook Air (2022).svg";
 import googleLogo from "../../assets/google.jpg";
 import "./LoginPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import BASE_URI from "../../../config";
@@ -18,6 +22,11 @@ function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   useEffect(() => {
     const storedRememberMe = localStorage.getItem("rememberMe") === "true";
@@ -69,6 +78,8 @@ function LoginPage() {
       return <Navigate to="/admin/dashboard" />;
     } else if (role === "user") {
       return <Navigate to="/users/myScreen" />;
+    } else {
+      return <Navigate to="*" />;
     }
   }
 
@@ -100,7 +111,7 @@ function LoginPage() {
                 <input
                   type="email"
                   id="email"
-                  placeholder="enter Email..."
+                  placeholder="Enter Email..."
                   required
                   value={email}
                   onFocus={() => setIsEmailFocused(true)}
@@ -118,13 +129,19 @@ function LoginPage() {
                   isPasswordFocused ? "focused" : ""
                 }`}
               >
-                <div className="input-icon-holder-login">
-                  <FontAwesomeIcon icon={faEye} size="sm" />
+                <div
+                  className="input-icon-holder-login"
+                  onClick={togglePasswordVisibility}
+                >
+                  <FontAwesomeIcon
+                    icon={showPassword ? faEye : faEyeSlash}
+                    size="sm"
+                  />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="enter Password..."
+                  placeholder="Enter Password..."
                   required
                   value={password}
                   onFocus={() => setIsPasswordFocused(true)}
@@ -160,7 +177,7 @@ function LoginPage() {
               </button>
             </div>
             <div className="socio-login">
-              <div>or continue with</div>
+              <div>Or continue with</div>
               <div className="google-logo">
                 <span>
                   <img src={googleLogo} alt="" className="google-img" />
@@ -168,13 +185,6 @@ function LoginPage() {
                 Google
               </div>
             </div>
-            {/* <div className="signUp-link-holder d-flex justify-content-center align-items-center">
-              <span className="signUp-link">
-                <Link to="/" className="link">
-                  Don&apos;t have an account? Click here!
-                </Link>
-              </span>
-            </div> */}
           </form>
         </div>
       </div>

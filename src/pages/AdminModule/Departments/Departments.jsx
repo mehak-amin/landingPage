@@ -360,7 +360,7 @@ const Departments = () => {
             <input
               type="text"
               value={deptName}
-              placeholder="Enter department name...!"
+              placeholder="Enter Department Name...!"
               className="px-3 py-2 rounded border w-100"
               onChange={(e) => setDeptName(e.target.value)}
             />

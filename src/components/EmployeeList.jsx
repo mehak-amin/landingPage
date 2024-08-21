@@ -55,7 +55,7 @@ const EmployeeList = ({ heading, data }) => {
               key={employee.user.user_id}
               className="employee-card d-flex gap-3"
             >
-              {employee.user.picture === "" ? (
+              {!employee.user.picture ? (
                 <FaUserCircle className="fs-1" />
               ) : (
                 <img
