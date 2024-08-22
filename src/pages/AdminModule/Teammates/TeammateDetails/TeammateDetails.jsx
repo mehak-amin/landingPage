@@ -43,6 +43,7 @@ export default function TeammateDetails() {
 
   const userData = data || {};
   const { name, snaps, userUsage } = userData;
+  console.log(userUsage);
 
   const calculateTime = (data) => {
     if (typeof data === "object") {

@@ -42,6 +42,8 @@ const Teamates = () => {
     role: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  // Track the index of the currently expanded row
+  const [expandedIndex, setExpandedIndex] = useState(null); //////////////////////////////////////////
 
   const filterPopupRef = useRef(null);
   const sortPopupRef = useRef(null);
@@ -366,6 +368,21 @@ const Teamates = () => {
 
     return buttons;
   };
+  function getFirstAndSecondName(fullName) {
+    const nameParts = fullName.split(" ");
+    if (nameParts.length >= 2) {
+      return `${nameParts[0]} ${nameParts[1]}`;
+    }
+    return fullName;
+  }
+  // Function to truncate text//////////////////////////////////////////////////////////////
+  const truncateText = (text, limit) => {
+    return text.length > limit ? `${text.substring(0, limit)}...` : text;
+  };
+  // Toggle function///////////////////////////////////////////////////////////////////////////
+  const handleToggle = (index) => {
+    setExpandedIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   return (
     <div className="container-xxxl px-0">
@@ -589,33 +606,38 @@ const Teamates = () => {
                           <th className="text-center py-3 bg-lightGray1">
                             Name
                           </th>
-                          {getCurrentItems()?.map((item, index) => (
-                            <th
-                              key={index}
-                              className="text-center py-3 fw-normal hover-effect border"
-                            >
-                              <Link
-                                to={`teammateDetails/${item.user.user_id}`}
-                                className="text-black text-decoration-none"
+                          {getCurrentItems()?.map((item, index) => {
+                            const displayName = getFirstAndSecondName(
+                              item.user.name
+                            );
+                            return (
+                              <th
+                                key={index}
+                                className="text-center py-3 fw-normal hover-effect border"
                               >
-                                {!item.user.picture ? (
-                                  <FaUserCircle className="fs-1 me-4" />
-                                ) : (
-                                  <img
-                                    src={item.user.picture}
-                                    alt=""
-                                    className="rounded-circle me-4 border"
-                                    style={{
-                                      width: "2.7rem",
-                                      height: "2.7rem",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                )}
-                                {item.user.name}
-                              </Link>
-                            </th>
-                          ))}
+                                <Link
+                                  to={`teammateDetails/${item.user.user_id}`}
+                                  className="text-black text-decoration-none text-capitalize"
+                                >
+                                  {!item.user.picture ? (
+                                    <FaUserCircle className="fs-1 me-4" />
+                                  ) : (
+                                    <img
+                                      src={item.user.picture}
+                                      alt=""
+                                      className="rounded-circle me-4 border"
+                                      style={{
+                                        width: "2.7rem",
+                                        height: "2.7rem",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  )}
+                                  {displayName}
+                                </Link>
+                              </th>
+                            );
+                          })}
                         </tr>
                       </thead>
                       <tbody>
@@ -630,48 +652,57 @@ const Teamates = () => {
                             >
                               {heading}
                             </td>
-                            {getCurrentItems()?.map((item, itemIndex) => (
-                              <td
-                                key={itemIndex}
-                                className="text-center py-3 border"
-                              >
-                                {headingIndex === 0
-                                  ? item.user.department_name
-                                  : headingIndex === 1
-                                  ? item.modeledData
-                                    ? item.modeledData?.arrivedAt
-                                    : "-"
-                                  : headingIndex === 2
-                                  ? item.modeledData
-                                    ? item.modeledData?.leftAt
-                                    : "-"
-                                  : headingIndex === 3
-                                  ? item.modeledData
-                                    ? secondsToHoursMinutes(
-                                        item.modeledData?.productiveTime
-                                      )
-                                    : "-"
-                                  : headingIndex === 4
-                                  ? item.modeledData
-                                    ? item.modeledData?.offlineTime === "-"
-                                      ? "-"
-                                      : secondsToHoursMinutes(
-                                          item.modeledData?.offlineTime
+                            {getCurrentItems()?.map((item, itemIndex) => {
+                              const activeApps =
+                                item.modeledData?.activeApp || "-";
+                              const isExpanded = expandedIndex === itemIndex;
+
+                              return (
+                                <td
+                                  key={itemIndex}
+                                  className="text-center py-3 border"
+                                  onClick={() => handleToggle(itemIndex)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {headingIndex === 5
+                                    ? isExpanded
+                                      ? activeApps
+                                      : truncateText(activeApps, 30)
+                                    : // Handle other cases
+                                    headingIndex === 0
+                                    ? item.user.department_name
+                                    : headingIndex === 1
+                                    ? item.modeledData
+                                      ? item.modeledData?.arrivedAt
+                                      : "-"
+                                    : headingIndex === 2
+                                    ? item.modeledData
+                                      ? item.modeledData?.leftAt
+                                      : "-"
+                                    : headingIndex === 3
+                                    ? item.modeledData
+                                      ? secondsToHoursMinutes(
+                                          item.modeledData?.productiveTime
                                         )
-                                    : "-"
-                                  : headingIndex === 5
-                                  ? item.modeledData
-                                    ? item.modeledData?.activeApp
-                                    : "-"
-                                  : headingIndex === 7
-                                  ? item.modeledData
-                                    ? secondsToHoursMinutes(
-                                        item.modeledData?.deskTime
-                                      )
-                                    : "-"
-                                  : "-"}
-                              </td>
-                            ))}
+                                      : "-"
+                                    : headingIndex === 4
+                                    ? item.modeledData
+                                      ? item.modeledData?.offlineTime === "-"
+                                        ? "-"
+                                        : secondsToHoursMinutes(
+                                            item.modeledData?.offlineTime
+                                          )
+                                      : "-"
+                                    : headingIndex === 7
+                                    ? item.modeledData
+                                      ? secondsToHoursMinutes(
+                                          item.modeledData?.deskTime
+                                        )
+                                      : "-"
+                                    : "-"}
+                                </td>
+                              );
+                            })}
                           </tr>
                         ))}
                       </tbody>
