@@ -23,7 +23,7 @@
     display: flex;
   }
 }
-@media screen and (min-width: 900px) and (max-width: 1500px) {
+@media screen and (min-width: 900px) and (max-width: 1499px) {
   .ss-display-flex {
     display: flex;
   }
