@@ -66,7 +66,11 @@ function Navbar({
         <ul className="list-unstyled cursor-pointer fs-5 mb-0">
           <li className="py-2 px-3 border-bottom">
             <Link
-              to="admin/profile"
+              to={
+                localStorage.getItem("role") === "admin"
+                  ? "admin/profile"
+                  : "users/profile"
+              }
               className="text-decoration-none text-black"
             >
               Profile

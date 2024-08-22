@@ -9,6 +9,7 @@ import {
 } from "recharts";
 
 export default function TimeCard({ title, data }) {
+  // console.log(data[0]);
   function calculateMeanTime(times) {
     const milliseconds = times.map((time) => {
       const [hours, minutes, seconds] = time.split(":");
@@ -29,18 +30,22 @@ export default function TimeCard({ title, data }) {
     return meanTime;
   }
 
-  const meanTime = data && calculateMeanTime(data);
+  const meanTime =
+    data[0] === "WORKING" ? data : data && calculateMeanTime(data);
 
   const timeToDecimalHours = (timeString) => {
-    const [hours, minutes, seconds] = timeString.match(/[0-9]+/g).map(Number);
-    const period = timeString.match(/[a-zA-Z]+/)[0].toLowerCase();
-    let hourValue = hours;
-    if (period === "pm" && hours < 12) {
-      hourValue += 12;
-    } else if (period === "am" && hours === 12) {
-      hourValue = 0;
+    if (timeString !== "WORKING") {
+      const [hours, minutes, seconds] = timeString.match(/[0-9]+/g).map(Number);
+      const period = timeString.match(/[a-zA-Z]+/)[0].toLowerCase();
+      let hourValue = hours;
+      if (period === "pm" && hours < 12) {
+        hourValue += 12;
+      } else if (period === "am" && hours === 12) {
+        hourValue = 0;
+      }
+      return hourValue + minutes / 60 + seconds / 3600;
     }
-    return hourValue + minutes / 60 + seconds / 3600;
+    return timeString;
   };
 
   const formattedData =
@@ -58,20 +63,22 @@ export default function TimeCard({ title, data }) {
           <Card.Title className="text-green">{meanTime}</Card.Title>
           <div style={{ width: "100%", height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={formattedData?.length === 1 ? dummyData : formattedData}
-                margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="time"
-                  stroke="#36c449"
-                  dot={false}
-                  activeDot={false}
-                />
-              </LineChart>
+              {data[0] !== "WORKING" && (
+                <LineChart
+                  data={formattedData?.length === 1 ? dummyData : formattedData}
+                  margin={{ top: 20, right: 10, left: 10, bottom: 10 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="time"
+                    stroke="#36c449"
+                    dot={false}
+                    activeDot={false}
+                  />
+                </LineChart>
+              )}
             </ResponsiveContainer>
           </div>
         </Card.Body>
