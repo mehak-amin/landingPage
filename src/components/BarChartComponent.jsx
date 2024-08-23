@@ -19,20 +19,22 @@ const BarChartComponent = ({ barData }) => {
     () => aggregateSlotData(barData),
     [barData, aggregateSlotData]
   );
+  const formatValueWithMinutes = (value) => {
+    return `${value.toFixed(1)}m`; // Format value with one decimal place followed by 'm'
+  };
 
   const chartData = useMemo(
     () =>
       aggregatedSlotDataResult &&
       aggregatedSlotDataResult.map((slot, index) => ({
         timeSlot: `${(index + 1) * 10}min`,
-        productive: slot.productive || 0,
-        unproductive: slot.unproductive || 0,
-        neutral: slot.neutral || 0,
-        idleTime: slot.idleTime || 0,
+        productive: Math.round(slot.productive / 60) || 0,
+        unproductive: Math.round(slot.unproductive / 60) || 0,
+        neutral: Math.round(slot.neutral / 60) || 0,
+        idleTime: Math.round(slot.idleTime / 60) || 0,
       })),
     [aggregatedSlotDataResult]
   );
-
   const formatXAxis = useCallback((tickItem) => {
     const minutes = parseInt(tickItem.replace("min", ""), 10);
     if (minutes % 60 === 0) {
@@ -57,6 +59,26 @@ const BarChartComponent = ({ barData }) => {
     );
   }
 
+  // Custom Tooltip function
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          className="custom-tooltip p-3"
+          style={{ backgroundColor: "white" }}
+        >
+          <p className="label">{`${label}`}</p>
+          {payload.map((entry, index) => (
+            <p key={index} style={{ color: entry.color }}>
+              {`${entry.name}: ${entry.value}m`}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="text-center mb-4 barChart">
       <BarChart
@@ -79,7 +101,7 @@ const BarChartComponent = ({ barData }) => {
           height={70}
           tickFormatter={formatXAxis}
         />
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="productive" fill="#36c449" stackId="a" />
         <Bar dataKey="unproductive" fill="#ff662f" stackId="a" />
         <Bar dataKey="neutral" fill="#D3D3D3" stackId="a" />

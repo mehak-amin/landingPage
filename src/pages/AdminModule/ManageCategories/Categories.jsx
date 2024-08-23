@@ -10,6 +10,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 import toast from "react-hot-toast";
+import "./Categories.css";
 
 export default function Categories() {
   const [isEdited, setIsEdited] = useState(false);
@@ -245,7 +246,7 @@ export default function Categories() {
         handleClick={toggleAddCategory}
       />
 
-      <div className="d-md-flex gap-6 px-sm-5 px-3 py-4 position-relative">
+      <div className="search-sort-holder  d-md-flex gap-6 px-sm-5 px-3 py-4 position-relative">
         <SearchInput
           placeholder="Search Categories...!"
           value={search}
@@ -307,8 +308,11 @@ export default function Categories() {
           <ShimmerTable row={6} col={5} />
         </div>
       ) : (
-        <div style={{ overflowX: "hidden" }} className="min-vh-100 mh-100">
-          <div className="px-sm-5 px-3" style={{ minWidth: "66rem" }}>
+        <div style={{ overflowX: "hidden" }} className=" min-vh-100 mh-100">
+          <div
+            className="category-list px-sm-5 px-3"
+            style={{ minWidth: "66rem" }}
+          >
             <div className="top-div-bottom-departments py-3">
               <div className="left-top-div-bottom-departments">
                 <h5 className="cursor-pointer text-decoration-none">
