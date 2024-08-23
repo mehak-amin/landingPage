@@ -54,10 +54,7 @@ function App() {
             />
           }
         />
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         <Route path="/forgetPassword" element={<ForgetPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/landingPage" element={<LandingPage />} />
@@ -73,10 +70,6 @@ function App() {
               path="teammates/teammateDetails/:id"
               element={<TeammateDetails />}
             />
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
             <Route path="settings" element={<Settings />}>
               <Route path="manageCategories" element={<Categories />} />
               <Route path="workplanner" element={<WorkPlanner />} />

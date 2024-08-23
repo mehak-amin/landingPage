@@ -43,7 +43,6 @@ export default function Header({
           setSelectedEndDate(activeButton === "day" ? start : end);
       }
 
-
       setIsOpen(false);
     },
     [activeButton, setSelectedStartDate, setSelectedEndDate]

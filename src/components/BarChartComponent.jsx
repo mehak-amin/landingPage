@@ -35,13 +35,54 @@ const BarChartComponent = ({ barData }) => {
       })),
     [aggregatedSlotDataResult]
   );
-  const formatXAxis = useCallback((tickItem) => {
-    const minutes = parseInt(tickItem.replace("min", ""), 10);
-    if (minutes % 60 === 0) {
-      return `${minutes / 60}h`;
-    }
-    return "";
-  }, []);
+
+  //hourly format
+  // const formatXAxis = useCallback((tickItem) => {
+  //   const minutes = parseInt(tickItem.replace("min", ""), 10);
+  //   if (minutes % 60 === 0) {
+  //     return `${minutes / 60}h`;
+  //   }
+  //   return "";
+  // }, []);
+
+  //24hr format
+  const startTime = new Date("2024-08-23T10:00:00"); // Example start time at 10:00 AM
+  const formatXAxis = useCallback(
+    (tickItem, index) => {
+      const barsPerHour = 6; // Since each bar represents 10 minutes, 6 bars = 1 hour
+      if (index % barsPerHour === 0) {
+        const currentTime = new Date(startTime);
+        currentTime.setMinutes(currentTime.getMinutes() + index * 10); // Calculate the time for the current bar
+        const hours = currentTime.getHours().toString().padStart(2, "0");
+        const minutes = currentTime.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`;
+      }
+      return ""; // Return an empty string for bars that do not fall on the hour mark
+    },
+    [startTime]
+  );
+
+  //am/pm format
+  // const formatXAxis = useCallback(
+  //   (tickItem, index) => {
+  //     const barsPerHour = 6; // Since each bar represents 10 minutes, 6 bars = 1 hour
+  //     if (index % barsPerHour === 0) {
+  //       const currentTime = new Date(startTime);
+  //       currentTime.setMinutes(currentTime.getMinutes() + index * 10); // Calculate the time for the current bar
+
+  //       let hours = currentTime.getHours();
+  //       const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+  //       const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  //       hours = hours % 12;
+  //       hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  //       return `${hours}:${minutes} ${ampm}`;
+  //     }
+  //     return ''; // Return an empty string for bars that do not fall on the hour mark
+  //   },
+  //   [startTime]
+  // );
 
   if (barData?.length === 0) {
     return (
@@ -100,6 +141,8 @@ const BarChartComponent = ({ barData }) => {
           interval={0}
           height={70}
           tickFormatter={formatXAxis}
+          axisLine={{ stroke: "red" }} // Set the X-axis line color to red
+          tick={{ fill: "#000" }}
         />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="productive" fill="#36c449" stackId="a" />

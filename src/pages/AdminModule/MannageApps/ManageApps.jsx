@@ -429,13 +429,9 @@ const ManageApps = () => {
       </div>
 
       {isLoading ? (
-<<<<<<< Updated upstream
         <div className="px-sm-5 px-3">
           <ShimmerTable row={6} col={5} />
         </div>
-=======
-        <ShimmerTable row={5} col={5} />
->>>>>>> Stashed changes
       ) : appList?.length === 0 ? (
         <div
           className="bg-white flex align-items-center justify-content-center"

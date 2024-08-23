@@ -2,6 +2,7 @@ import { useState } from "react";
 import { RiListView } from "react-icons/ri";
 import { FaUserCircle } from "react-icons/fa";
 import convertSecondsToTime from "../utils/formattingTime";
+import { Link } from "react-router-dom";
 const EmployeeList = ({ heading, data }) => {
   const [showAllEmployees, setShowAllEmployees] = useState(false);
   const visibleEmployees =
@@ -67,7 +68,12 @@ const EmployeeList = ({ heading, data }) => {
               )}
               <div className="employee-details mt-1" style={{ color: "gray" }}>
                 <h6 className="text-decoration-underline mb-0 text-capitalize">
-                  {employee.user.name}
+                  <Link
+                    to={`/admin/teammates/teammateDetails/${employee.user.user_id}`}
+                    className="text-black"
+                  >
+                    {employee.user.name}
+                  </Link>
                 </h6>
                 <div className="d-flex gap-1">
                   <p className="mb-0">{getMetric(employee)}</p>

@@ -22,7 +22,7 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                 {Object.entries(tabData).map(([key, value], index) => (
                   <div key={`${tabIndex}-${index}`} className="fw-light">
                     {Number.isFinite(value)
-                      ? `${(value / 60).toFixed(2)} min`
+                      ? convertSecondsToTime(value)
                       : "No time spent data"}
                   </div>
                 ))}
@@ -126,7 +126,7 @@ export default function AppList({ heading, data = "", backgound, loading }) {
                       />
                       <p className="mb-0">{appName}</p>
                       <p className={`mb-0 fw-bold ${getColorClass(heading)}`}>
-                        {(AllTime / 60).toFixed(0)}m
+                        {convertSecondsToTime(AllTime)}
                       </p>
                     </div>
                   </OverlayTrigger>
