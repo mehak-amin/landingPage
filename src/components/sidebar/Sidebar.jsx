@@ -34,7 +34,6 @@ function Sidebar({ isSideBarOpen }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeElement, setActiveElement] = useState("admin/dashboard");
   const [activeSubElement, setActiveSubElement] = useState(null);
-
   const location = useLocation();
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
@@ -50,7 +49,6 @@ function Sidebar({ isSideBarOpen }) {
   const handleSubActiveElement = (subLink) => {
     setActiveSubElement(subLink);
   };
-
   const role = localStorage.getItem("role");
   const adminOptions = [
     {

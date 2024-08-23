@@ -10,7 +10,9 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import { ShimmerTable } from "react-shimmer-effects";
 import axios from "axios";
 import toast from "react-hot-toast";
+
 import "./Categories.css";
+
 
 export default function Categories() {
   const [isEdited, setIsEdited] = useState(false);
@@ -19,11 +21,8 @@ export default function Categories() {
   const [isSort, setIsSort] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
   const [sortCriteria, setSortCriteria] = useState("");
-
   const [editOrDeletePopUp, setEditOrDeletePopUp] = useState(false);
-
   const [id, setId] = useState(false);
-
   const [singleCategoryData, setSingleCategoryData] = useState({
     type: "",
   });
@@ -32,19 +31,15 @@ export default function Categories() {
   });
   const sortPopupRef = useRef(null);
   const editDeletePopupRefs = useRef({});
-
   const token = localStorage.getItem("token");
   let url = `${BASE_URI}/category?search=${search}&sort=${sortCriteria}&direction=${sortOrder}`;
-
   const fetchOptions = {
     headers: {
       Authorization: "Bearer " + token,
     },
   };
-
   const { data, isLoading, error, refetch } = useFetch(url, fetchOptions);
   const categoryData = data?.data?.appCategories || [];
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -65,19 +60,16 @@ export default function Categories() {
         }
       });
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   const getSingleCategory = async () => {
     try {
       const response = await axios({
         method: "GET",
         url: `${BASE_URI}/category/${id}`,
-
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -91,7 +83,6 @@ export default function Categories() {
       });
     }
   };
-
   const handleEditCategory = async () => {
     // console.log(id);
     try {
@@ -116,7 +107,6 @@ export default function Categories() {
       });
     }
   };
-
   const handleCreateCategory = async () => {
     // console.log(newAppData);
     try {
@@ -142,14 +132,12 @@ export default function Categories() {
       });
     }
   };
-
   const toggleEditOrDeletePopUp = (id) => {
     setEditOrDeletePopUp((prevEditOrDeletePopUp) => ({
       ...prevEditOrDeletePopUp,
       [id]: !prevEditOrDeletePopUp[id],
     }));
   };
-
   const handleEdit = () => {
     getSingleCategory();
     setIsEdited(!isEdited);
@@ -158,7 +146,6 @@ export default function Categories() {
     setEditOrDeletePopUp(false);
     setIsEdited(false);
   };
-
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setSingleCategoryData((prevState) => ({
@@ -166,7 +153,6 @@ export default function Categories() {
       [name]: value,
     }));
   };
-
   const handleAddChange = (e) => {
     const { name, value } = e.target;
     setNewCategory((prevState) => ({
@@ -174,18 +160,15 @@ export default function Categories() {
       [name]: value,
     }));
   };
-
   const toggleAddCategory = () => {
     setIsAddCategory(!isAddCategory);
   };
   const handleSortOrderChange = (event) => {
     setSortOrder(event.target.value);
   };
-
   const handleSortCriteriaChange = (event) => {
     setSortCriteria(event.target.value);
   };
-
   return (
     <div className="wrapper-div-departments container-xxxl p-0">
       {isEdited && (
@@ -212,7 +195,6 @@ export default function Categories() {
           </div>
         </ModalComponent>
       )}
-
       {isAddCategory && (
         <ModalComponent
           heading="Add Category"
@@ -246,13 +228,14 @@ export default function Categories() {
         handleClick={toggleAddCategory}
       />
 
+
       <div className="search-sort-holder  d-md-flex gap-6 px-sm-5 px-3 py-4 position-relative">
+
         <SearchInput
           placeholder="Search Categories...!"
           value={search}
           setValue={setSearch}
         />
-
         <div ref={sortPopupRef} className="d-flex gap-4 mt-3 mt-md-0">
           <div
             className="border-0 bg-white rounded"
@@ -277,7 +260,6 @@ export default function Categories() {
                   <option value="category_name">Category Name</option>
                 </select>
               </div>
-
               <div className="d-flex flex-direction-column">
                 <label className="d-flex align-items-center gap-3 px-4 py-2 border-top border-bottom">
                   <input
@@ -302,7 +284,6 @@ export default function Categories() {
           )}
         </div>
       </div>
-
       {isLoading ? (
         <div className="px-sm-5 px-3">
           <ShimmerTable row={6} col={5} />
