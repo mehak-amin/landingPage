@@ -10,6 +10,7 @@ import "react-international-phone/style.css";
 import "./UserProfile.css";
 import toast from "react-hot-toast";
 import { ShimmerPostItem } from "react-shimmer-effects";
+import { useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const [formData, setFormData] = useState({
@@ -19,7 +20,12 @@ export default function UserProfile() {
     image: "",
   });
   const [isImage, setIsImage] = useState(false);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : { fullname: "", picture: "" };
+  });
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   let url = `${BASE_URI}/employee/profile`;
 
@@ -94,6 +100,19 @@ export default function UserProfile() {
             position: "top-right",
           });
           refetch();
+          navigate("/users/myScreen");
+          console.log(data);
+          const updatedUser = {
+            ...user,
+            fullname: e.target.name.value,
+            picture: e.target.profile_picture.value,
+          };
+
+          // Update state
+          setUser(updatedUser);
+
+          // Update local storage
+          localStorage.setItem("user", JSON.stringify(updatedUser));
         } else {
           toast.error("Failed to update profile", {
             position: "top-right",

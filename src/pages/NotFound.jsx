@@ -23,7 +23,7 @@ const NotFound = () => {
                   localStorage.getItem("role") === "admin"
                     ? "admin/dashboard"
                     : localStorage.getItem("role") === "user"
-                    ? "user/myScreen"
+                    ? "users/myScreen"
                     : "/"
                 }
                 role="button"
