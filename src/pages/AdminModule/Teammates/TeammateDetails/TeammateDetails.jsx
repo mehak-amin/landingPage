@@ -43,6 +43,7 @@ export default function TeammateDetails() {
 
   const userData = data || {};
   const { name, snaps, userUsage } = userData;
+  console.log(userUsage);
 
   const calculateTime = (data) => {
     if (typeof data === "object") {
@@ -99,7 +100,7 @@ export default function TeammateDetails() {
               />
             </Suspense>
           </div>
-          <div style={{ minWidth: "48%" }}>
+          <div style={{ maxWidth: "48%" }}>
             <div className="px-3 py-2 border-4 border-white border rounded mb-5">
               <p className="fs-4 fw-medium">Productivity Bar</p>
               {isLoading ? (

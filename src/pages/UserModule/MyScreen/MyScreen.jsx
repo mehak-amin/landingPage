@@ -80,7 +80,7 @@ function MyScreen() {
     ],
     []
   );
-  if (!data) {
+  if (!data && !isLoading) {
     return (
       <div className=" container-xxxl px-0 mt-1  w-100">
         <Header

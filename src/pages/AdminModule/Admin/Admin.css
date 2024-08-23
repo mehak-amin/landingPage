@@ -1,7 +1,7 @@
-* {
+/* * {
   padding: 0;
   margin: 0;
-  /* overflow-x: hidden; */
+ 
   position: relative;
 }
 .logged-in-page {
@@ -15,7 +15,7 @@
   overflow-y: auto;
 }
 .sidebar-holder.openn {
-  left: -20%; /* Show sidebar by sliding it into view */
+  left: -20%;
   transform: translateX(0);
   overflow-y: auto;
 }
@@ -57,6 +57,6 @@
   }
   .navbar-home-holder-full {
     width: 100%;
-    /* margin-left: 0; */
+  
   }
-}
+} */

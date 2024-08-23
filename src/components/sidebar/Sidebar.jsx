@@ -108,7 +108,7 @@ function Sidebar({ isSideBarOpen }) {
             },
             {
               icon: faUserCog,
-              text: "Manage Rolls",
+              text: "Manage Roles",
               link: "/admin/settings/manageroles",
             },
           ],
