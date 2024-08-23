@@ -43,6 +43,7 @@ export default function AdminDashboard() {
     allSnaps,
     barData,
   } = usersData;
+  console.log(barData);
 
   const flattenedArray = useMemo(() => barData?.flat(), [barData]);
 

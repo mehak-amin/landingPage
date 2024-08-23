@@ -11,6 +11,7 @@ import "./UserProfile.css";
 import toast from "react-hot-toast";
 import { ShimmerPostItem } from "react-shimmer-effects";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function UserProfile() {
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ export default function UserProfile() {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : { fullname: "", picture: "" };
   });
+
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -104,8 +106,8 @@ export default function UserProfile() {
           console.log(data);
           const updatedUser = {
             ...user,
-            fullname: e.target.name.value,
-            picture: e.target.profile_picture.value,
+            fullname: data?.user?.fullName,
+            picture: data?.user?.picture,
           };
 
           // Update state
@@ -147,7 +149,9 @@ export default function UserProfile() {
         </div>
         <div className="d-flex flex-wrap gap-3 align-items-center">
           <ButtonActive heading="Save Changes" handleClick={handleSubmit} />
-          <ButtonInactive heading="Change Password" />
+          <Link to="/reset-password">
+            <ButtonInactive heading="Change Password" />
+          </Link>
         </div>
       </div>
 
