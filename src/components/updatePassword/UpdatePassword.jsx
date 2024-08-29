@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import signInImg from "../../assets/MacBook Air (2022).svg";
 import googleLogo from "../../assets/google.jpg";
-import "./ResetPassword.css";
+import "./UpdatePassword.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
@@ -14,19 +14,28 @@ import axios from "axios";
 import BASE_URI from "../../../config";
 
 axios.defaults.withCredentials = true;
-function ResetPassword() {
+function UpdatePassword() {
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [user, setUser] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [token, setToken] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const location = useLocation();
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword((prevState) => !prevState);
@@ -36,82 +45,52 @@ function ResetPassword() {
     setShowConfirmPassword((prevState) => !prevState);
   };
 
-  //WORK TOMMOROW
-  // const resetToken = "186e975b6053cdb6d3a5f094b1bd0ab6424dc22acf6336825e781857b5c19538"; // Replace with the actual token
-
-  // const resetPasswordURL = `http://yourfrontend.com/resetPassword/${resetToken}`;
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    // setToken(queryParams.get("token"));
-    const tokenFromURL = queryParams.get("token");
-    if (tokenFromURL) {
-      setToken(tokenFromURL);
-    } else {
-      setError("Token is missing or invalid.");
-    }
-    console.log("Token from URL:", token);
-  }, [location]);
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
   const handleBlur = () => {
     setIsFocused(false);
-    1;
   };
-
-  const handleResetPassword = async (e) => {
+  // const token = localStorage.getItem("token");
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    // Debugging: Check the token
+    console.log("Token:", token);
 
     if (!token) {
-      setError("No token provided.");
+      console.error("No token found in localStorage");
       return;
     }
-    // if (password !== confirmPassword) {
-    //   setError("Passwords do not match.");
-    //   return;
-    // }
 
-    setLoading(true);
-    console.log(`${BASE_URI}/users/reset-password/${token}`);
+    // Check for JWT structure
+    if (token.split(".").length !== 3) {
+      console.error("Malformed JWT token:", token);
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        `${BASE_URI}/users/reset-password/${token}`,
-        // "http://localhost:5050/api/v1/users/reset-password/3b42ffdc4a1b4ab94126646e8c077f3e9a26b6f425869ed96c965c67267ad74c"c6a478cbc3031bff3520cb0cb0eea8815d64a36c889910f43822ae0d23078615
-        // or
-        // "http://emp-monitoring.ap-south-1.elasticbeanstalk.com/api/v1/users/reset-password",
-
+      const response = await axios.patch(
+        `${BASE_URI}/users/me`,
         {
           password: password,
-          confirmPassword: confirmPassword,
+          newPassword: newPassword,
+          passwordConfirm: passwordConfirm,
         },
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log(response);
-      if (response.data.message === "Password updated successfuly") {
-        setMessage("Your password has been successfully reset.");
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
-      }
-      // else {
-      //   setError("Failed to reset password. Please try again.");
-      // }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+
+      console.log("Password updated:", response);
+    } catch (error) {
+      console.error(
+        "Error updating password:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
-
-  // const token = localStorage.getItem("token");
-  // if (token && user) {
-  //   return <Navigate to="/" />;
-  // }
 
   return (
     <div className="login">
@@ -123,13 +102,41 @@ function ResetPassword() {
 
       <div className="container form-section-login">
         <h1 className="signin-heading-login mb-2 text-center">
-          Reset Password
+          Update Password
         </h1>
         <p className="signIn-subHeading-login mb-4 text-center">
-          Enter New Password, and we'll help you get back on track right away.
+          Update Password, and we'll help you get back on track right away.
         </p>
 
-        <form action="" onSubmit={handleResetPassword}>
+        <form action="" onSubmit={handleUpdatePassword}>
+          <div className="input-col">
+            <label htmlFor="password" className="form-label">
+              Current Password
+            </label>
+            <div
+              className={`inputwithicon-login ${isFocused ? "focused" : ""}`}
+            >
+              <div
+                className="input-icon-holder-login"
+                onClick={togglePasswordVisibility}
+              >
+                <FontAwesomeIcon
+                  icon={showPassword ? faEye : faEyeSlash}
+                  size="sm"
+                />
+              </div>
+              <input
+                type={showPassword ? "text" : "password"}
+                id="currentpassword"
+                placeholder="enter current Password..."
+                value={password}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
           <div className="input-col">
             <label htmlFor="password" className="form-label">
               New Password
@@ -148,12 +155,12 @@ function ResetPassword() {
               </div>
               <input
                 type={showNewPassword ? "text" : "password"}
-                id="password"
+                id="newPassword"
                 placeholder="enter new Password..."
-                value={password}
+                value={newPassword}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
           </div>
@@ -176,34 +183,25 @@ function ResetPassword() {
               </div>
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                id="confirmpassword"
+                id="passwordConfirm"
                 placeholder="confirm new Password..."
-                value={confirmPassword}
+                value={passwordConfirm}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
               />
             </div>
           </div>
 
           <div className="btn-holder-login my-5">
-            {/* <button
-              type="submit"
-              className="btn-login "
-              onClick={handleResetPassword}
-            >
-              Reset Password
-            </button> */}
             <button
               type="submit"
               className="btn btn-primary mt-3"
               disabled={loading}
-              // onClick={handleResetPassword}
             >
-              {loading ? "Resetting..." : "Reset Password"}
+              {loading ? "Updatting..." : "Update Password"}
             </button>
           </div>
-          {/* <div className="validation">{message && message}</div> */}
           {message && <div className="alert alert-success">{message}</div>}
           {error && <div className="alert alert-danger">{error}</div>}
         </form>
@@ -212,4 +210,4 @@ function ResetPassword() {
   );
 }
 
-export default ResetPassword;
+export default UpdatePassword;

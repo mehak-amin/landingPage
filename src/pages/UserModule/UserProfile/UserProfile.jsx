@@ -106,7 +106,7 @@ export default function UserProfile() {
           console.log(data);
           const updatedUser = {
             ...user,
-            fullname: data?.user?.fullName,
+            fullname: data?.user?.fullname,
             picture: data?.user?.picture,
           };
 
@@ -149,7 +149,7 @@ export default function UserProfile() {
         </div>
         <div className="d-flex flex-wrap gap-3 align-items-center">
           <ButtonActive heading="Save Changes" handleClick={handleSubmit} />
-          <Link to="/reset-password">
+          <Link to="/update-password">
             <ButtonInactive heading="Change Password" />
           </Link>
         </div>
