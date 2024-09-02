@@ -274,7 +274,7 @@ export default function LandingPage() {
           </motion.nav>
 
           <div
-            className="d-flex flex-direction-column align-items-center justify-content-center gap-4 text-white"
+            className="d-flex flex-column align-items-center justify-content-center gap-4 text-white"
             style={{ minHeight: "38rem" }}
           >
             <div className="text-center text-wrap">
