@@ -59,14 +59,14 @@ const Card = ({
 );
 
 export default function LandingPage() {
-  // my code
+  // mouse hover
   const [mousePosition, setMousePosition] = useState({
     x: 0,
     y: 0
   });
 
   const [cursorVariant, setCursorVariant] = useState("default");
-  // my code
+  //mouse hover
 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -262,7 +262,7 @@ export default function LandingPage() {
     }
   }, [controls, inViewLogo3]);
 
-  // my code
+  // mouse hover
   
   useEffect(() => {
     const mouseMove = e => {
@@ -296,14 +296,14 @@ export default function LandingPage() {
       <motion.span
         key={index}
         onMouseEnter={textEnter}
-       
+        transition={{ duration: 0.01 ,type: "spring" , stiffness: 300, damping: 20 }}
         style={{ display: 'inline-block' }}
       >
         {char}
       </motion.span>
     ));
   };
-  // my code
+  // mouse hover
 
   return (
     <>
@@ -396,13 +396,25 @@ export default function LandingPage() {
                 Start for free
               </button>
             </motion.div>
-            {/* my code */}
+            {/* mouse hover */}
             <motion.div
+            
         className='cursor'
         variants={variants}
         animate={cursorVariant}
       />
-            {/* my code */}
+
+<motion.div
+  className="your-element-class"
+  whileHover={{
+    scale: 1.1,
+    transition: { type: "spring", stiffness: 300, damping: 20 },
+  }}
+>
+
+</motion.div>
+
+            {/* mouse hover */}
           </div>
         </div>
       </div>
@@ -419,7 +431,7 @@ export default function LandingPage() {
               }}
             />
           </motion.div> */}
-          {/* my code landing 3d effect */}
+          {/*  landing 3d effect */}
           <div className="landing-images">
         <Atropos className="my-atropos" activeOffset={50} shadow={true}>
           <img src="src/assets/wp7632525.webp" data-atropos-offset="-5" className="bg-img" alt="Background" />
@@ -435,7 +447,7 @@ export default function LandingPage() {
       </div>
 
 
-          {/* my code  */}
+          {/* 3d annimate  */}
         </div>
 
         <div

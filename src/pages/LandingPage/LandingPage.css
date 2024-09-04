@@ -96,10 +96,10 @@
 }
 
 
-/* my code */
+/*annimations cursor , landing img */
 
 .cursor{
-  background-color: white !important;
+  background-color: rgb(255, 253, 253) ;
   height:32px;
   width: 32px;
   border-radius: 50%;
@@ -112,6 +112,12 @@
 }
 *{
   cursor: none;
+}
+
+
+
+.your-element-class {
+  will-change: transform;
 }
 /* landing css 3d */
 
@@ -197,4 +203,4 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* my code */
+/* annimations cursor landing image */
