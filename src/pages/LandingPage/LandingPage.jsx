@@ -10,6 +10,9 @@ import { LuArrowDownLeftFromCircle } from "react-icons/lu";
 import PricingCard from "../../components/Card/PricingCard";
 import ReviewCard from "../../components/Card/ReviewCard";
 
+import Atropos from 'atropos/react';
+import 'atropos/css';
+
 const Card = ({
   icon,
   heading,
@@ -56,6 +59,15 @@ const Card = ({
 );
 
 export default function LandingPage() {
+  // my code
+  const [mousePosition, setMousePosition] = useState({
+    x: 0,
+    y: 0
+  });
+
+  const [cursorVariant, setCursorVariant] = useState("default");
+  // my code
+
   const [isVisible, setIsVisible] = useState(false);
 
   const controls = useAnimation();
@@ -250,6 +262,49 @@ export default function LandingPage() {
     }
   }, [controls, inViewLogo3]);
 
+  // my code
+  
+  useEffect(() => {
+    const mouseMove = e => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", mouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+    };
+  }, []);
+
+  const variants = {
+    default: {
+      x: mousePosition.x - 16,
+      y: mousePosition.y - 16,
+    },
+    text: {
+      x: mousePosition.x - 75,
+      y: mousePosition.y - 75,
+      // backgroundColor: "white",
+      mixBlendMode: "difference",
+    }
+  };
+
+  const textEnter = () => setCursorVariant("text");
+
+  const splitText = (text) => {
+    return text.split("").map((char, index) => (
+      <motion.span
+        key={index}
+        onMouseEnter={textEnter}
+       
+        style={{ display: 'inline-block' }}
+      >
+        {char}
+      </motion.span>
+    ));
+  };
+  // my code
+
   return (
     <>
       <div className="gradient-bg">
@@ -289,7 +344,11 @@ export default function LandingPage() {
                 }}
                 className="fw-bold"
               >
-                Empower Your Workforce
+                {/* my code */}
+                {splitText("Empower Your Workforce")}
+                {/* Empower Your Workforce */}
+                {/* my code */}
+                
               </motion.h1>
               <motion.h1
                 initial={{ width: 0 }}
@@ -337,12 +396,19 @@ export default function LandingPage() {
                 Start for free
               </button>
             </motion.div>
+            {/* my code */}
+            <motion.div
+        className='cursor'
+        variants={variants}
+        animate={cursorVariant}
+      />
+            {/* my code */}
           </div>
         </div>
       </div>
       <main className="container-xl min-vh-100 h-100">
         <div className="flex justify-content-center align-items-center">
-          <motion.div>
+          {/* <motion.div>
             <motion.img
               src="src/assets/Dashboard (Dark Mode)@2x.svg"
               alt="Dashboard"
@@ -352,7 +418,24 @@ export default function LandingPage() {
                 transformOrigin: "center",
               }}
             />
-          </motion.div>
+          </motion.div> */}
+          {/* my code landing 3d effect */}
+          <div className="landing-images">
+        <Atropos className="my-atropos" activeOffset={50} shadow={true}>
+          <img src="src/assets/wp7632525.webp" data-atropos-offset="-5" className="bg-img" alt="Background" />
+          <img src="src/assets/Frame 1.svg" data-atropos-offset="5" alt="Frame 1" className="image image-1" />
+          <img src="src/assets/Frame 19.svg" data-atropos-offset="2" alt="Frame 19" className="image image-2" />
+          <img src="src/assets/Group 33628.svg" data-atropos-offset="5" alt="Group 33628" className="image image-grp" />
+          <img src="src/assets/Frame 30.svg" data-atropos-offset="5" alt="Frame 30" className="image image-4" />
+          <img src="src/assets/Frame 37.svg" data-atropos-offset="15" alt="Frame 37" className="image image-3" />
+          <img src="src/assets/Vector 3.svg" data-atropos-offset="20" alt="Vector 3" className="image image-5" />
+          <img src="src/assets/Frame 45.svg" data-atropos-offset="20" alt="Frame 45" className="image image-6" />
+          <img src="src/assets/Frame 44.svg" data-atropos-offset="20" alt="Frame 44" className="image image-7" />
+        </Atropos>
+      </div>
+
+
+          {/* my code  */}
         </div>
 
         <div

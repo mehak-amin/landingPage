@@ -20,6 +20,7 @@
     "@fullcalendar/interaction": "^6.1.11",
     "@fullcalendar/react": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
+    "atropos": "^2.0.2",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "framer-motion": "^11.3.2",
