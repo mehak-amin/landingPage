@@ -17,13 +17,13 @@ const PricingCard = ({ type, pricing, audience, features }) => {
         {type}
       </Card.Header>
       <Card.Body>
-        <Card.Title className="fw-bold text-start" style={{ fontSize: "4rem" }}>
+        <Card.Title className="fw-bold text-start" style={{ fontSize: "1.8rem" }}>
           ${pricing} <span className="text-muted fs-5 fw-normal">/month</span>
         </Card.Title>
         <Card.Subtitle className="pb-4 fs-5 text-start border-bottom border-2 mb-4">
           {audience}
         </Card.Subtitle>
-        <Card.Text className="text-start" style={{ marginBlockEnd: "15rem" }}>
+        <Card.Text className="text-start" style={{ marginBlockEnd: "-1rem" }}>
           <ul className="list-unstyled">
             {features.map((feature, index) => (
               <li key={index} className="mb-3" style={{ fontWeight: "600" }}>
@@ -34,9 +34,9 @@ const PricingCard = ({ type, pricing, audience, features }) => {
           </ul>
         </Card.Text>
         <Button
-          className="rounded-pill px-5 py-3 border-0 text-white w-auto fw-bold"
+          className="rounded-pill px-5 py-2 border-0 text-white w-auto fw-bold"
           style={{
-            background: "linear-gradient(to right, #777777, #333333)",
+            background: "linear-gradient(to right, #777777, #333333)",fontSize: "15px", marginTop:"10px"
           }}
         >
           Get Started

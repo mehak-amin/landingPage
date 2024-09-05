@@ -108,12 +108,17 @@
   left: 0;
   z-index: 9999; 
   pointer-events: none; 
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
   
 }
-*{
-  cursor: none;
-}
 
+.custom-cursor-page * {
+  cursor: none !important;
+}
+.my-atropos{
+  margin-bottom: 30px;
+}
 
 
 .your-element-class {
@@ -122,17 +127,6 @@
 /* landing css 3d */
 
 
-.landing-images {
-  position: relative;
-  width: 1090px;
-  height: 722px;
-  background-color: white;
-  margin-left: 30px;
-  margin-top: 30px;
-  border-radius: 3%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-  margin-bottom: 40px !important;
-}
 
 .image {
   position: absolute;
@@ -143,27 +137,29 @@
 
 .image-1 {
   left: 0;
-  top: 2%;
+  top: 6%;
  
   z-index: 1;
   margin-top: -17px;
-  width: 273px;
+  width: 267px;
+  margin-left: 19px;
 }
 .image-2 {
-  right: 0px;
-  top: 0;
+  right: 10px;
+  top: 3.5%;
   z-index: 2;
-  width: 820px;
+  width: 825px;
   border-top-right-radius: 15%;
+  
 }
 .image-grp {
-  right: 13px;
-  top: 123px;
+  right: 25px;
+  top: 135px;
   z-index: 2;
   width: 749px;
 }
 .image-4 {
-  right: 2px;
+  right: 16px;
   top: 192px;
   z-index: 2;
   width: 815px;
@@ -200,7 +196,10 @@
   width: 1090px !important;
   border-radius: 3%;
   height: 722px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 10px 4px rgba(0, 0, 0, 0.25);
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-bottom: 30px;
 }
 
 /* annimations cursor landing image */

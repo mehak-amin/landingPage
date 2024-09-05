@@ -9,6 +9,7 @@ import "./LandingPage.css";
 import { LuArrowDownLeftFromCircle } from "react-icons/lu";
 import PricingCard from "../../components/Card/PricingCard";
 import ReviewCard from "../../components/Card/ReviewCard";
+import _ from 'lodash'; // Import lodash for debounce
 
 import Atropos from 'atropos/react';
 import 'atropos/css';
@@ -43,7 +44,7 @@ const Card = ({
         {icon}
       </p>
     </div>
-    <div className="card-body">
+    <div className="card-body  " style={{ height: '200px' }}>
       <h5 className="card-heading fw-bold mb-3">{heading}</h5>
       <p className="card-details text-secondary text-sm fs-09rem mb-5">
         {details}
@@ -66,6 +67,9 @@ export default function LandingPage() {
   });
 
   const [cursorVariant, setCursorVariant] = useState("default");
+  const debouncedMouseMove = _.debounce(e => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  }, 5); // Adjust debounce delay as needed
   //mouse hover
 
   const [isVisible, setIsVisible] = useState(false);
@@ -266,7 +270,7 @@ export default function LandingPage() {
   
   useEffect(() => {
     const mouseMove = e => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      debouncedMouseMove(e);
     };
 
     window.addEventListener("mousemove", mouseMove);
@@ -278,36 +282,32 @@ export default function LandingPage() {
 
   const variants = {
     default: {
-      x: mousePosition.x - 16,
-      y: mousePosition.y - 16,
+      x: mousePosition.x-16,
+      y: mousePosition.y-16,
+      mixBlendMode: "difference",
+      width: "20px", // Default cursor size
+      height: "20px",
     },
     text: {
-      x: mousePosition.x - 75,
-      y: mousePosition.y - 75,
-      // backgroundColor: "white",
+      x: mousePosition.x,
+      y: mousePosition.y,
       mixBlendMode: "difference",
-    }
+      width: "35px", // Enlarged cursor size
+      height: "35px",
+    },
+   
   };
 
+ 
   const textEnter = () => setCursorVariant("text");
+  const textLeave = () => setCursorVariant("default"); 
+ 
 
-  const splitText = (text) => {
-    return text.split("").map((char, index) => (
-      <motion.span
-        key={index}
-        onMouseEnter={textEnter}
-        transition={{ duration: 0.01 ,type: "spring" , stiffness: 300, damping: 20 }}
-        style={{ display: 'inline-block' }}
-      >
-        {char}
-      </motion.span>
-    ));
-  };
-  // mouse hover
+ 
 
   return (
-    <>
-      <div className="gradient-bg">
+    <div className="custom-cursor-page">
+      <div className="gradient-bg custom-cursor-page">
         <div className="container-xl min-vh-100 h-100">
           <motion.nav
             className="d-flex align-items-center justify-content-between py-4 text-white"
@@ -315,15 +315,15 @@ export default function LandingPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: "easeOut", delay: 1.5 }}
           >
-            <h1 className="body">empsuite</h1>
+            <h1 className="body" onMouseEnter={textEnter} onMouseLeave={textLeave}>empsuite</h1>
             <ul className="d-flex align-items-center gap-5 list-unstyled mb-0">
-              <li className="cursor-pointer">Product</li>
-              <li className="cursor-pointer">Solution</li>
-              <li className="cursor-pointer">Customer</li>
-              <li className="cursor-pointer">Pricing</li>
-              <li className="cursor-pointer">About Us</li>
+              <li className="cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>Product</li>
+              <li className="cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>Solution</li>
+              <li className="cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>Customer</li>
+              <li className="cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>Pricing</li>
+              <li className="cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>About Us</li>
             </ul>
-            <button className="rounded-pill px-4 py-2 fw-bold fs-5 border-0">
+            <button className="rounded-pill px-4 py-2 fw-bold fs-5 border-0" onMouseEnter={textEnter} onMouseLeave={textLeave}>
               Get Started
             </button>
           </motion.nav>
@@ -338,16 +338,16 @@ export default function LandingPage() {
                 animate={{ width: "100%" }}
                 transition={{ duration: 2, ease: "easeInOut" }}
                 style={{
-                  fontSize: "4.7rem",
+                  fontSize: "4rem",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                 }}
-                className="fw-bold"
+                className="fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave}
               >
-                {/* my code */}
-                {splitText("Empower Your Workforce")}
-                {/* Empower Your Workforce */}
-                {/* my code */}
+              
+               
+                Empower Your Workforce
+              
                 
               </motion.h1>
               <motion.h1
@@ -355,20 +355,20 @@ export default function LandingPage() {
                 animate={{ width: "100%" }}
                 transition={{ duration: 2, ease: "easeInOut", delay: 2 }}
                 style={{
-                  fontSize: "4.7rem",
+                  fontSize: "4rem",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                 }}
-                className="fw-bold"
+                className="fw-bold " onMouseEnter={textEnter} onMouseLeave={textLeave}
               >
                 {isVisible && "Smart Tracking"}
               </motion.h1>
             </div>
             <div>
-              <p className="fs-5 mb-0">
-                Our cutting-edge employee tracking app designed to
+              <p className="fs-5 mb-0" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                Our cutting-edge employee tracking app designed to 
               </p>
-              <p className="fs-5">
+              <p className="fs-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                 streamline workforce management like never before.
               </p>
             </div>
@@ -388,7 +388,7 @@ export default function LandingPage() {
                 />
               </div>
               <button
-                className="rounded-pill px-5 py-3 border-0 text-white"
+                className="rounded-pill px-5 py-3 border-0 text-white" onMouseEnter={textEnter} onMouseLeave={textLeave}
                 style={{
                   background: "linear-gradient(to right, #777777, #333333)",
                 }}
@@ -398,10 +398,10 @@ export default function LandingPage() {
             </motion.div>
             {/* mouse hover */}
             <motion.div
-            
-        className='cursor'
+        className='cursor cursor-landingPage'
         variants={variants}
         animate={cursorVariant}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }} // Add smooth transition
       />
 
 <motion.div
@@ -420,31 +420,22 @@ export default function LandingPage() {
       </div>
       <main className="container-xl min-vh-100 h-100">
         <div className="flex justify-content-center align-items-center">
-          {/* <motion.div>
-            <motion.img
-              src="src/assets/Dashboard (Dark Mode)@2x.svg"
-              alt="Dashboard"
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                transformOrigin: "center",
-              }}
-            />
-          </motion.div> */}
+          
           {/*  landing 3d effect */}
           <div className="landing-images">
-        <Atropos className="my-atropos" activeOffset={50} shadow={true}>
-          <img src="src/assets/wp7632525.webp" data-atropos-offset="-5" className="bg-img" alt="Background" />
-          <img src="src/assets/Frame 1.svg" data-atropos-offset="5" alt="Frame 1" className="image image-1" />
-          <img src="src/assets/Frame 19.svg" data-atropos-offset="2" alt="Frame 19" className="image image-2" />
-          <img src="src/assets/Group 33628.svg" data-atropos-offset="5" alt="Group 33628" className="image image-grp" />
-          <img src="src/assets/Frame 30.svg" data-atropos-offset="5" alt="Frame 30" className="image image-4" />
-          <img src="src/assets/Frame 37.svg" data-atropos-offset="15" alt="Frame 37" className="image image-3" />
-          <img src="src/assets/Vector 3.svg" data-atropos-offset="20" alt="Vector 3" className="image image-5" />
-          <img src="src/assets/Frame 45.svg" data-atropos-offset="20" alt="Frame 45" className="image image-6" />
-          <img src="src/assets/Frame 44.svg" data-atropos-offset="20" alt="Frame 44" className="image image-7" />
-        </Atropos>
-      </div>
+  <Atropos className="my-atropos" activeOffset={20} shadow={true}>
+    <img src="src/assets/wp7632525.webp" data-atropos-offset="-2" className="bg-img" alt="Background" />
+    <img src="src/assets/Frame 1.svg" data-atropos-offset="2" alt="Frame 1" className="image image-1" />
+    <img src="src/assets/Frame 19.svg" data-atropos-offset="1" alt="Frame 19" className="image image-2" />
+    <img src="src/assets/Group 33628.svg" data-atropos-offset="2" alt="Group 33628" className="image image-grp" />
+    <img src="src/assets/Frame 30.svg" data-atropos-offset="2" alt="Frame 30" className="image image-4" />
+    <img src="src/assets/Frame 37.svg" data-atropos-offset="5" alt="Frame 37" className="image image-3" />
+    <img src="src/assets/Vector 3.svg" data-atropos-offset="8" alt="Vector 3" className="image image-5" />
+    <img src="src/assets/Frame 45.svg" data-atropos-offset="8" alt="Frame 45" className="image image-6" />
+    <img src="src/assets/Frame 44.svg" data-atropos-offset="8" alt="Frame 44" className="image image-7" />
+  </Atropos>
+</div>
+
 
 
           {/* 3d annimate  */}
@@ -486,11 +477,11 @@ export default function LandingPage() {
             animate={controls}
             transition={{ duration: 0.7, delay: 0.8 }}
             style={{
-              fontSize: "3.3rem",
+              fontSize: "2.5rem",
               overflow: "hidden",
               whiteSpace: "nowrap",
             }}
-            className="fw-bold"
+            className="fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave}
           >
             Say Goodbye To Manual
           </motion.h1>
@@ -499,11 +490,11 @@ export default function LandingPage() {
             animate={controls}
             transition={{ duration: 0.7, delay: 1 }}
             style={{
-              fontSize: "3.3rem",
+              fontSize: "2.5rem",
               overflow: "hidden",
               whiteSpace: "nowrap",
             }}
-            className="fw-bold"
+            className="fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave}
           >
             Tracking Methods!
           </motion.h1>
@@ -533,15 +524,20 @@ export default function LandingPage() {
             initial={{ y: 50, opacity: 0 }}
             animate={controlsCenterCard}
           />
-          <Card
+          <Card 
             icon={<PiSquareLogo />}
-            heading="Staff Management"
-            details="Crafting Strategies for Your Workforce Introducing Staff Management, Your Business's Personnel Planner."
+            heading="Staff Management" 
+            details={
+              <div style={{ marginBottom: '-25px' }}>
+                Crafting Strategies for Your Workforce Introducing Staff Management, Your Business's Personnel Planner.
+              </div>
+            }
             readMoreLink="#"
             refProp={refRightCard}
             controls={controlsRightCard}
             initial={{ x: 200, opacity: 0, rotate: 10 }}
             animate={controlsRightCard}
+
           />
         </div>
 
@@ -556,16 +552,16 @@ export default function LandingPage() {
             transition={{ duration: 1 }}
             className="pe-5"
           >
-            <h1 className="mb-5 fw-bold fs-1">
+            <h1 className="mb-5 fw-bold fs-1" onMouseEnter={textEnter} onMouseLeave={textLeave}>
               Embrace the future of Employee management
             </h1>
-            <p className="mb-5">
+            <p className="mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
               From tracking time and attendance to monitoring project progress
               and task assignments, our app provides a comprehensive solution
               for businesses of all sizes.
             </p>
             <button
-              className="rounded-pill px-5 py-3 border-0 text-white fw-bold"
+              className="rounded-pill px-5 py-3 border-0 text-white fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave}
               style={{
                 background: "linear-gradient(to right, #777777, #333333)",
               }}
@@ -600,11 +596,11 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
-      <div className="gradient-bg" style={{ marginBlockEnd: "9rem" }}>
+      <div className="gradient-bg" style={{ marginBlockEnd: "7rem" }}>
         <div className="container py-5 text-white">
-          <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="d-flex align-items-center justify-content-between mb-4" onMouseEnter={textEnter} onMouseLeave={textLeave}>
             <motion.h1
-              style={{ fontSize: "3rem", paddingInlineEnd: "8.9rem" }}
+              style={{ fontSize: "2.4rem", paddingInlineEnd: "8.9rem" }}
               initial="hidden"
               animate={inViewSection ? "visible" : "hidden"}
               variants={sectionVariants}
@@ -613,23 +609,23 @@ export default function LandingPage() {
             >
               Real-time insights into employee activities
             </motion.h1>
-            <button className="rounded-pill px-4 py-3 fw-bold fs-5 border-0 text-nowrap">
+            <button className="rounded-pill px-3 py-3 fw-bold fs-6 border-0 text-nowrap">
               Get Started Now
             </button>
           </div>
-          <div className="d-flex justify-content-between py-5">
-            <ol className="custom-list">
-              <li>
-                <h4 className="mb-3 fw-bold">Create Account</h4>
+          <div className="d-flex justify-content-between py-5" >
+            <ol className="custom-list" >
+              <li >
+                <h4 className="mb-3 fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave}  style={{ fontSize: "23px" }}>Create Account</h4>
                 <p>Lorem, ipsum.</p>
               </li>
               <li>
-                <h4 className="mb-3 fw-bold">Invite Employees</h4>
+                <h4 className="mb-3 fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave} style={{ fontSize: "23px" }}>Invite Employees</h4>
                 <p>Lorem, ipsum.</p>
               </li>
               <li>
-                <h4 className="mb-3 fw-bold">Track Performance</h4>
-                <p>Lorem, ipsum.</p>
+                <h4 className="mb-3 fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave} style={{ fontSize: "23px" }}>Track Performance</h4>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Lorem, ipsum.</p>
               </li>
             </ol>
             <motion.div
@@ -647,8 +643,8 @@ export default function LandingPage() {
 
       <div className="container">
         <motion.h1
-          className="fw-bold text-center mb-4"
-          style={{ fontSize: "3rem" }}
+          className="fw-bold text-center mb-4" onMouseEnter={textEnter} onMouseLeave={textLeave}
+          style={{ fontSize: "2.3rem" ,}}
           animate={inViewHeading ? "visible" : "hidden"}
           variants={headingVariants}
           transition={{ duration: 1 }}
@@ -659,28 +655,28 @@ export default function LandingPage() {
 
         <motion.div
           className="d-flex align-items-end justify-content-center gap-4"
-          style={{ marginBlockEnd: "4rem" }}
+          style={{ marginBlockEnd: "4rem" ,marginBottom: "25px"}}
           ref={divRef}
           animate={inViewdiv ? "visible" : "hidden"}
           variants={divVariants}
           transition={{ duration: 1 }}
         >
           <button
-            className="rounded-pill px-3 py-1 border-0 text-white"
+            className="rounded-pill px-3 py-1 border-0 text-white" onMouseEnter={textEnter} onMouseLeave={textLeave}
             style={{
               background: "linear-gradient(to right, #777777, #333333)",
             }}
           >
             Monthly
           </button>
-          <p className="mb-0">Annually</p>
-          <p className="mb-0">
+          <p className="mb-0" onMouseEnter={textEnter} onMouseLeave={textLeave}>Annually</p>
+          <p className="mb-0" onMouseEnter={textEnter} onMouseLeave={textLeave}>
             <LuArrowDownLeftFromCircle style={{ fontSize: "3rem" }} />
             <span>Get 20% OFF</span>
           </p>
         </motion.div>
 
-        <div className="row g-3" style={{ marginBlockEnd: "9rem" }}>
+        <div className="row g-5" style={{ marginBlockEnd: "9rem" , marginBottom: "105px"}} >
           <motion.div
             className="col-3"
             ref={cardLeftRef}
@@ -741,8 +737,8 @@ export default function LandingPage() {
 
         <div style={{ marginBlockEnd: "8rem" }}>
           <motion.h1
-            className="fw-bold text-center mb-5"
-            style={{ fontSize: "3rem" }}
+            className="fw-bold text-center mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}
+            style={{ fontSize: "2.5rem" }}
             ref={h1ReviewVariantsRef}
             animate={inViewH1ReviewVariants ? "visible" : "hidden"}
             variants={h1ReviewVariants}
@@ -767,7 +763,7 @@ export default function LandingPage() {
                 />
               </motion.div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4" >
               <motion.div
                 ref={reviewCardVariantsCenterRef}
                 animate={inViewReviewCardVariantsCenter ? "visible" : "hidden"}
@@ -813,16 +809,16 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <div className="mb-5  container">
-              <h1 className="text-center fw-bold" style={{ fontSize: "4rem" }}>
+              <h1 className="text-center fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave} style={{ fontSize: "2.7rem" }}>
                 We are here to help
               </h1>
-              <h1 className="text-center fw-bold" style={{ fontSize: "4rem" }}>
+              <h1 className="text-center fw-bold" onMouseEnter={textEnter} onMouseLeave={textLeave} style={{ fontSize: "2.7rem" }}>
                 {" "}
                 you grow your business
               </h1>
             </div>
             <div className="text-center  container">
-              <button className="rounded-pill px-4 py-3 fw-bold fs-5 border-0 text-nowrap text-center">
+              <button className="rounded-pill px-4 py-3 fw-bold fs-5 border-0 text-nowrap text-center" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                 Get Started Now
               </button>
             </div>
@@ -831,61 +827,61 @@ export default function LandingPage() {
         <div className="border-milky" style={{ paddingBlock: "4rem" }}>
           <div className="container d-flex justify-content-between">
             <div>
-              <h1 className="body mb-3">empsuite</h1>
-              <p className="mb-0 text-milky fs-5">Empower Your Workforce:</p>
-              <p className="mb-0 text-milky text-center fs-5">
+              <h1 className="body mb-3" onMouseEnter={textEnter} onMouseLeave={textLeave}>empsuite</h1>
+              <p className="mb-0 text-milky fs-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>Empower Your Workforce:</p>
+              <p className="mb-0 text-milky fs-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                 Smart Tracking, Seamless
               </p>
-              <p className="text-center text-milky fs-5">Performance</p>
+              <p className=" text-milky fs-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>Performance</p>
             </div>
 
             <div className="d-flex align-items-center gap-5">
               <ul className="list-unstyled">
-                <li className="mb-5">
+                <li className="mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h5>Product</h5>
                 </li>
-                <li className="mb-4 text-milky">Digital Invoice</li>
-                <li className="mb-4 text-milky">Insights</li>
-                <li className="mb-4 text-milky">Reimbursements</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Digital Invoice</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Insights</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Reimbursements</li>
                 <li className="text-milky">Virtual Assistant</li>
               </ul>
               <ul className="list-unstyled">
-                <li className="mb-5">
+                <li className="mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h5>Company</h5>
                 </li>
-                <li className="mb-4 text-milky">About Us</li>
-                <li className="mb-4 text-milky">Newsletters</li>
-                <li className="mb-4 text-milky">Our Partners</li>
-                <li className="text-milky">Our Partners</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>About Us</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Newsletters</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Our Partners</li>
+                <li className="text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Our Partners</li>
               </ul>
               <ul className="list-unstyled">
-                <li className="mb-5">
+                <li className="mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h5>Resources</h5>
                 </li>
-                <li className="mb-4 text-milky">Blog</li>
-                <li className="mb-4 text-milky">Pricing</li>
-                <li className="mb-4 text-milky">FAQ</li>
-                <li className=" text-milky">Events</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Blog</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Pricing</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>FAQ</li>
+                <li className=" text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Events</li>
               </ul>
               <ul className="list-unstyled">
-                <li className="mb-5">
+                <li className="mb-5" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h5>Follow Us</h5>
                 </li>
-                <li className="mb-4 text-milky">LinkedIn</li>
-                <li className="mb-4 text-milky">Twitter</li>
-                <li className="mb-4 text-milky">Instagram</li>
-                <li className=" text-milky">Facebook</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>LinkedIn</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Twitter</li>
+                <li className="mb-2 text-milky" onMouseEnter={textEnter} onMouseLeave={textLeave}>Instagram</li>
+                <li className=" text-milky"  onMouseEnter={textEnter} onMouseLeave={textLeave}>Facebook</li>
               </ul>
             </div>
           </div>
         </div>
 
         <div className="container py-5">
-          <p className="text-center text-milky">
+          <p className="text-center text-milky"  onMouseEnter={textEnter} onMouseLeave={textLeave}>
             Copyright @ Raybit Technologies 2024. All Rights Reserved.
           </p>
         </div>
       </footer>
-    </>
+    </ div>
   );
 }
