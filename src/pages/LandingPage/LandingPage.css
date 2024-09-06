@@ -1,7 +1,9 @@
 .gradient-bg {
   background: linear-gradient(to right, #777777, #333333);
   /* clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); */
+  /* height: 850px; */
 }
+
 .gradient-bg-reverse {
   background: linear-gradient(to right, #333333, #777777);
 }
@@ -12,12 +14,12 @@
   list-style: none;
 }
 
+
 .custom-list li {
   position: relative;
   padding-left: 120px;
-  margin-bottom: 80px;
+  margin-bottom: 45px;
 }
-
 .custom-list li::before {
   content: counter(list);
   counter-increment: list;
@@ -25,8 +27,8 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 100px;
-  height: 100px;
+  width: 65px;
+  height: 65px;
   border-radius: 50%;
   background-color: white;
   color: black;
@@ -34,8 +36,9 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 50px;
+  font-size: 40px;
   border: 1px solid #dee2e6;
+  
 }
 
 .text-milky {
@@ -126,7 +129,11 @@
 }
 /* landing css 3d */
 
-
+.landing-images{
+  margin-top: -230px;
+ 
+  
+}
 
 .image {
   position: absolute;
@@ -140,65 +147,67 @@
   top: 6%;
  
   z-index: 1;
-  margin-top: -17px;
-  width: 267px;
-  margin-left: 19px;
+  margin-top: -10px;
+  width: 220px;
+  /* height:650px; */
+  margin-left: 40px;
 }
 .image-2 {
-  right: 10px;
-  top: 3.5%;
+  right: 110px;
+  top: 5%;
   z-index: 2;
-  width: 825px;
+  width: 750px;
+  /* height: 80px; */
   border-top-right-radius: 15%;
   
 }
 .image-grp {
-  right: 25px;
+  right: 115px;
   top: 135px;
   z-index: 2;
-  width: 749px;
+  width: 680px;
 }
 .image-4 {
-  right: 16px;
+  right: 80px;
   top: 192px;
   z-index: 2;
-  width: 815px;
+  width: 775px;
 }
 
 .image-3 {
-  right: 35px;
+  right: 95px;
   top: 249px;
   z-index: 2;
-  width: 758px;
+  width: 715px;
 }
 .image-7 {
-  right: 423px;
-  top: 531px;
+  right: 505px;
+  top: 480px;
   z-index: 2;
-  width: 366px;
+  width: 300px;
 }
 
 .image-6 {
-  right: 50px;
-  top: 531px;
+  right: 150px;
+  top: 480px;
   z-index: 2;
-  width: 359px;
+  width: 300px;
 }
 .image-5 {
-  right: 53px;
-  top: 570px;
+  right: 153px;
+  top: 511px;
   z-index: 2;
-  width: 352px;
+  width: 293px;
 }
 
 
 .bg-img {
-  width: 1090px !important;
+  width: 1030px !important;
   border-radius: 3%;
-  height: 722px;
+  height: 580px;
   box-shadow: 0px 4px 10px 4px rgba(0, 0, 0, 0.25);
   margin-top: 30px;
-  margin-left: 20px;
+  margin-left: 40px;
   margin-bottom: 30px;
 }
 

@@ -26,17 +26,17 @@ const PricingCard = ({ type, pricing, audience, features }) => {
         <Card.Text className="text-start" style={{ marginBlockEnd: "-1rem" }}>
           <ul className="list-unstyled">
             {features.map((feature, index) => (
-              <li key={index} className="mb-3" style={{ fontWeight: "600" }}>
-                <IoIosCheckmarkCircle className="me-2 fs-5" />
+              <li key={index} className="mb-2" style={{ fontWeight: "600" }}>
+                <IoIosCheckmarkCircle className="me-2 fs-6" />
                 {feature}
               </li>
             ))}
           </ul>
         </Card.Text>
         <Button
-          className="rounded-pill px-5 py-2 border-0 text-white w-auto fw-bold"
+          className="rounded-pill px-4 py-2 border-0 text-white w-auto fw-bold"
           style={{
-            background: "linear-gradient(to right, #777777, #333333)",fontSize: "15px", marginTop:"10px"
+            background: "linear-gradient(to right, #777777, #333333)",fontSize: "15px", marginTop:"23px"
           }}
         >
           Get Started
